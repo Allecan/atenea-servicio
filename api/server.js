@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
+import {conectarDB} from '../database/db.js'
 
 // Configuracion de paths
 
@@ -16,6 +17,7 @@ class Server {
     this._dirname = dirname(fileURLToPath(import.meta.url))
     this.setMiddlewares()
     this.setRoutes()
+    conectarDB()
   }
 
   // Middlewares
