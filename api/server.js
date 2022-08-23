@@ -17,6 +17,7 @@ class Server {
     this._dirname = dirname(fileURLToPath(import.meta.url))
     this.setMiddlewares()
     this.setRoutes()
+    //conectarDB()
     conectarDB()
   }
 
