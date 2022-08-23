@@ -1,4 +1,4 @@
-import usuario from '../models/Usuario.js'
+import usuario from '../../models/Usuario.js'
 
 const getUsuarios = ()=> {
 }

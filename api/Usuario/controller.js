@@ -1,4 +1,4 @@
-import servicio from '../services/usuarioServicio.js'
+import servicio from './servicio.js'
 
 const getUsuarios = (req,res)=> {
 }
