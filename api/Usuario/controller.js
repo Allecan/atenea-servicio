@@ -1,20 +1,15 @@
-import servicio from './servicio.js'
+ class ControllerUser{
+    constructor(serviceUser,user){
+        this._service = serviceUser
+        this._model = user
+    }
 
-const getUsuarios = (req,res)=> {
-}
-
-const getUnUsuario =(req,res)=> { 
-
-}
-
-const crearNuevoUsuario = (req,res)=> { 
-
-}
-
-const modificarUnUnsuarios = (req,res)=> { 
+    async createNewUser(user){
+        const newUser = new this._model(user)
+        const response = await this._service.save(newUser)
+        return response
+    }
 
 }
 
-const eliminarUnUsuarios= (req,res)=> { 
-    
-}
+export default ControllerUser

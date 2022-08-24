@@ -1,7 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
-import {conectarDB} from '../database/db.js'
+
+import { userModel } from './Usuario/index.js'
 
 // Configuracion de paths
 
@@ -17,8 +18,7 @@ class Server {
     this._dirname = dirname(fileURLToPath(import.meta.url))
     this.setMiddlewares()
     this.setRoutes()
-    //conectarDB()
-    conectarDB()
+  
   }
 
   // Middlewares
@@ -30,7 +30,7 @@ class Server {
   }
 
   setRoutes () {
-    // this._app.use('/api/v1/prueba', )
+    this._app.use('/api/v1/user',userModel(express.Router))
   }
 
   start () {

@@ -5,6 +5,7 @@ import { config } from '../config/default.js';
     constructor(){
         this._pool = this.getConnection()
     }
+    
     async getConnection(){
         const pool = await createPool({
             database:  config.db.database,
@@ -15,6 +16,7 @@ import { config } from '../config/default.js';
                 rejectUnauthorized: false,
             }
         })
+    
         return pool
     }
 }
@@ -38,7 +40,8 @@ const conectarDB  = async  ()=> {
     
 }
 */
-
+/*
 const data = new DataBasePlanetScale()
 const newData = await  data.getConnection()
 console.log(newData)
+*/

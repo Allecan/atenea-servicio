@@ -1,28 +1,17 @@
-import usuario from '../../models/Usuario.js'
+import { DataBasePlanetScale } from "../../database/db.js"
+export class userService{
+    constructor(){
+        const pool = new DataBasePlanetScale()
+        this._connect = pool.getConnection()
+    }
+    async save(data){
+            const query = `select * from users;`
+        // const query = `INSERT INTO users(username,email,password) VALUES ('${data.username}','${data.email}','${data.password}')`
 
-const getUsuarios = ()=> {
-}
-
-const getUnUsuario = ()=> { 
-
-}
-
-const crearNuevoUsuario = ()=> { 
-
-}
-
-const modificarUnUnsuarios = ()=> { 
-
-}
-
-const eliminarUnUsuarios = ()=> { 
+        await  this._connect.execute(query)
+        
+    }
 
 }
 
-module.exports={
-    getUsuarios,
-    getUnUsuario,
-    crearNuevoUsuario,
-    modificarUnUnsuarios,
-    eliminarUnUsuarios,
-}
+
