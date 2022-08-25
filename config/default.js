@@ -14,4 +14,10 @@ export const config = {
     host: process.env.HOST,
     password: process.env.PASSWORD,
   },
+  dbUrl: {
+    database_url: process.env.DATABASE_URL
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'secret!'
+  }
 }
