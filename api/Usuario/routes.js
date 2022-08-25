@@ -1,19 +1,23 @@
-import { response } from "../../response/response.js"
-import { HttpCode } from "../../response/httpcode.js"
-
 export class UserRouter{
-    constructor(router,controller){
+    constructor(router, controller, response, httpCode){
         this._router = router()
         this._controller = controller
+        this._response = response
+        this._httpcode = httpCode
         this.registerRouter()    
     }
 
     registerRouter(){
-        this._router.post('/singup', this.handleSingUp.bind(this))
+        this._router.post('/create-user', this.handleSingUp.bind(this))
     }
     
     async handleSingUp(req,res){
-        const result = await this._controller.createNewUser(req.body)
-        response.succes(req, res, result, HttpCode.OK)
+        const user = req.body
+        const result = await this._controller.createNewUser(user)
+        if (result instanceof Error) {
+            this._response.error(req, res, result, 201)
+        } else {
+            this._response.succes(req, res, result, this._httpcode.OK)
+        }
     }
 }
