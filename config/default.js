@@ -17,6 +17,12 @@ export const config = {
   dbUrl: {
     database_url: process.env.DATABASE_URL
   },
+  dbLocal:{
+    host: process.env.HOST_LOCAL,
+    user: process.env.USER_LOCAL,
+    password:process.env.PASSWORD_LOCAL,
+    database: process.env.DATABASE_LOCAL,
+  },
   jwt: {
     secret: process.env.JWT_SECRET || 'secret!'
   }

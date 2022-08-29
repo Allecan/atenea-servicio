@@ -8,7 +8,7 @@ export class UserRouter{
     }
 
     registerRouter(){
-        this._router.post('/create-user', this.handleSingUp.bind(this))
+        this._router.post('/signUp', this.handleSingUp.bind(this))
     }
     
     async handleSingUp(req,res){
