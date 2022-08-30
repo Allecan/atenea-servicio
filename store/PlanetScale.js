@@ -4,9 +4,8 @@ import { config } from '../config/default.js';
 export class DataBasePS {
 
   async save (data) {
-    const exists = await this.getOneUserByEmail(data)
-    console.log("Existe",existe)
-    if(!exists){
+    const existsUser = await this.getOneUserByEmail(data)
+    if( typeof existsUser === 'undefined'){
       console.log(await this.getOneUserByEmail(data));
       const connection = await mysql.createConnection(config.dbLocal)
       const query = `INSERT INTO users (name_complete, email, password) VALUES (?, ?, ?);`
@@ -16,9 +15,9 @@ export class DataBasePS {
       return result
     }
     else{
-      return {
-        message: "user already exists"
-      }
+      return new Error({
+        message: "user already exists",
+      })
     }
   }
 
@@ -28,12 +27,8 @@ export class DataBasePS {
     console.log(query)
     const result = await connection.query(query)
     connection.end()
-    if(typeof result[0][0] == "undefined"){
-      return false //hay datos
-    }else{
-      return true //no hay datos
+    return result[0][0]
     }
-  }
 }
 
 // const data = new DataBasePS ()

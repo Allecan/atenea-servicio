@@ -8,7 +8,7 @@ export default class AuthRoute {
   }
 
   registerRoutes() {
-    this._router.post('/signin', this.handleSignIn.bind(this))
+    this._router.post('/signIn', this.handleSignIn.bind(this))
   }
 
   async handleSignIn (req, res) {

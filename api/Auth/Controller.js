@@ -9,8 +9,10 @@ export default class AuthController {
   async authenticationUser(user){
     try {
       const result = await this._services.getOneUserByEmail(user)
-      if (result != null) {
+      //si existe el email
+      if (result) {
         const resultComparePassword = await this._comparePassword(user.password, result.password)
+        //comprobacion de password 
         if (resultComparePassword) {
           const tokenUser = this._generateToken(result.id)
           return new this._model({
@@ -21,7 +23,7 @@ export default class AuthController {
             token: tokenUser,
             message: 'Login Succesfully'
           })
-        } else {
+        } else { // si no existe el email
           return new this._model({
             state: false, 
             name_complete: '',
