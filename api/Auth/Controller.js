@@ -14,6 +14,7 @@ export default class AuthController {
         const resultComparePassword = await this._comparePassword(user.password, result.password)
         //comprobacion de password 
         if (resultComparePassword) {
+          //generar autenticacion 
           const tokenUser = this._generateToken(result.id)
           return new this._model({
             state: true, 

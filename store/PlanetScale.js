@@ -15,9 +15,8 @@ export class DataBasePS {
       return result
     }
     else{
-      return new Error({
-        message: "user already exists",
-      })
+      const error  = new Error("user already exists")
+      return error
     }
   }
 
