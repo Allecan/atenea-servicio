@@ -25,6 +25,7 @@ export default class AuthController {
           console.log("si es el password")
           //generar autenticacion 
           const tokenUser = this._generateToken(result.id)
+          this._services.upDate("users","token",`'${tokenUser}'`,"id",result.id)
           return new this._model({
             state: true, 
             name_complete: result.name_complete,

@@ -16,6 +16,7 @@ export default class AuthRoute {
       console.log("body",req.body)
       const result = await this._controller.authenticationUser(req.body)
       if (result._auth) {
+        console.log("response")
         this._response.succes(req, res, result, this._httpCode.OK)
       } else {
         this._response.succes(req, res, result, this._httpCode.BAD_REQUEST)
