@@ -8,12 +8,21 @@ export default class AuthController {
 
   async authenticationUser(user){
     try {
-      const result = await this._services.getOneUserByEmail(user)
+      //se debe de pasar los parmetros al formato del modelo
+      const auxUser = {
+        _email:user.email,
+        _password:user.password
+      }
+      
+      const result = await this._services.getOneUserByEmail(auxUser)
+      console.log("resutl",result)
       //si existe el email
       if (result) {
+        console.log("si es el email")
         const resultComparePassword = await this._comparePassword(user.password, result.password)
         //comprobacion de password 
         if (resultComparePassword) {
+          console.log("si es el password")
           //generar autenticacion 
           const tokenUser = this._generateToken(result.id)
           return new this._model({
@@ -25,6 +34,7 @@ export default class AuthController {
             message: 'Login Succesfully'
           })
         } else { // si no existe el email
+          console.log("no es password")
           return new this._model({
             state: false, 
             name_complete: '',
@@ -35,6 +45,7 @@ export default class AuthController {
         })
       }
     }else{
+      console.log("no es el email")
       return new this._model({
         state: false, 
         name_complete: '',

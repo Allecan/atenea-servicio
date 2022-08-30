@@ -21,12 +21,21 @@ export class DataBasePS {
   }
 
   async getOneUserByEmail(data){
+    
     const connection = await mysql.createConnection(config.dbLocal)
     const query = `SELECT id, name_complete, password, email, profile_rol FROM users WHERE email = '${data._email}' LIMIT 1`
     console.log(query)
     const result = await connection.query(query)
     connection.end()
     return result[0][0]
+    }
+
+    async upDate(table,key,value,id,condition){
+      const connection = await mysql.createConnection(config.dbLocal)
+      const query =`UPDATE ${table} SET ${key}=${value} WHERE ${id}=${condition}`
+      const result = await connection.query(query)
+      connection.end()
+      return result 
     }
 }
 

@@ -13,6 +13,7 @@ export default class AuthRoute {
 
   async handleSignIn (req, res) {
     try {
+      console.log("body",req.body)
       const result = await this._controller.authenticationUser(req.body)
       if (result._auth) {
         this._response.succes(req, res, result, this._httpCode.OK)
