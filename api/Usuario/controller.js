@@ -6,9 +6,10 @@
     }
 
     async createNewUser(user){
-        const newUser = new this._model(user)
-        newUser.encryptPassword(user.password, this._hashPassword)
-        const response = await this._service.save(newUser)
+        const newModel = new this._model(user)
+        newModel.encryptPassword(user.password, this._hashPassword)
+        const newUser = Object.assign({}, newModel)
+        const response = await this._service.saveData('Users', newUser)
         return response
     }
 
