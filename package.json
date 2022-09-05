@@ -1,0 +1,35 @@
+{
+  "name": "atenea",
+  "version": "1.0.0",
+  "description": "Servicio Backend para el proyecto Atenea, el cual consiste en la elobracion de una plataforma para el manejo de estudiantes notas asi como el de los docentes",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test-entity": "mocha ./test/entity/*.spec.js",
+    "dev": "nodemon api/index.js"
+  },
+  "author": "Backend-Atenea",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.18",
+    "standard": "^17.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.2",
+    "firebase": "^9.9.4",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.4.3",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.3",
+    "pg": "^8.7.3",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0",
+    "yamljs": "^0.3.0"
+  }
+}
