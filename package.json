@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test-entity": "mocha ./test/entity/*.spec.js",
-    "dev": "nodemon api/index.js"
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js"
   },
   "author": "Backend-Atenea",
   "license": "ISC",
