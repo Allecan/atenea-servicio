@@ -19,7 +19,6 @@ export class FireBaseAdminSDK {
         this.app = initializeApp(this.firebaseAdminSDK)
     }
 
-
     async saveUser(data){
         try {
             const auth = getAuth(this.app)
@@ -83,16 +82,24 @@ export class FireBaseAdminSDK {
     }
 
     async setRolUser(uid, type){
-        const auth = getAuth(this.app)
-        const result = await auth.setCustomUserClaims(uid, {rol: type})
+        try {
+            const auth = getAuth(this.app)
+            await auth.setCustomUserClaims(uid, {rol: type})
+            return 'Se ha actualizado el rol del usuario correctamente.'
+        } catch (error) {
+            return error
+        }   
     }
 
     async createToken(uid){
-        // Aun en cambios...
+        const auth = getAuth(this.app)
+        const TokenUser = await auth.createCustomToken(uid)
+        console.log(TokenUser)
     }
 }
 
-//const newData = new FireBaseAdminSDK(config.firebaseSDK)
+// const newData = new FireBaseAdminSDK(config.firebaseSDK)
+// await newData.createToken('IKBMlVhnyJYyhvlNgi38AMLYtj92')
 // await newData.getAllUser()
 // const result = await newData.saveUser({
 //     email: "jossugames@gmail.com",

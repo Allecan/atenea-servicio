@@ -32,5 +32,10 @@
         const response = await this._service.deleteUser(id)
         return response
     }
+
+    async updateRolUser(id, type){
+        const response = await this._service.setRolUser(id, type)
+        return response
+    }
 }
 
