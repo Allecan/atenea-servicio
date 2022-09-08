@@ -13,6 +13,7 @@ export class UserRouter{
         this._router.get('/get-user/:id', this.handleGetOneUser.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
         this._router.put('/delete-user/:id', this.handleDeleteuser.bind(this))
+        this._router.put('/update-user-rol/:id/:type', this.handleUpdateRol.bind(this))
     }
     
     async handleCreateUser(req,res){
@@ -59,6 +60,16 @@ export class UserRouter{
         try {
             const idUser = req.params['id']
             const result = await this._controller.deleteUserController(idUser)
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+    async handleUpdateRol(req, res){
+        try {
+            const idUser = req.params['id']
+            const type = req.params['type']
+            const result = await this._controller.updateRolUser(idUser, type)
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
