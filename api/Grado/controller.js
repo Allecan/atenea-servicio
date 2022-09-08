@@ -11,4 +11,11 @@ export class ControllerGrade{
         return response
     }
 
+    async updateAGrade(id, grade) {
+        const newModel = new this._model(grade);
+        const newGrade = Object.assign({}, newModel);
+        const response = await this._service.updateData('Grades', id, newGrade);
+        return response;
+      }
+
 }

@@ -8,7 +8,11 @@ export class GradeRouter{
     }
 
     registerRouter(){
-        this._router.post('/add-grade', this.handleSingUp.bind(this))
+        this._router.post('/add-grade', this.handleSingUp.bind(this));
+        this._router.put(
+            '/update-grade/:id',
+            this.handleUpdateGrade.bind(this)
+          );
     }
     
     async handleSingUp(req,res){
@@ -20,4 +24,15 @@ export class GradeRouter{
             this._response.succes(req, res, result, this._httpcode.OK)
         }
     }
+
+    async handleUpdateGrade(req, res) {
+        try {
+          const updateGrade = req.body;
+          const idGrade = req.params["id"];
+          const result = await this._controller.updateAGrade(idGrade, updateGrade);
+          this._response.succes(req, res, result, this._httpcode.OK);
+        } catch (error) {
+          this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
+        }
+      }
 }
