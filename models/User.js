@@ -1,8 +1,10 @@
 export class User{
     constructor(user){
-        this.name_complete = user.name_complete
         this.email = user.email
+        this.emailVerified = false
         this.password = user.password
+        this.displayName = user.displayName
+        this.disable = false
     }
 
     encryptPassword(password, hashPassword){
