@@ -4,6 +4,7 @@ import morgan from 'morgan'
 
 import { userModel } from './Usuario/index.js'
 import { authModule } from './Auth/index.js'
+import { gradeModel } from './Grado/index.js'
 
 // Configuracion de paths
 
@@ -32,6 +33,7 @@ class Server {
   setRoutes () {
     this._app.use('/api/v1/user',userModel(express.Router))
     this._app.use('/api/v1/auth',authModule(express.Router))
+    this._app.use('/api/v1/grade',gradeModel(express.Router))
   }
 
   start () {
