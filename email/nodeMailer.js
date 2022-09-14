@@ -1,14 +1,14 @@
 import nodemailer from 'nodemailer'
-
+import { config } from '../config/default'
 
 export class SendCustomVerificationEmail {
     constructor(){
         this.info = {
-            host: 'smtp.gmail.com',
-            port: 587,
+            host: config.smtp.host,
+            port: config.smtp.port,
             auth: {
-                user: 'jossugames@gmail.com',
-                pass: 'uzsihiwjxrzdhull',
+                user: config.smtp.user,
+                pass: config.smtp.pass,
             },
         }
         this.transporter = nodemailer.createTransport(this.info)
@@ -35,7 +35,7 @@ export class SendCustomVerificationEmail {
             })
             return 'Se ha enviado un link para crear nueva contraseña a su correo electronico.'
         }else {
-            return 'Email Verificacion Not Valid'
+            return 'Error. Por favor contactese con el soporte.'
         }
     }
 }

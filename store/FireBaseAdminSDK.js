@@ -88,16 +88,20 @@ export class FireBaseAdminSDK {
     }
 
     async generateResetPasswordLink(email){
-        const newEmail = new SendCustomVerificationEmail()
-        const auth = getAuth(this.app)
-        const result = await auth.generatePasswordResetLink(email)
-        const nameuser = await this.getUserByEmail(email)
-        const linkEmail = newEmail.sendEmail({
-            to: email,
-            name: nameuser,
-            link: result
-        })
-        return linkEmail
+        try {
+            const newEmail = new SendCustomVerificationEmail()
+            const auth = getAuth(this.app)
+            const result = await auth.generatePasswordResetLink(email)
+            const nameuser = await this.getUserByEmail(email)
+            const linkEmail = newEmail.sendEmail({
+                to: email,
+                name: nameuser,
+                link: result
+            })
+            return linkEmail
+        } catch (error) {
+            return error
+        }
     }
 }
 
