@@ -13,7 +13,8 @@ export class UserRouter{
         this._router.get('/get-user/:id', this.handleGetOneUser.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
         this._router.put('/delete-user/:id', this.handleDeleteuser.bind(this))
-        this._router.put('/update-user-rol/:id/:type', this.handleUpdateRol.bind(this))
+        this._router.put('/update-user-rol/', this.handleUpdateRol.bind(this))
+        this._router.get('/reset-password/', this.resetPasswordUser.bind(this))
     }
     
     async handleCreateUser(req,res){
@@ -37,7 +38,7 @@ export class UserRouter{
 
     async handleGetOneUser(req, res){
         try {
-            const idUser = req.params['id']
+            const idUser = req.query.email
             const result = await this._controller.getOneUser(idUser)
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
@@ -67,9 +68,25 @@ export class UserRouter{
     }
     async handleUpdateRol(req, res){
         try {
-            const idUser = req.params['id']
-            const type = req.params['type']
-            const result = await this._controller.updateRolUser(idUser, type)
+            const idUser = req.query.id
+            const type = req.query.type
+            if (idUser === "" || type ==="") {
+                this._response.error(req, res, 'No se envio ningun parametro', this._httpcode.BAD_REQUEST)
+            } else if(idUser === undefined || type === undefined){
+                this._response.error(req, res, 'Revisar el parametro de informacion', this._httpcode.BAD_REQUEST)
+            }else{
+                const result = await this._controller.updateRolUser(idUser, type)
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+
+    async resetPasswordUser(req, res){
+        try {
+            const userEmail = req.query.email
+            const result = await this._controller.resetPasswordLink(userEmail)
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)

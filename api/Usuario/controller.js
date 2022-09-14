@@ -22,9 +22,7 @@
     }
 
     async updateInfoUser(id, data){
-        const newModel = new this._model(data)
-        const newUser = Object.assign({}, newModel)
-        const response = await this._service.updateUser(id, newUser)
+        const response = await this._service.updateUser(id, data)
         return response
     }
 
@@ -35,6 +33,11 @@
 
     async updateRolUser(id, type){
         const response = await this._service.setRolUser(id, type)
+        return response
+    }
+
+    async resetPasswordLink(email){
+        const response = await this._service.generateResetPasswordLink(email)
         return response
     }
 }

@@ -1,22 +1,12 @@
 import { initializeApp } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { config } from '../config/default.js'
+import { SendCustomVerificationEmail } from '../email/nodeMailer.js'
+
 
 export class FireBaseAdminSDK {
-    constructor(config){
-        this.firebaseAdminSDK = {
-            type: config.type,
-            project_id: config.project_id,
-            private_key_id: config.private_key_id,
-            private_key: config.private_key,
-            client_email: config.client_email,
-            client_id: config.client_id,
-            auth_uri: config.auth_uri,
-            token_uri: config.token_uri,
-            auth_provider_x509_cert_url: config.auth_provider_x509_cert_url,
-            client_x509_cert_url: config.client_x509_cert_url  
-        }
-        this.app = initializeApp(this.firebaseAdminSDK)
+    constructor(){
+        this.app = initializeApp()
     }
 
     async saveUser(data){
@@ -28,7 +18,6 @@ export class FireBaseAdminSDK {
         } catch (error) {
             return error.message
         }
-
     }
 
     async getAllUser(){
@@ -81,6 +70,13 @@ export class FireBaseAdminSDK {
         }
     }
 
+    async getUserByEmail(email){
+        const auth = getAuth(this.app)
+        const result = await auth.getUserByEmail(email)
+        const { displayName } = result
+        return displayName
+    }
+
     async setRolUser(uid, type){
         try {
             const auth = getAuth(this.app)
@@ -91,14 +87,25 @@ export class FireBaseAdminSDK {
         }   
     }
 
-    async createToken(uid){
+    async generateResetPasswordLink(email){
+        const newEmail = new SendCustomVerificationEmail()
         const auth = getAuth(this.app)
-        const TokenUser = await auth.createCustomToken(uid)
-        console.log(TokenUser)
+        const result = await auth.generatePasswordResetLink(email)
+        const nameuser = await this.getUserByEmail(email)
+        const linkEmail = newEmail.sendEmail({
+            to: email,
+            name: nameuser,
+            link: result
+        })
+        return linkEmail
     }
 }
 
 // const newData = new FireBaseAdminSDK(config.firebaseSDK)
+// const result = await newData.generateResetPasswordLink('jossugames@gmail.com')
+// console.log(result)
+// const result = await newData.generateResetPasswordLink('admin@gmail.com')
+// console.log(result)
 // await newData.createToken('IKBMlVhnyJYyhvlNgi38AMLYtj92')
 // await newData.getAllUser()
 // const result = await newData.saveUser({
