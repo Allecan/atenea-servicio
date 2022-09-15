@@ -2,6 +2,11 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 
+
+//Helpers
+import { helpers } from '../lib/helpers.js'
+
+//Models
 import { userModel } from './Usuario/index.js'
 import { authModule } from './Auth/index.js'
 import { gradeModel } from './Grado/index.js'
@@ -10,6 +15,10 @@ import { gradeModel } from './Grado/index.js'
 
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+
+//configuracion swagger
+import swaggerUI from "swagger-ui-express"
+import swaggerJsDoc from "swagger-jsdoc"
 
 class Server {
   constructor (config) {
@@ -24,6 +33,7 @@ class Server {
 
   // Middlewares
   setMiddlewares () {
+    this._app.use("/api-doc",swaggerUI.serve,swaggerUI.setup(swaggerJsDoc(helpers.swaggerSpec)))
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: true }))
     this._app.use(cors())
