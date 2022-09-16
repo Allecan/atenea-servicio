@@ -48,33 +48,24 @@ export const userModel = (expressRouter)=>{
  *       example: 
  *         email: jossugames@gmail.com
  *         emailVerified: false
- *         password: 123456
+ *         password: "123456"
  *         displayName: josue
  *         disable: false
  */
 /**
  * @swagger
- * /api/v1/users/create-user:
+ * /api/v1/user/create-user:
  *   post:
  *     summary: Create a new user.
  *     tags: [User]
+ *     requestBody:  
+ *       required: true
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/User'
  *     responses:
- *       201:
- *         description: Created
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       description: The user ID.
- *                       example: 0
- *                     name:
- *                       type: string
- *                       description: The user's name.
- *                       example: Leanne Graham
+ *       200:
+ *         description: create a new user
 */
