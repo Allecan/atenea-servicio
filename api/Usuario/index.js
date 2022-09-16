@@ -12,3 +12,69 @@ export const userModel = (expressRouter)=>{
     const userRouter = new UserRouter(expressRouter, userController, response, HttpCode)
     return userRouter._router
 } 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: The user email.
+ *           example: jossugames@gmail.com
+ *         emailVerified:
+ *           type: boolean
+ *           description: The user's email verified.
+ *           example: false || true
+ *         password:
+ *           type: string
+ *           description: The user's password
+ *           example: 123456
+ *         displayName: 
+ *           type: string
+ *           description: The user's display name
+ *           example: 'John Doe'
+ *         disable:
+ *           type: boolean
+ *           description: The user's disable
+ *           example: false || true
+ *       required:
+ *         -email
+ *         -emailVerified
+ *         -password
+ *         -displayName
+ *         -disable
+ *       example: 
+ *         email: jossugames@gmail.com
+ *         emailVerified: false
+ *         password: 123456
+ *         displayName: josue
+ *         disable: false
+ */
+/**
+ * @swagger
+ * /api/v1/users/create-user:
+ *   post:
+ *     summary: Create a new user.
+ *     tags: [User]
+ *     responses:
+ *       201:
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       description: The user ID.
+ *                       example: 0
+ *                     name:
+ *                       type: string
+ *                       description: The user's name.
+ *                       example: Leanne Graham
+*/
