@@ -3,9 +3,20 @@
 </div>
 <br>
 <div align="center">
-<p>Repositorio para el apartado backend de la applicacion Atenea</p>
+<p>Este proyecto será desarrollado juntamente con los docentes y director de la escuela correspondiente, por ello este proyecto está enfocado en su totalidad en apoyar a los miembros de la Escuela para facilitar y agilizar la gestión de las tareas cotidianas que tengan dentro de la institución relacionada a los alumnos de esta.
+</p>
 </div>
-
+<div align="center">
+<h1>Propuesta del proyecto</h1>
+<p>
+Se desarrolló una aplicación web que sea utilizable en computadoras y en dispositivos móviles, sin embargo, estará más enfocada en utilizarse en un computador ya que será el ambiente en donde se dispondrá de más herramientas para utilizarse, mientras que la parte móvil será únicamente para ingresar datos puntuales, como notas de alumnos o asistencias / inasistencias. Por ello, la parte móvil tendrá la particularidad de poder usarse sin necesidad de tener internet (cabe resaltar la necesidad de estar previamente registrados en la aplicación web para que esta funcione sin internet) ya que se podrá “instalar” la aplicación desde cualquier navegador utilizando la tecnología PWA. 
+</p>
+</div>
+<li><b>Para los docentes:</b> Para ellos la aplicación les servirá en llevar el control de las notas, de trabajos y evaluaciones, de sus alumnos con el fin de tener siempre actualizado la hoja de registro digital y el boletín por alumno. También les ayudara a llevar de una mejor manera el registro de asistencias e inasistencias que tengan los alumnos a lo largo del ciclo escolar para tener un mejor control. Por último, la aplicación les va a ayudar a imprimir una plantilla del boletín con las notas del estudiante al momento de que acabe cada bimestre y al final del ciclo escolar.
+</li>
+<br>
+<li><b>Para el director:</b> Por último, pero no menos importante, la aplicación le va a ayudar al director en todo el sin fin de tareas que el realiza dentro de la escuela, dentro de las cuales podrá crear y actualizar la información de los grados, esto se refiere a que podrá asignar a cada grado quienes van a ser los estudiantes que integren el grado y quien es el docente encargado de dicho grado. Así mismo el podrá ver toda la información disponible de la aplicación en cualquier momento, como las notas de los estudiantes, boletines, asistencias, inasistencias, etc. 
+</li>
 <div align="center">
 <h1>Tecnologías</h1>
 </div>
