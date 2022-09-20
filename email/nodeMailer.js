@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { config } from '../config/default'
+import { config } from '../config/default.js'
 
 export class SendCustomVerificationEmail {
     constructor(){

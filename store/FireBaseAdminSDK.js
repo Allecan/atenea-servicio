@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
+import { getFirestore } from 'firebase-admin/firestore'
 import { config } from '../config/default.js'
 import { SendCustomVerificationEmail } from '../email/nodeMailer.js'
 
@@ -7,6 +8,11 @@ import { SendCustomVerificationEmail } from '../email/nodeMailer.js'
 export class FireBaseAdminSDK {
     constructor(){
         this.app = initializeApp()
+        this.database = getFirestore(this.app)
+    }
+
+    async saveUserFirestore(uid, data){
+        await this.database.collection('User').doc(uid).set(data)
     }
 
     async saveUser(data){
@@ -14,7 +20,8 @@ export class FireBaseAdminSDK {
             const auth = getAuth(this.app)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            return 'Data Save'
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: result.phoneNumber})
+            return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
         }
@@ -104,21 +111,3 @@ export class FireBaseAdminSDK {
         }
     }
 }
-
-// const newData = new FireBaseAdminSDK(config.firebaseSDK)
-// const result = await newData.generateResetPasswordLink('jossugames@gmail.com')
-// console.log(result)
-// const result = await newData.generateResetPasswordLink('admin@gmail.com')
-// console.log(result)
-// await newData.createToken('IKBMlVhnyJYyhvlNgi38AMLYtj92')
-// await newData.getAllUser()
-// const result = await newData.saveUser({
-//     email: "jossugames@gmail.com",
-//     emailVerified: false,
-//     password: "hola1234",
-//     displayName: "Josue Mendez Diaz",
-//     disable: false, 
-// })
-// console.log(result);
-//const result = await newData.setRolUser('vNiQoTSasTY7RVpxsols8fD5ULr2', 'teacher')
-// const result = await newData.getDataUser('XXeiZsqmpjOo4wcOANEMBNh098w2')
