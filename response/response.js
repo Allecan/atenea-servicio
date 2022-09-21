@@ -13,7 +13,7 @@ export const response = {
   },
   error: function (req, res, message, status) {
     const statusCode = status || HttpCode.INTERNAL_SERVER_ERROR
-    const statusMessage = message.message || 'Internal Server Error'
+    const statusMessage = message || 'Internal Server Error'
     res.status(statusCode).send({
       request: req.method + ' ' + req.url,
       error: true,

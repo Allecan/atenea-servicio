@@ -1,14 +1,15 @@
 export class UserRouter{
-    constructor(router, controller, response, httpCode){
+    constructor(router, controller, response, httpCode, createUserValidation){
         this._router = router()
         this._controller = controller
         this._response = response
         this._httpcode = httpCode
+        this._checkUser = createUserValidation
         this.registerRouter()    
     }
 
     registerRouter(){
-        this._router.post('/create-user', this.handleCreateUser.bind(this))
+        this._router.post('/create-user', this._checkUser, this.handleCreateUser.bind(this))
         this._router.get('/get-users', this.handleGetAllUsers.bind(this))
         this._router.get('/get-user/:id', this.handleGetOneUser.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
