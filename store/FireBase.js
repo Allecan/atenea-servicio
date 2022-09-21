@@ -4,14 +4,15 @@ import { collection, getDocs, getFirestore, addDoc, updateDoc, doc } from 'fireb
 
 export class FireBase {
     constructor(config) {
+        //console.log(config)
         this._firebaseConfig = {
             apiKey: config.apiKey,
             authDomain: config.authDomain,
+            databaseURL: config.databaseURL,
             projectId: config.projectId,
             storageBucket: config.storageBucket,
             messagingSenderId: config.messagingSenderId,
             appId: config.appId,
-            measurementId: config.measurementId
         }
     }
 
@@ -34,6 +35,7 @@ export class FireBase {
     }
 
     async saveData(name, data) {
+        console.log(name,data)
         const docRef = await addDoc(collection(this.getDB(), name), data)
         return 'Data Save'
     }
