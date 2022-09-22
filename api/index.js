@@ -1,9 +1,9 @@
 import Server from './server.js'
 import { config } from '../config/default.js'
 
-function main(config, configcoors) {
-  const server = new Server(config, configcoors)
+function main(config) {
+  const server = new Server(config)
   server.start()
 }
 
-main(config.api, config.coors)
+main(config.api)

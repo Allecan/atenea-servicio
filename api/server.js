@@ -6,9 +6,6 @@ import path from "path"
 //Helpers
 import { helpers } from '../lib/helpers.js'
 
-// ENV VARIABLES
-import { config } from '../config/default.js'
-
 //Models
 import { userModel } from './Usuario/index.js'
 import { gradeModel } from './Grado/index.js'
@@ -27,7 +24,7 @@ import swaggerJsDoc from "swagger-jsdoc"
 
 
 class Server {
-  constructor (config, configcoors) {
+  constructor (config) {
     this._app = express()
     this._port = config.port
     this._hostname = config.hostname
@@ -43,16 +40,8 @@ class Server {
     this._app.use("/api-doc",swaggerUI.serve,swaggerUI.setup(swaggerJsDoc(helpers.swaggerSpec)))
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: true }))
-    const allowedDomains = [config.coors.urlfront];
     const corsOptions = {
-      origin: function (origin, callback) {
-        if (allowedDomains.indexOf(origin) !== -1) {
-          //El origen de request esta pemitido
-          callback(null, true);
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
-      },
+      origin : ['http://localhost:3000', 'http://localhost:4000'],
     }
     this._app.use(cors(corsOptions))
     this._app.use(morgan('dev'))
