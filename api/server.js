@@ -27,12 +27,13 @@ import swaggerJsDoc from "swagger-jsdoc"
 
 
 class Server {
-  constructor (config) {
+  constructor (config, configcoors) {
     this._app = express()
     this._port = config.port
     this._hostname = config.hostname
     this._name = config.name
     this._dirname = dirname(fileURLToPath(import.meta.url))
+    this._allowedDomains = [configcoors.urlfront]
     this.setMiddlewares()
     this.setRoutes()
   }
@@ -43,7 +44,17 @@ class Server {
     this._app.use("/api-doc",swaggerUI.serve,swaggerUI.setup(swaggerJsDoc(helpers.swaggerSpec)))
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: true }))
-    this._app.use(cors())
+    const corsOptions = {
+      origin: function (origin, callback) {
+        if (this._allowedDomains.indexOf(origin) !== -1) {
+          //El origen de request esta pemitido
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+    }
+    this._app.use(cors(corsOptions))
     this._app.use(morgan('dev'))
   }
 

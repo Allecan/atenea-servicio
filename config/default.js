@@ -53,4 +53,7 @@ export const config = {
     user: process.env.USER_SMTP,
     pass: process.env.PASS_SMTP
   },
+  coors: {
+    urlfront: process.env.FRONTEND_URL
+  },
 }
