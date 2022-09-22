@@ -6,9 +6,6 @@ import path from "path"
 //Helpers
 import { helpers } from '../lib/helpers.js'
 
-// ENV VARIABLES
-import { config } from '../config/default.js'
-
 //Models
 import { userModel } from './Usuario/index.js'
 import { gradeModel } from './Grado/index.js'
