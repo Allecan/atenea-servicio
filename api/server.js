@@ -8,9 +8,8 @@ import { helpers } from '../lib/helpers.js'
 
 //Models
 import { userModel } from './Usuario/index.js'
-import { authModule } from './Auth/index.js'
 import { gradeModel } from './Grado/index.js'
-import {boletinModel} from "./Boletin/index.js"
+import { boletinModel } from "./Boletin/index.js"
 
 // Configuracion de paths
 
