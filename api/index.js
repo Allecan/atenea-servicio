@@ -6,4 +6,4 @@ function main(config, configcoors) {
   server.start()
 }
 
-main(config.api, config.urlsCoors)
+main(config.api)
