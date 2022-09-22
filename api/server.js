@@ -9,7 +9,9 @@ import { helpers } from '../lib/helpers.js'
 //Models
 import { userModel } from './Usuario/index.js'
 import { gradeModel } from './Grado/index.js'
+import { studentModel } from './Student/index.js'
 import { boletinModel } from "./Boletin/index.js"
+
 
 // Configuracion de paths
 
@@ -43,9 +45,9 @@ class Server {
   }
 
   setRoutes () {
-    this._app.use('/api/v1/user',userModel(express.Router))
-    this._app.use('/api/v1/auth',authModule(express.Router))
-    this._app.use('/api/v1/grade',gradeModel(express.Router))
+    this._app.use('/api/v1/user', userModel(express.Router))
+    this._app.use('/api/v1/grade', gradeModel(express.Router))
+    this._app.use('/api/v1/student', studentModel(express.Router))
     this._app.use('/api/v1/boletin',boletinModel(express.Router))
   }
 
