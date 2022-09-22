@@ -11,7 +11,7 @@ export class UserRouter{
     registerRouter(){
         this._router.post('/create-user', this._checkUser, this.handleCreateUser.bind(this))
         this._router.get('/get-users', this.handleGetAllUsers.bind(this))
-        this._router.get('/get-user/:id', this.handleGetOneUser.bind(this))
+        this._router.get('/get-user/', this.handleGetOneUser.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
         this._router.put('/delete-user/:id', this.handleDeleteuser.bind(this))
         this._router.put('/update-user-rol/', this.handleUpdateRol.bind(this))
@@ -39,7 +39,7 @@ export class UserRouter{
 
     async handleGetOneUser(req, res){
         try {
-            const idUser = req.query.email
+            const idUser = req.query.id
             const result = await this._controller.getOneUser(idUser)
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
