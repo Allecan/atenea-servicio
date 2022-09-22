@@ -10,6 +10,10 @@ export class BoletinRouter{
 
     registerRouter(){
         this._router.post('/add-boletin', this.handleCreateBoletin.bind(this));
+        this._router.put('/update-boletin/:id', this.handleUpdateBoletin.bind(this));
+        this._router.get('/getAll-boletin', this.handleGetAllBoletin.bind(this));
+        this._router.delete('/delete-boletin/:id', this.handleDeleteBoletin.bind(this));
+        this._router.get('/getOne-boletin/:id', this.handleGetOneBoletin.bind(this));
     }
     
     async handleCreateBoletin(req,res){
@@ -19,6 +23,49 @@ export class BoletinRouter{
             this._response.error(req, res, result, 201)
         } else {
             this._response.succes(req, res, result, this._httpcode.OK)
+        }
+    }
+    async handleUpdateBoletin(req, res) {
+        try {
+          const boletin = req.body;
+          const idBoletin = req.params["id"];
+          const result = await this._controller.updateBoletin(idBoletin, boletin);
+          this._response.succes(req, res, result, this._httpcode.OK);
+        } catch (error) {
+          this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
+        }
+      }
+      
+    async handleGetAllBoletin(req, res){
+        console.log("entro")
+        try {
+          
+            const result = await this._controller.getAllBoletin()
+            console.log(result)
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+    
+    
+    async handleDeleteBoletin(req, res){
+        try {
+            const idBoletin = req.params['id']
+            const result = await this._controller.deleteBoletin(idBoletin)
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+        
+    async handleGetOneBoletin(req, res){
+        try {
+            const idBoletin = req.params['id']
+            const result = await this._controller.getOneBoletin(idBoletin)
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
     }
 }

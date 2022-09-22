@@ -1,6 +1,6 @@
 import { config } from '../config/default.js'
 import { initializeApp } from 'firebase/app'
-import { collection, getDocs, getFirestore, addDoc, updateDoc, doc } from 'firebase/firestore'
+import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc,getDoc } from 'firebase/firestore'
 
 export class FireBase {
     constructor(config) {
@@ -43,11 +43,30 @@ export class FireBase {
     async updateData(name, id, data) {
         try {
             const docRef = doc(this.getDB(), name, id);
-            console.log(data);
             const docSnap = await updateDoc(docRef, data);
             return "Data Updated";
         } catch (error) {
             return error;
+        }
+    }
+    async deleteData(name,id){
+        try {
+         const docRef = doc(this.getDB(), name, id)
+         const docSnap = await deleteDoc(docRef);
+          return "Delete Data"
+        } catch (error) {
+            console.log("Error")
+            return error
+        }
+    }
+    async getOneData(name,id){
+        try {
+         const docRef = doc(this.getDB(), name, id)
+         const docSnap = await getDoc(docRef);
+         const oneData = docSnap.data()
+         return oneData
+        } catch (error) {
+            return error
         }
     }
 }
