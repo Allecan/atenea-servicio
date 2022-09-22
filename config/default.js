@@ -29,6 +29,7 @@ export const config = {
   fireBase: {
     apikey: process.env.API_KEY,
     authDomain: process.env.AUTH_DOMAIN,
+    databaseURL: process.env.DATABASE_URL,
     projectId: process.env.PROJECT_ID,
     storageBucket: process.env.STORAGE_BUCKET,
     messagingSenderId: process.env.MESSAGING_SENDER_ID,
@@ -45,5 +46,14 @@ export const config = {
     token_uri: process.env.TOKEN_URI,
     auth_provider_x509_cert_url: process.env.AUTH_PROVIDER_X509_CERT_URL,
     client_x509_cert_url: process.env.CLIENT_X509_CER_URL 
+  },
+  smtp: {
+    host: process.env.HOST_SMTP,
+    port: process.env.PORT_SMTP,
+    user: process.env.USER_SMTP,
+    pass: process.env.PASS_SMTP
+  },
+  coors: {
+    urlfront: process.env.FRONTEND_URL
   },
 }

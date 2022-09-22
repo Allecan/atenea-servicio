@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "engines": {
-    "node":"14.x"
+    "node": "14.x"
   },
   "scripts": {
     "test-entity": "mocha ./test/entity/*.spec.js",
@@ -32,6 +32,7 @@
     "mongoose": "^6.4.3",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.8",
     "pg": "^8.7.3",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0",
