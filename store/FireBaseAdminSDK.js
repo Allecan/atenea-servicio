@@ -13,9 +13,67 @@ export class FireBaseAdminSDK {
 
     async saveNewStudent(name, data){
         try {
-            const collectionRef = this.getFireStoreDatabase().collection(name)
-            await collectionRef.add(data)
-            return 'Informacion creada Correctamente'
+            if(name === 'Students'){
+                const collectionRef = this.getFireStoreDatabase().collection(name)
+                await collectionRef.add({
+                    name_complete: data.name_complete,
+                    date_birth: data.date_birth,
+                    direction: data.direction,
+                    gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
+                    manager_name: data.manager_name,
+                    manager_phone: data.manager_phone,
+                    enable: data.enable
+                })
+                return 'Alumno Creado'
+            }else {
+                return 'Informacion Creada'
+            }
+        } catch (error) {
+            return error
+        }
+    }
+
+    async updateData(name, uid, data){
+        try {
+            if(name === 'Students'){
+                await this.getFireStoreDatabase().collection(name).doc(uid).update({
+                    name_complete: data.name_complete,
+                    date_birth: data.date_birth,
+                    direction: data.direction,
+                    gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
+                    manager_name: data.manager_name,
+                    manager_phone: data.manager_phone,
+                    enable: data.enable
+                }, {merge: true})
+                return 'Alumno Modificado Correctamente'
+            }else {
+                return 'Informacion Creada'
+            }
+        } catch (error) {
+            return error
+        }
+    }
+
+    async getOneData(name, uid){
+        const cityRef = this.getFireStoreDatabase().collection(name).doc(uid);
+        const doc = await cityRef.get();
+        if (!doc.exists) {
+            return 'No existe un almuno con esa información'
+        } else {
+            return doc.data()
+        }
+    }
+
+    async deleteData(name, uid, data){
+        try {
+            if(name === 'Students'){
+                await this.getFireStoreDatabase().collection(name).doc(uid).update({
+                    enable: data.enable
+                }, {merge: true})
+                return 'Alumno Eliminado Correctamente'
+            }else {
+                return 'Eliminacion Creada'
+            }
         } catch (error) {
             return error
         }
@@ -121,3 +179,6 @@ export class FireBaseAdminSDK {
         }
     }
 }
+
+// const firebase = new FireBaseAdminSDK()
+// const result = await firebase.getOneData('Students', 'nqMubJ2w4km87jCJGtf2')
