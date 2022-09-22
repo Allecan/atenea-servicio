@@ -5,7 +5,7 @@ export  class Boletin{
         this.teacher = boletin.teacher
         this.year = boletin.year
         this.keyCode  = boletin.keyCode
-
+    //    this.courses = boletin.courses
     }
 
 }
