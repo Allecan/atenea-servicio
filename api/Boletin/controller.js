@@ -31,4 +31,37 @@ export  class BoletinController{
       }
 
 
+      async addCourses(id,course){
+        //se busca el boletin
+        let bulletin = await this.getOneBoletin(id) 
+        //se devuelve la lista de cursos
+        let courses = bulletin.courses
+        //vemos si hay mas de un curso 
+        if(courses.length>0){
+          //se debe de evaluar si ya existe el curso en la lista 
+          const some = courses.some(current => current.name_grade==course.name_grade)
+          //si no existe se agrega
+          if(!some){
+            //se agrega el curso a la lista
+            courses.push(course)
+            //se convierte en el formato adecuado 
+            const newCourses = {
+              courses
+            }
+            //se edita el boletin con la lsita de cursos actualizado
+            const response = await this.updateBoletin(id, newCourses)
+            return response 
+          }else{
+            return "the course already exists"
+          }
+        }else{
+          courses.push(course)
+            const newCourses = {
+              courses
+            }
+            const response = await this.updateBoletin(id, newCourses)
+            return response 
+        }      
+      }
+
 }
