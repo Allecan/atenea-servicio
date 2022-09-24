@@ -47,4 +47,13 @@ export const config = {
     auth_provider_x509_cert_url: process.env.AUTH_PROVIDER_X509_CERT_URL,
     client_x509_cert_url: process.env.CLIENT_X509_CER_URL 
   },
+  smtp: {
+    host: process.env.HOST_SMTP,
+    port: process.env.PORT_SMTP,
+    user: process.env.USER_SMTP,
+    pass: process.env.PASS_SMTP
+  },
+  coors: {
+    urlfront: process.env.FRONTEND_URL
+  },
 }

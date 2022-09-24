@@ -8,9 +8,10 @@ import { helpers } from '../lib/helpers.js'
 
 //Models
 import { userModel } from './Usuario/index.js'
-import { authModule } from './Auth/index.js'
 import { gradeModel } from './Grado/index.js'
-import {boletinModel} from "./Boletin/index.js"
+import { studentModel } from './Student/index.js'
+import { boletinModel } from "./Boletin/index.js"
+
 
 // Configuracion de paths
 
@@ -39,14 +40,17 @@ class Server {
     this._app.use("/api-doc",swaggerUI.serve,swaggerUI.setup(swaggerJsDoc(helpers.swaggerSpec)))
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: true }))
-    this._app.use(cors())
+    const corsOptions = {
+      origin : ['http://localhost:3000', 'http://localhost:4000'],
+    }
+    this._app.use(cors(corsOptions))
     this._app.use(morgan('dev'))
   }
 
   setRoutes () {
-    this._app.use('/api/v1/user',userModel(express.Router))
-    this._app.use('/api/v1/auth',authModule(express.Router))
-    this._app.use('/api/v1/grade',gradeModel(express.Router))
+    this._app.use('/api/v1/user', userModel(express.Router))
+    this._app.use('/api/v1/grade', gradeModel(express.Router))
+    this._app.use('/api/v1/student', studentModel(express.Router))
     this._app.use('/api/v1/boletin',boletinModel(express.Router))
   }
 
