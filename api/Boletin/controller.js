@@ -64,4 +64,56 @@ export  class BoletinController{
         }      
       }
 
+      async deleteCourse(id,data) {
+        const bulletin = await this.getOneBoletin(id)
+        let courses = bulletin.courses
+        const some = courses.some(current => current.name_grade==data.name_course)
+        if(some){
+          const newCourses = courses.filter((item) => item.name_grade !== data.name_course)
+          const deleteCourse = {
+            courses:newCourses
+          }
+          const response = await this.updateBoletin(id, deleteCourse)
+          return response
+        }
+        else{
+          return "the course does not exist"
+        }
+      }
+
+      async addNoteCourse(id,data){
+        const bulletin = await this.getOneBoletin(id)
+        if(!(bulletin === undefined)){
+          let courses = bulletin.courses
+          const some = courses.some(current => current.name_grade==data.name_course)
+          if(some){
+            let course = courses.find(current => current.name_grade==data.name_course)  
+            const index = courses.findIndex(current => current.name_grade==data.name_course)  
+            course.grades[data.unit-1] = data.note
+            course.promedio =  this.additionAverage(course.grades)
+            courses[index] = course
+            const newCourses = {
+              courses
+            }
+            const response = await this.updateBoletin(id, newCourses)
+            return response
+          }  
+          else{
+            return "the course does not exist"
+          }
+        }else{
+          return "the bulletin does not exist"
+        }
+      }
+
+
+
+      additionAverage(list){
+        let addition = 0
+        list.forEach((grade)=>{
+          addition+=grade
+        });
+        const average = addition/4
+        return average
+      }
 }
