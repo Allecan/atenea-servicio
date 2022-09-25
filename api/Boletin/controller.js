@@ -1,8 +1,9 @@
 
 export  class BoletinController{
-    constructor(serviceBoletin, boletin){
+    constructor(serviceBoletin, boletin,courseBulletin){
         this._service = serviceBoletin
         this._model = boletin
+        this._courseModel = courseBulletin
     }
 
     async createNewBoletin(boletin){
@@ -42,8 +43,13 @@ export  class BoletinController{
           const some = courses.some(current => current.name_grade==course.name_grade)
           //si no existe se agrega
           if(!some){
+            //se crea el nuevo modelo del curso
+            const newModel = new this._courseModel(course)
+            const newCourse = Object.assign({}, newModel)
+            console.log(newCourse)
             //se agrega el curso a la lista
-            courses.push(course)
+            courses.push(newCourse)
+            console.log(courses)
             //se convierte en el formato adecuado 
             const newCourses = {
               courses
@@ -55,7 +61,10 @@ export  class BoletinController{
             return "the course already exists"
           }
         }else{
-          courses.push(course)
+          //se crea el nuevo modelo del curso
+          const newModel = new this._courseModel(course)
+          const newCourse = Object.assign({}, newModel)
+          courses.push(newCourse)
             const newCourses = {
               courses
             }
@@ -81,17 +90,28 @@ export  class BoletinController{
         }
       }
 
+      //Agregar una nota a un curso del boletin
       async addNoteCourse(id,data){
+        //se busca el boletin 
         const bulletin = await this.getOneBoletin(id)
+        //se verifica que el boletin exista 
         if(!(bulletin === undefined)){
+          //se obtiene la lista de cursos
           let courses = bulletin.courses
+          //se verifica si el curso existe 
           const some = courses.some(current => current.name_grade==data.name_course)
           if(some){
+            //se obtiene el curso que se esta buscando segun el nombre
             let course = courses.find(current => current.name_grade==data.name_course)  
+            //se obtiene el indice en el que esta el curso para luego editarlo en la lista de cursos
             const index = courses.findIndex(current => current.name_grade==data.name_course)  
+            //se agrega en la lista de notas la nueva nota segun la posicion o unidad que nos manden
             course.grades[data.unit-1] = data.note
+            //se actualiza el promedio 
             course.promedio =  this.additionAverage(course.grades)
+            //se modifica en la lista de cursos 
             courses[index] = course
+            //se crea un objeto con la lista de cursos ya modificado
             const newCourses = {
               courses
             }
@@ -105,8 +125,6 @@ export  class BoletinController{
           return "the bulletin does not exist"
         }
       }
-
-
 
       additionAverage(list){
         let addition = 0
