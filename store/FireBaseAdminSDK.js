@@ -88,7 +88,7 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: result.phoneNumber})
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: ''})
             return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
@@ -128,6 +128,7 @@ export class FireBaseAdminSDK {
         try {
             const auth = getAuth(appFirebase)
             const update = await auth.updateUser(id, data)
+            await this.getFireStoreDatabase().collection('User').doc(id).update({displayName: data.displayName, email: data.email, phoneNumber: data.phoneNumber || ''})
             return `Se actualizo la informacio para el Usuario ${update.displayName}`
         } catch (error) {
             return error
@@ -179,6 +180,3 @@ export class FireBaseAdminSDK {
         }
     }
 }
-
-// const firebase = new FireBaseAdminSDK()
-// const result = await firebase.getOneData('Students', 'nqMubJ2w4km87jCJGtf2')
