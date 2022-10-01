@@ -127,7 +127,6 @@ export  class BoletinController{
       }
       
       async createPdf(id,data){
-        console.log("createPdf")
         const bulletin = await this.getOneBoletin(id)
         if(!(bulletin === undefined)){
           return this.createDocumentPdf(bulletin)
@@ -153,8 +152,29 @@ export  class BoletinController{
           teacher: bulletin.teacher,
           grade:bulletin.grade,
           keyCode: bulletin.keyCode,
-          year:bulletin.year
+          year:bulletin.year,
+          courses:this.createRawCourse(bulletin.courses)
         }
         return doc
+      }
+      createRawCourse(courses){
+        //console.log(courses)
+        let table = []
+        courses.forEach((element,index,array)=>{
+          let raw = []
+          //nombre del curso
+          const nameCourse = {text: element.name_grade, style: 'tableHeader'}
+          //notas 
+          raw.push(nameCourse)
+          element.grades.forEach((grade,index,array)=>{
+            raw.push(grade)
+          })
+          //promedio 
+          raw.push(element.promedio)
+          
+         //ingresar a la tabla
+          table.push(raw)
+        })
+        return table
       }
 }
