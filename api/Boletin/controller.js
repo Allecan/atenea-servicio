@@ -125,7 +125,19 @@ export  class BoletinController{
           return "the bulletin does not exist"
         }
       }
+      
+      async createPdf(id,data){
+        console.log("createPdf")
+        const bulletin = await this.getOneBoletin(id)
+        if(!(bulletin === undefined)){
+          return this.createDocumentPdf(bulletin)
+        }
+        else{
+          return "the bulletin does not exist"
+        }
+      }
 
+      //crea el promedio para los boletines 
       additionAverage(list){
         let addition = 0
         list.forEach((grade)=>{
@@ -133,5 +145,16 @@ export  class BoletinController{
         });
         const average = addition/4
         return average
+      }
+
+      createDocumentPdf(bulletin){
+        let doc = {
+          name_student: bulletin.name_student,
+          teacher: bulletin.teacher,
+          grade:bulletin.grade,
+          keyCode: bulletin.keyCode,
+          year:bulletin.year
+        }
+        return doc
       }
 }
