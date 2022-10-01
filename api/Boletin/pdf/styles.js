@@ -16,6 +16,6 @@ export const  style={
     tableHeader: {
         bold: true,
         fontSize: 13,
-        color: 'black'
+        color: 'black',
     }
 }

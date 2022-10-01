@@ -1,4 +1,4 @@
-
+import {appPdf} from "./pdf/app.js"
 export  class BoletinController{
     constructor(serviceBoletin, boletin,courseBulletin){
         this._service = serviceBoletin
@@ -129,12 +129,14 @@ export  class BoletinController{
       async createPdf(id,data){
         const bulletin = await this.getOneBoletin(id)
         if(!(bulletin === undefined)){
-          return this.createDocumentPdf(bulletin)
+          //return this.createDocumentPdf(bulletin)
+          return await appPdf(this.createDocumentPdf(bulletin),data)
         }
         else{
           return "the bulletin does not exist"
         }
       }
+
 
       //crea el promedio para los boletines 
       additionAverage(list){
@@ -146,6 +148,7 @@ export  class BoletinController{
         return average
       }
 
+      //crear documento par el pdf
       createDocumentPdf(bulletin){
         let doc = {
           name_student: bulletin.name_student,
@@ -157,6 +160,7 @@ export  class BoletinController{
         }
         return doc
       }
+      //crear filas de la tabla del boletin 
       createRawCourse(courses){
         //console.log(courses)
         let table = []

@@ -2,12 +2,13 @@ import PdfPrinter from "pdfmake";
 
 import fs from "fs";
 
-import {fonts} from "./fonts.js"
+import {fonts} from "./font.js"
 import { style } from "./styles.js";
 
 import {contentFunction} from "./pdfContent.js"
 
-export const appPdf = (information)=>{
+export const appPdf = (information,data)=>{
+    console.log(data)
     try {
         const content = contentFunction(information)
         let docDefinition ={
@@ -16,9 +17,11 @@ export const appPdf = (information)=>{
         }
         console.log(docDefinition)
         let printer = new PdfPrinter(fonts)
-        
+        const direction = `${data.direction}/${data.name_file}.pdf`
+        console.log(direction)
         let pdfDoc = printer.createPdfKitDocument(docDefinition)
-        pdfDoc.pipe(fs.createWriteStream(""))
+        
+        pdfDoc.pipe(fs.createWriteStream(direction))
         pdfDoc.end()
         return "pdf created successfully"
     } catch (error) {
