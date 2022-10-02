@@ -1,30 +1,66 @@
 export const contentFunction = (information)=>{
     const content = {
         content:[
-           
-            {text:"Boletin de notas \n\n",style:"header"},
             {
-               
-                table:{
-                    headerRows: 1,
-                    widths: ['*', 150, '*', 150],
-                    body:[
-                        [
-                            {text:`Estudiante: `,style:"subheader"},{text:information.name_student,style:"text"},
-                            {text:`Profesor: `,style:"subheader"}, {text:information.teacher,style:"text"},
-                        ],
-                        [
-                            {text:`Grado: `,style:"subheader"},{text:information.grade,style:"text"} ,
-                            {text:`Codigo: `,style:"subheader"}, {text:information.keyCode,style:"text"}
-                        ],
-                        [
-                            {text:`Año: `,style:"subheader"},{text:information.year,style:"text"} ,"",""
-                        ]
-                    ]
-                    
-                },
-                layout: 'noBorders'
+                alignment: 'justify',
+                columns: [
+                    {
+                        text: "FIRMA DEL PADRE O ENCARGADO",
+                        style: "header"
+                    },
+                        {
+                        text: "EORM CANTÓN EL LLANO \n",
+                        style: "header"
+                    },
+                
+                ]
             },
+            {
+                alignment: 'justify',
+                columns: [
+                    {
+                        text: ""
+                    },
+                        {
+                        text: "OCUBILA HUEHUETENANGO \n\n\n",
+                        style: "header"
+                    },
+                
+                ]
+            },
+            {
+                alignment: 'justify',
+                columns: [
+                    {
+                        text: "",
+                   
+                    },
+                    {   
+                        table:{
+                            headerRows: 1,
+                            heights:[40,40,40,40],
+                            widths: ['*', 80, '*', 70],
+                            body:[
+                                [
+                                    {text:`Estudiante: `,style:"subheader"},{text:information.name_student,style:"text"},
+                                    {text:`Profesor: `,style:"subheader"}, {text:information.teacher,style:"text"},
+                                ],
+                                [
+                                    {text:`Grado: `,style:"subheader"},{text:information.grade,style:"text"} ,
+                                    {text:`Codigo: `,style:"subheader"}, {text:information.keyCode,style:"text"}
+                                ],
+                                [
+                                    {text:`Año: `,style:"subheader"},{text:information.year,style:"text"} ,"",""
+                                ]
+                            ]
+                            
+                        },
+                        layout: 'noBorders'
+                    }
+                
+                ]
+            },
+            
             "\n\n",
             {
                 style: 'tableExample',
@@ -39,7 +75,8 @@ export const contentFunction = (information)=>{
                 },
                 pageOrientation: 'landscape', pageBreak: 'before'
             },
-        ]
+            {text:"NOTA: Sobresaliente = 90 - 100; Muy Bueno = 80 - 89; Bueno = 70 - 79; Regular = 60 - 69; Malo = 0 - 59",style:"textSimple" }
+        ],
     }
 
     return content

@@ -6,15 +6,18 @@ export const  style={
         alignment:"center",
     },
     subheader: {
-        fontSize: 16,
+        fontSize: 14,
         bold: true,
         margin: [0, 10, 0, 5],
         alignment:"right"
     },
     text: {
-        fontSize: 16,
+        fontSize: 12,
         margin: [0, 10, 0, 5],
         
+    },
+    textSimple:{
+        alignment:"center",
     },
     tableExample: {
         alignment:"center",

@@ -13,7 +13,8 @@ export const appPdf = (information,data)=>{
         const content = contentFunction(information)
         let docDefinition ={
             content:content.content,
-            styles:style
+            styles:style,
+            pageOrientation: 'landscape'
         }
         console.log(docDefinition)
         let printer = new PdfPrinter(fonts)
