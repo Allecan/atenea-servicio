@@ -164,9 +164,11 @@ export  class BoletinController{
       createRawCourse(courses){
         //console.log(courses)
         let table = []
+        let num_course = 1
         courses.forEach((element,index,array)=>{
           let raw = []
           //nombre del curso
+          raw.push(num_course++)
           const nameCourse = {text: element.name_grade, style: 'tableHeader'}
           //notas 
           raw.push(nameCourse)
@@ -179,6 +181,7 @@ export  class BoletinController{
          //ingresar a la tabla
           table.push(raw)
         })
+        console.log(table)
         return table
       }
 }
