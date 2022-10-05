@@ -41,7 +41,7 @@ class Server {
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: true }))
     const corsOptions = {
-      origin : ['http://localhost:3000', 'http://localhost:4000'],
+      origin : ['http://localhost:3000', 'http://localhost:4000', 'https://ateneaq.netlify.app/'],
     }
     this._app.use(cors(corsOptions))
     this._app.use(morgan('dev'))
