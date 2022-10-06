@@ -49,6 +49,15 @@ export class FireBase {
             return error;
         }
     }
+    async setData(name,id,data){
+        try {
+            const db = this.getDB()
+            const docSnap = await db.collection(name).doc(id).setDoc(data,{merge:true})
+            return "Data Updated";
+        } catch (error) {
+            return error;
+        }
+    }
     async deleteData(name,id){
         try {
          const docRef = doc(this.getDB(), name, id)
