@@ -160,9 +160,6 @@ export class FireBaseAdminSDK {
     }
 
     async saveUserFirestore(uid, data){
-        console.log(data)
-        data.gradesList = []
-        console.log(data)
         await this.getFireStoreDatabase().collection('User').doc(uid).set(data)
     }
 
