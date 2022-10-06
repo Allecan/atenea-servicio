@@ -56,7 +56,7 @@ class Server {
     this._app.use('/api/v1/grade', gradeModel(express.Router))
     this._app.use('/api/v1/student', studentModel(express.Router))
     this._app.use('/api/v1/boletin',boletinModel(express.Router))
-    this._app.use('/api/v1/teacher',boletinModel(express.Router))
+    this._app.use('/api/v1/teacher',teacherModel(express.Router))
   }
 
   start () {
