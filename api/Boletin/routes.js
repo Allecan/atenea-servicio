@@ -14,6 +14,7 @@ export class BoletinRouter{
         this._router.put('/addCourses-boletin/:id', this.handleAddCourses.bind(this));
         this._router.put('/deleteCourses-boletin/:id', this.handleDeleteCourses.bind(this));
         this._router.put('/addNote-boletin/:id', this.handleAddNote.bind(this));
+        this._router.put('/createPdf-boletin/:id', this.handleCreatePdf.bind(this));
         this._router.get('/getAll-boletin', this.handleGetAllBoletin.bind(this));
         this._router.delete('/delete-boletin/:id', this.handleDeleteBoletin.bind(this));
         this._router.get('/getOne-boletin/:id', this.handleGetOneBoletin.bind(this));
@@ -93,6 +94,15 @@ export class BoletinRouter{
         try {
             const idBoletin = req.params['id']
             const result = await this._controller.addNoteCourse(idBoletin,req.body)
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+    async handleCreatePdf(req, res){
+        try {
+            const idBoletin = req.params['id']
+            const result = await this._controller.createPdf(idBoletin,req.body)
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
