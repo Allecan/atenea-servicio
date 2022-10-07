@@ -115,9 +115,9 @@ export const contentFunction = (information)=>{
             {
                 table:{
                     heights:[40,40,'*'],
-                    widths: [10,200, 60, '*', '*','*',200],
+                    widths: [10,200, 60, 135, '*','*',200],
                     body:[
-                        [{},{},{text:"Resultado",style:"footer"},{text:"",border: [false, false, false,true]},{text:"",border: [false, false, false,true]},{},{}],
+                        [{},{},{text:"Resultado",style:"footer"},{text:information.condition,border: [false, false, false,true],style:"footer"},{text:"",border: [false, false, false,true]},{},{}],
                         [{text:"f)",style:"footer"},{text:"",border: [false, false, false,true]},{},{text:"SELLO", margin: [0,30 ,0, 0]},{},{text:"Vo.Bo.",style:"footer"},{text:"",border: [false, false, false,true]}],
                         [{},{text:"Prof. del grado",alignment:"center"},{},{},{},{},{text:"Director", alignment:"center"}]
                         

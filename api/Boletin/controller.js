@@ -156,7 +156,8 @@ export  class BoletinController{
           grade:bulletin.grade,
           keyCode: bulletin.keyCode,
           year:bulletin.year,
-          courses:this.createRawCourse(bulletin.courses)
+          courses:this.createRawCourse(bulletin.courses),
+          condition: this.passOrFail(bulletin.courses)
         }
         return doc
       }
@@ -175,13 +176,39 @@ export  class BoletinController{
           element.grades.forEach((grade,index,array)=>{
             raw.push(grade)
           })
+          let promedioCourse = {}
           //promedio 
-          raw.push(element.promedio)
+          //Se asigna el estilo segun si gana o no el curso 
+          if(element.promedio<60){
+            promedioCourse = {text:element.promedio,style:'missedCourse'}
+          }
+          else{
+            promedioCourse = {text:element.promedio,style:'courseWon'}
+          }
+          raw.push(promedioCourse)
           
          //ingresar a la tabla
           table.push(raw)
         })
         console.log(table)
         return table
+      }
+
+      //Verifica si el estudiante aprobo o no el grado 
+      passOrFail(courses){
+        let counter = 0
+        courses.forEach((element)=>{
+          //se evaluan los promedios de las cuatro unidades de cada curso 
+          if(element.promedio<60){           
+            counter++
+          }
+        })
+        //si el conteo es mayor a cero significa que reprobo, ya que encontro algun promedio menor a 60
+        if(counter>0){
+          return "REPROBADO"
+        }
+        else{
+          return "APROBADO"
+        }
       }
 }

@@ -10,6 +10,13 @@ export const  style={
         margin: [0, 0, 0, 10],
         alignment:"center",
     },
+    missedCourse:{
+        color:"red",
+        bold: true
+    },
+    courseWon:{
+        bold:true
+    },
     columnLeft:{
         alignment: 'center',
         fontSize: 20,
