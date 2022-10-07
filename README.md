@@ -17,6 +17,12 @@ Se desarrolló una aplicación web que sea utilizable en computadoras y en dispo
 <br>
 <li><b>Para el director:</b> Por último, pero no menos importante, la aplicación le va a ayudar al director en todo el sin fin de tareas que el realiza dentro de la escuela, dentro de las cuales podrá crear y actualizar la información de los grados, esto se refiere a que podrá asignar a cada grado quienes van a ser los estudiantes que integren el grado y quien es el docente encargado de dicho grado. Así mismo el podrá ver toda la información disponible de la aplicación en cualquier momento, como las notas de los estudiantes, boletines, asistencias, inasistencias, etc. 
 </li>
+<br>
+<div style="display: inline_block" align="center">
+<img height="500em" src="https://user-images.githubusercontent.com/42653664/192157937-8dee4d05-b0b2-4464-877a-dc919011325a.png"/>
+<img height="500em" src="https://user-images.githubusercontent.com/42653664/192158105-71aba686-57c3-40da-b278-bf4caafc5cf4.png"/>
+<img height="500em" src="https://user-images.githubusercontent.com/42653664/192158217-cc2c5113-3e18-4974-877f-0533f80d5c6c.png"/>
+</div>
 <div align="center">
 <h1>Tecnologías</h1>
 </div>

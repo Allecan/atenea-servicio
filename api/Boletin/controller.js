@@ -1,4 +1,4 @@
-
+import {appPdf} from "./pdf/app.js"
 export  class BoletinController{
     constructor(serviceBoletin, boletin,courseBulletin){
         this._service = serviceBoletin
@@ -125,7 +125,20 @@ export  class BoletinController{
           return "the bulletin does not exist"
         }
       }
+      
+      async createPdf(id,data){
+        const bulletin = await this.getOneBoletin(id)
+        if(!(bulletin === undefined)){
+          //return this.createDocumentPdf(bulletin)
+          return await appPdf(this.createDocumentPdf(bulletin),data)
+        }
+        else{
+          return "the bulletin does not exist"
+        }
+      }
 
+
+      //crea el promedio para los boletines 
       additionAverage(list){
         let addition = 0
         list.forEach((grade)=>{
@@ -133,5 +146,69 @@ export  class BoletinController{
         });
         const average = addition/4
         return average
+      }
+
+      //crear documento par el pdf
+      createDocumentPdf(bulletin){
+        let doc = {
+          name_student: bulletin.name_student,
+          teacher: bulletin.teacher,
+          grade:bulletin.grade,
+          keyCode: bulletin.keyCode,
+          year:bulletin.year,
+          courses:this.createRawCourse(bulletin.courses),
+          condition: this.passOrFail(bulletin.courses)
+        }
+        return doc
+      }
+      //crear filas de la tabla del boletin 
+      createRawCourse(courses){
+        //console.log(courses)
+        let table = []
+        let num_course = 1
+        courses.forEach((element,index,array)=>{
+          let raw = []
+          //nombre del curso
+          raw.push(num_course++)
+          const nameCourse = {text: element.name_grade, style: 'tableHeader'}
+          //notas 
+          raw.push(nameCourse)
+          element.grades.forEach((grade,index,array)=>{
+            raw.push(grade)
+          })
+          let promedioCourse = {}
+          //promedio 
+          //Se asigna el estilo segun si gana o no el curso 
+          if(element.promedio<60){
+            promedioCourse = {text:element.promedio,style:'missedCourse'}
+          }
+          else{
+            promedioCourse = {text:element.promedio,style:'courseWon'}
+          }
+          raw.push(promedioCourse)
+          
+         //ingresar a la tabla
+          table.push(raw)
+        })
+        console.log(table)
+        return table
+      }
+
+      //Verifica si el estudiante aprobo o no el grado 
+      passOrFail(courses){
+        let counter = 0
+        courses.forEach((element)=>{
+          //se evaluan los promedios de las cuatro unidades de cada curso 
+          if(element.promedio<60){           
+            counter++
+          }
+        })
+        //si el conteo es mayor a cero significa que reprobo, ya que encontro algun promedio menor a 60
+        if(counter>0){
+          return "REPROBADO"
+        }
+        else{
+          return "APROBADO"
+        }
       }
 }
