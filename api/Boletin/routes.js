@@ -1,4 +1,4 @@
-
+import { helpers } from "../../lib/helpers.js"
 export class BoletinRouter{
     constructor(router, controller, response, httpCode){
         this._router = router()
@@ -18,6 +18,7 @@ export class BoletinRouter{
         this._router.get('/getAll-boletin', this.handleGetAllBoletin.bind(this));
         this._router.delete('/delete-boletin/:id', this.handleDeleteBoletin.bind(this));
         this._router.get('/getOne-boletin/:id', this.handleGetOneBoletin.bind(this));
+        this._router.get('/download-boletin/:name', this.handleDownloadPdf.bind(this));
     }
     
     async handleCreateBoletin(req,res){
@@ -102,8 +103,29 @@ export class BoletinRouter{
     async handleCreatePdf(req, res){
         try {
             const idBoletin = req.params['id']
-            const result = await this._controller.createPdf(idBoletin,req.body)
+            const result = await this._controller.createPdf(idBoletin)
             this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+    async handleDownloadPdf(req, res){
+        try {
+            const direction = `api/Boletin/pdf/docs/${req.params["name"]}.pdf`
+            console.log(direction)
+            res.download(direction,`${req.params["name"]}.pdf`,function(err){
+                if(err){
+                    console.log(err)
+                }else{
+                    const direction_file = "api/Boletin/pdf/docs" 
+                    const name_file = `${req.params["name"]}.pdf`
+
+                    helpers.deleteFile(direction_file,name_file)
+                    console.log("downloaded file")
+                    
+                }
+            })
+         
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }

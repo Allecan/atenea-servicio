@@ -7,5 +7,4 @@ export  class Boletin{
         this.keyCode  = boletin.keyCode
         this.courses = []
     }
-
 }
