@@ -126,11 +126,16 @@ export  class BoletinController{
         }
       }
       
-      async createPdf(id,data){
+      async createPdf(id){
         const bulletin = await this.getOneBoletin(id)
         if(!(bulletin === undefined)){
           //return this.createDocumentPdf(bulletin)
-          return await appPdf(this.createDocumentPdf(bulletin),data)
+          const doc = this.createDocumentPdf(bulletin)
+          const data = {
+            name: doc.name_student.replace(/ /g,'_'),
+            year: doc.year 
+          }
+          return  appPdf(this.createDocumentPdf(bulletin),data)
         }
         else{
           return "the bulletin does not exist"

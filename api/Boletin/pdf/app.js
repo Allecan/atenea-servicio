@@ -7,8 +7,8 @@ import { style } from "./styles.js";
 
 import {contentFunction} from "./pdfContent.js"
 
-export const appPdf = (information,data)=>{
-    console.log(data)
+export const appPdf =  (information,data)=>{
+   // console.log(data)
     try {
         const content = contentFunction(information)
         let docDefinition ={
@@ -16,15 +16,20 @@ export const appPdf = (information,data)=>{
             styles:style,
             pageOrientation: 'landscape'
         }
-        console.log(docDefinition)
+
+       // console.log(docDefinition)
         let printer = new PdfPrinter(fonts)
-        const direction = `${data.direction}/${data.name_file}.pdf`
+        const name = `${data.name}${data.year}Boletin`
+        console.log(name)
+        const direction = `api/Boletin/pdf/docs/${name}.pdf`
         console.log(direction)
         let pdfDoc = printer.createPdfKitDocument(docDefinition)
-        
         pdfDoc.pipe(fs.createWriteStream(direction))
         pdfDoc.end()
-        return "pdf created successfully"
+        const result = {
+            name_file: name
+        }
+        return result
     } catch (error) {
         return error
     }
