@@ -6,7 +6,7 @@ export class ControllerTeacher {
 
     async updateATeacherGrades(id, teacher) {
         const oldTeacher = await this._service.getOneData('User', id)
-        if (oldTeacher.rol != "teacher") {
+        if (oldTeacher.rol != "docente") {
             return "Este usuario no es un maestro"
         }
 
@@ -41,7 +41,7 @@ export class ControllerTeacher {
 
     async addATeacherGrades(id, teacher) {
         const oldTeacher = await this._service.getOneData('User', id);
-        if (oldTeacher == undefined || oldTeacher.rol != "teacher") {
+        if (oldTeacher == undefined || oldTeacher.rol != "docente") {
             return "Este usuario no es un maestro o no existe"
         }
         for (const grade of teacher.gradesList) {
@@ -56,14 +56,12 @@ export class ControllerTeacher {
         return response;
     }
 
-    async deleteATeacherGrades(id, teacher) {
+    async removeATeacherGrades(id, gradeId) {
         const oldTeacher = await this._service.getOneData('User', id)
-        if (oldTeacher == undefined || oldTeacher.rol != "teacher") {
+        if (oldTeacher == undefined || oldTeacher.rol != "docente") {
             return "Este usuario no es un maestro o no existe"
         }
-        const newModel = new this._model(teacher, oldTeacher);
-        const newTeacher = Object.assign({}, newModel);
-        const response = await this._service.updateData('User', id, newTeacher);
+        const response = await this._service.deleteGradesToTeacher('User', id, gradeId, oldTeacher);
         return response;
     }
 

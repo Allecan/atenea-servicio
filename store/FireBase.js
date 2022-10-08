@@ -1,6 +1,6 @@
 import { config } from '../config/default.js'
 import { initializeApp } from 'firebase/app'
-import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc,getDoc } from 'firebase/firestore'
+import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore'
 
 export class FireBase {
     constructor(config) {
@@ -35,7 +35,7 @@ export class FireBase {
     }
 
     async saveData(name, data) {
-        console.log(name,data)
+        console.log(name, data)
         const docRef = await addDoc(collection(this.getDB(), name), data)
         return 'Data Save'
     }
@@ -49,31 +49,31 @@ export class FireBase {
             return error;
         }
     }
-    async setData(name,id,data){
+    async setData(name, id, data) {
         try {
             const db = this.getDB()
-            const docSnap = await db.collection(name).doc(id).setDoc(data,{merge:true})
+            const docSnap = await db.collection(name).doc(id).setDoc(data, { merge: true })
             return "Data Updated";
         } catch (error) {
             return error;
         }
     }
-    async deleteData(name,id){
+    async deleteData(name, id) {
         try {
-         const docRef = doc(this.getDB(), name, id)
-         const docSnap = await deleteDoc(docRef);
-          return "Delete Data"
+            const docRef = doc(this.getDB(), name, id)
+            const docSnap = await deleteDoc(docRef);
+            return "Delete Data"
         } catch (error) {
             console.log("Error")
             return error
         }
     }
-    async getOneData(name,id){
+    async getOneData(name, id) {
         try {
-         const docRef = doc(this.getDB(), name, id)
-         const docSnap = await getDoc(docRef);
-         const oneData = docSnap.data()
-         return oneData
+            const docRef = doc(this.getDB(), name, id)
+            const docSnap = await getDoc(docRef);
+            const oneData = docSnap.data()
+            return oneData
         } catch (error) {
             return error
         }
@@ -88,6 +88,31 @@ export class FireBase {
             data.gradesList = oldGrades
             const docSnap = await updateDoc(docRef, data);
             return "Data Updated";
+        } catch (error) {
+            return error;
+        }
+    }
+    async deleteGradesToTeacher(name, id, gradeId, data) {
+        try {
+            const docRef = doc(this.getDB(), name, id);
+            const newGradesList = []
+            var gradeFinded = false
+            for (const grade of data.gradesList) {
+                if (grade._key.path.segments[6] != gradeId) {
+                    newGradesList.push(grade)
+                } else {
+                    gradeFinded = true
+                }
+            }
+            data.gradesList = newGradesList
+            
+            if (gradeFinded) {
+                const docSnap = await updateDoc(docRef, data);
+                return "Grade Removed";
+            } else {
+                return "No se ha encontrado el grado ingresado"
+            }
+
         } catch (error) {
             return error;
         }

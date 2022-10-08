@@ -16,6 +16,10 @@ export class TeacherRouter {
       '/add-teacher-grades/:id',
       this.handleAddATeacherGrades.bind(this)
     );
+    this._router.put(
+      '/remove-teacher-grades/',
+      this.handleRemoveATeacherGrades.bind(this)
+    );
     this._router.get('/getone-teacher/:id', this.handleGetOneTeacher.bind(this));
   }
 
@@ -35,6 +39,17 @@ export class TeacherRouter {
       const updateTeacher = req.body;
       const idTeacher = req.params["id"];
       const result = await this._controller.addATeacherGrades(idTeacher, updateTeacher);
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
+    }
+  }
+
+  async handleRemoveATeacherGrades(req, res) {
+    try {
+      const idUser = req.query.id
+      const idGrade = req.query.idGrade
+      const result = await this._controller.removeATeacherGrades(idUser, idGrade);
       this._response.succes(req, res, result, this._httpcode.OK);
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
