@@ -250,9 +250,16 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             await auth.setCustomUserClaims(uid, {rol: type})
             
-            await this.getFireStoreDatabase().collection("User").doc(uid).update({
-                rol: type
-            })
+            if (type == "teacher") {
+                await this.getFireStoreDatabase().collection("User").doc(uid).update({
+                    rol: type,
+                    gradesList: []
+                })
+            } else {
+                await this.getFireStoreDatabase().collection("User").doc(uid).update({
+                    rol: type
+                })
+            }
 
             return 'Se ha actualizado el rol del usuario correctamente.'
         } catch (error) {

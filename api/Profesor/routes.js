@@ -12,6 +12,10 @@ export class TeacherRouter {
       '/update-teacher-grades/:id',
       this.handleUpdateTeacherGrades.bind(this)
     );
+    this._router.put(
+      '/add-teacher-grades/:id',
+      this.handleAddATeacherGrades.bind(this)
+    );
     this._router.get('/getone-teacher/:id', this.handleGetOneTeacher.bind(this));
   }
 
@@ -20,6 +24,17 @@ export class TeacherRouter {
       const updateTeacher = req.body;
       const idTeacher = req.params["id"];
       const result = await this._controller.updateATeacherGrades(idTeacher, updateTeacher);
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
+    }
+  }
+
+  async handleAddATeacherGrades(req, res) {
+    try {
+      const updateTeacher = req.body;
+      const idTeacher = req.params["id"];
+      const result = await this._controller.addATeacherGrades(idTeacher, updateTeacher);
       this._response.succes(req, res, result, this._httpcode.OK);
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST);

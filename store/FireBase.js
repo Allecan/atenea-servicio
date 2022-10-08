@@ -78,6 +78,20 @@ export class FireBase {
             return error
         }
     }
+    async addGradesToTeacher(name, id, data, oldGrades) {
+        try {
+            const docRef = doc(this.getDB(), name, id);
+            for (const grade of data.gradesList) {
+                const gradeRef = doc(this.getDB(), "Grades", grade)
+                oldGrades.push(gradeRef)
+            }
+            data.gradesList = oldGrades
+            const docSnap = await updateDoc(docRef, data);
+            return "Data Updated";
+        } catch (error) {
+            return error;
+        }
+    }
 }
 
 // const newFireBase = new FireBase(config.fireBase)
