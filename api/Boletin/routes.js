@@ -1,4 +1,4 @@
-import path  from "path"
+import { helpers } from "../../lib/helpers.js"
 export class BoletinRouter{
     constructor(router, controller, response, httpCode){
         this._router = router()
@@ -103,7 +103,7 @@ export class BoletinRouter{
     async handleCreatePdf(req, res){
         try {
             const idBoletin = req.params['id']
-            const result = await this._controller.createPdf(idBoletin,req.body)
+            const result = await this._controller.createPdf(idBoletin)
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
@@ -117,6 +117,10 @@ export class BoletinRouter{
                 if(err){
                     console.log(err)
                 }else{
+                    const direction_file = "api/Boletin/pdf/docs" 
+                    const name_file = `${req.params["name"]}.pdf`
+
+                    helpers.deleteFile(direction_file,name_file)
                     console.log("downloaded file")
                     
                 }
