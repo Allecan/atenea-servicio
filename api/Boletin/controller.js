@@ -130,7 +130,7 @@ export  class BoletinController{
         const bulletin = await this.getOneBoletin(id)
         if(!(bulletin === undefined)){
           //return this.createDocumentPdf(bulletin)
-          return await appPdf(this.createDocumentPdf(bulletin),data)
+          return  appPdf(this.createDocumentPdf(bulletin),data)
         }
         else{
           return "the bulletin does not exist"
