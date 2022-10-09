@@ -31,7 +31,7 @@ export const appPdf =  (information,data)=>{
         let pdfDoc = printer.createPdfKitDocument(docDefinition)
         pdfDoc.pipe(fs.createWriteStream(finalDirection))
         pdfDoc.end()
-        const result = {
+        const result = { 
             name_file: name,
             path: finalDirection
         }
