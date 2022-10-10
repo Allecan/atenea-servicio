@@ -13,7 +13,7 @@ export class UserRouter{
         this._router.get('/get-users', this.handleGetAllUsers.bind(this))
         this._router.get('/get-user/', this.handleGetOneUser.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
-        this._router.put('/delete-user/:id', this.handleDeleteuser.bind(this))
+        this._router.put('/delete-user/', this.handleDeleteuser.bind(this))
         this._router.put('/update-user-rol/', this.handleUpdateRol.bind(this))
         this._router.get('/reset-password/', this.resetPasswordUser.bind(this))
     }
@@ -60,13 +60,14 @@ export class UserRouter{
 
     async handleDeleteuser(req, res){
         try {
-            const idUser = req.params['id']
+            const idUser = req.body
             const result = await this._controller.deleteUserController(idUser)
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
     }
+
     async handleUpdateRol(req, res){
         try {
             const idUser = req.query.id

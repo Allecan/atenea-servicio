@@ -112,7 +112,10 @@ export class BoletinRouter{
         }
     }
     async handleDownloadPdf(req, res){
-        
+        try {
+            const direction = `api/Boletin/pdf/docs/${req.params["name"]}.pdf`
+            console.log(direction)
+            res.download(direction,`${req.params["name"]}.pdf`,function(err){
         try {
             const direction = `api/Boletin/pdf/docs/${req.params["name"]}.pdf`
             const __filename = fileURLToPath(import.meta.url);
