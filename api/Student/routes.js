@@ -13,7 +13,7 @@ export class StudentRouter{
         this._router.get('/getone-bygrade/:id', this.handleGetStudentsByGrade.bind(this))
         this._router.get('/getone-student/:id', this.handleGetOneStudent.bind(this))
         this._router.put('/update-student/:id', this.handleUpdateStudent.bind(this))
-        this._router.put('/delete-student/:id', this.handleDeleteStudent.bind(this))
+        this._router.put('/delete-student/', this.handleDeleteStudent.bind(this))
 
     }
 
@@ -70,8 +70,7 @@ export class StudentRouter{
     async handleDeleteStudent(req, res){
         try {
             const student = req.body
-            const uid = req.params.id
-            const result = await this._controller.deleteStudent(student, uid)
+            const result = await this._controller.deleteStudent(student)
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)

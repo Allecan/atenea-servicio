@@ -11,6 +11,7 @@ import { userModel } from './Usuario/index.js'
 import { gradeModel } from './Grado/index.js'
 import { studentModel } from './Student/index.js'
 import { boletinModel } from "./Boletin/index.js"
+import { teacherModel } from "./Profesor/index.js"
 
 
 // Configuracion de paths
@@ -41,8 +42,11 @@ class Server {
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: true }))
     const corsOptions = {
-      origin : ['http://localhost:3000', 'http://localhost:4000'],
+      origin : ['http://localhost:3000', 'http://localhost:4000', 'https://ateneaq.netlify.app/', 'https://ateneaq.netlify.app/register/', 'https://ateneaq.netlify.app', 'https://ateneaq.netlify.app/register', /(^|^[^:]+:\/\/|[^\.]+\.)ateneaq\.netlify\.app(\/)(.*)/],
+      credentials: true,
+      methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
     }
+
     this._app.use(cors(corsOptions))
     this._app.use(morgan('dev'))
   }
@@ -52,6 +56,7 @@ class Server {
     this._app.use('/api/v1/grade', gradeModel(express.Router))
     this._app.use('/api/v1/student', studentModel(express.Router))
     this._app.use('/api/v1/boletin',boletinModel(express.Router))
+    this._app.use('/api/v1/teacher',teacherModel(express.Router))
   }
 
   start () {

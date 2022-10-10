@@ -144,11 +144,11 @@ export class FireBaseAdminSDK {
         }
     }
 
-    async deleteData(name, uid, data){
+    async deleteData(name, uid, enable){
         try {
             if(name === 'Students'){
                 await this.getFireStoreDatabase().collection(name).doc(uid).update({
-                    enable: data.enable
+                    enable: enable
                 }, {merge: true})
                 return 'Alumno Eliminado Correctamente'
             }else {
@@ -227,10 +227,10 @@ export class FireBaseAdminSDK {
         }
     }
 
-    async deleteUser(id){
+    async deleteUser(id, state){
         try {
             const auth = getAuth(appFirebase)
-            const deleteUser = await auth.updateUser(id, {disabled: true})
+            const deleteUser = await auth.updateUser(id, {disabled: state})
             this.setRolUser(id, '')
             return `Se ha borrado exitosamente el usuario ${deleteUser.displayName}`
         } catch (error) {
@@ -282,5 +282,5 @@ export class FireBaseAdminSDK {
 }
 
 // const firebase = new FireBaseAdminSDK()
-// const result = await firebase.getAllStudentsEnable()
+// const result = await firebase.deleteUser('Ljdjq4rZ5JUyeTqnzyZtsafoBgl2', false)
 // console.log(result)
