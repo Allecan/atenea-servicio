@@ -26,8 +26,9 @@
         return response
     }
 
-    async deleteUserController(id){
-        const response = await this._service.deleteUser(id)
+    async deleteUserController(data){
+        console.log(data);
+        const response = await this._service.deleteUser(data.uid, data.enable)
         return response
     }
 
