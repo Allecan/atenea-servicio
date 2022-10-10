@@ -1,4 +1,6 @@
 import { helpers } from "../../lib/helpers.js"
+import path from "path"
+import {fileURLToPath} from 'url'
 export class BoletinRouter{
     constructor(router, controller, response, httpCode){
         this._router = router()
@@ -114,6 +116,18 @@ export class BoletinRouter{
             const direction = `api/Boletin/pdf/docs/${req.params["name"]}.pdf`
             console.log(direction)
             res.download(direction,`${req.params["name"]}.pdf`,function(err){
+        try {
+            const direction = `api/Boletin/pdf/docs/${req.params["name"]}.pdf`
+            const __filename = fileURLToPath(import.meta.url);
+
+            // 👇️ "/home/john/Desktop/javascript"
+            const __dirname = path.dirname(__filename);
+        
+            // 👇️ "/home/borislav/Desktop/javascript/dist/index.html"
+            const finalDirection = path.join(__dirname, 'pdf/docs/', `${req.params["name"]}.pdf`)
+           
+            console.log(finalDirection)
+            res.download(finalDirection,`${req.params["name"]}.pdf`,function(err){
                 if(err){
                     console.log(err)
                 }else{
