@@ -144,11 +144,11 @@ export class FireBaseAdminSDK {
         }
     }
 
-    async deleteData(name, uid, data){
+    async deleteData(name, uid, enable){
         try {
             if(name === 'Students'){
                 await this.getFireStoreDatabase().collection(name).doc(uid).update({
-                    enable: data.enable
+                    enable: enable
                 }, {merge: true})
                 return 'Alumno Eliminado Correctamente'
             }else {
