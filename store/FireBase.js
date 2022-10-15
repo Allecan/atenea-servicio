@@ -88,8 +88,8 @@ export class FireBase {
             const teacherRef = oneData.teacherRef
             const teacherSnap = await getDoc(teacherRef);
             const teacherData = teacherSnap.data()
+
             oneData.teacherRef = teacherData
-            console.log("se obtuvo " + teacherData)
 
             return oneData
         } catch (error) {
