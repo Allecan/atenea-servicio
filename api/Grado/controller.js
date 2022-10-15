@@ -7,6 +7,7 @@ export class ControllerGrade {
     async createNewGrade(grade) {
         const newModel = new this._model(grade)
         const newGrade = Object.assign({}, newModel)
+        const teacher = await this._service.getOneData('User', grade.teacherRef)
         const response = await this._service.saveData('Grades', newGrade)
         return response
     }
@@ -24,7 +25,7 @@ export class ControllerGrade {
     }
 
     async getOneGrade(uid) {
-        const response = await this._service.getOneData('Grades', uid)
+        const response = await this._service.getOneGrade('Grades', uid)
         response.totalStudents = response.studentsList.length
         return response
     }

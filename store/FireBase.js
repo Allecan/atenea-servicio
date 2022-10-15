@@ -78,6 +78,25 @@ export class FireBase {
             return error
         }
     }
+
+    async getOneGrade(name, id) {
+        try {
+            const docRef = doc(this.getDB(), name, id)
+            const docSnap = await getDoc(docRef);
+            const oneData = docSnap.data()
+
+            const teacherRef = oneData.teacherRef
+            const teacherSnap = await getDoc(teacherRef);
+            const teacherData = teacherSnap.data()
+            oneData.teacherRef = teacherData
+            console.log("se obtuvo " + teacherData)
+
+            return oneData
+        } catch (error) {
+            return error
+        }
+    }
+
     async addGradesToTeacher(name, id, data, oldGrades) {
         try {
             const docRef = doc(this.getDB(), name, id);
