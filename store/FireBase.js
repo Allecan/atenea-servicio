@@ -97,6 +97,11 @@ export class FireBase {
         }
     }
 
+    async getDocRef(name, id) {
+        const docRef = doc(this.getDB(), name, id)
+        return docRef
+    }
+
     async addGradesToTeacher(name, id, data, oldGrades) {
         try {
             const docRef = doc(this.getDB(), name, id);

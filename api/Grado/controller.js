@@ -7,7 +7,14 @@ export class ControllerGrade {
     async createNewGrade(grade) {
         const newModel = new this._model(grade)
         const newGrade = Object.assign({}, newModel)
-        const teacher = await this._service.getOneData('User', grade.teacherRef)
+
+        const teacher = await this._service.getOneData('User', newGrade.teacherRef)
+        if (teacher == undefined) {
+            return "El id de este usuario no existe"
+        } else if (teacher.rol != 'docente') {
+            return "Este usuario no es un docente"
+        }
+
         const response = await this._service.saveData('Grades', newGrade)
         return response
     }
