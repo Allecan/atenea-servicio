@@ -59,92 +59,9 @@ export const boletinModel = (expressRouter)=>{
  */
 /**
  * @swagger
- * components:
- *   schemas:
- *     CourseBulletin:
- *       type: object
- *       properties:
- *         name_grade:
- *           type: string
- *           description: The name course.
- *           example: "curso 1"
- *       required:
- *         -name_grade
- *       example: 
- *         name_grade: "curso 1"
- */
-/**
- * @swagger
- * components:
- *   schemas:
- *     deleteCourseBulletin:
- *       type: object
- *       properties:
- *         name_course:
- *           type: string
- *           description: The name course.
- *           example: "curso 1"
- *       required:
- *         -name_course
- *       example: 
- *         name_course: "curso 1"
- */
-/**
- * @swagger
- * components:
- *   schemas:
- *     AddNoteBulletin:
- *       type: object
- *       properties:
- *         name_course:
- *           type: string
- *           description: The name course.
- *           example: "curso 1"
- *         note:
- *           type: number
- *           description: The note unit.
- *           example: 60
- *         unit:
- *           type: number
- *           description: The unit course.
- *           example: 2
- *       required:
- *         -name_course
- *         -note
- *         -unit
- *       example: 
- *         name_course: "curso 1"
- *         note: 60
- *         unit: 2
- */
-/**
- * @swagger
- * components:
- *   schemas:
- *     createPdfBulletin:
- *       type: object
- *       properties:
- *         name_file:
- *           type: string
- *           description: The name file.
- *           example: "pdf_prueba"
- *         direction:
- *           type: string
- *           description: The file address
- *           example: "C:/Users/Usuario/Documents/pdf"
- *       required:
- *         -name_file
- *         -direction
- *       example: 
- *         name_file: "pdf_prueba"
- *         direction: "C:/Users/Usuario/Documents/pdf"
- */
-
-/**
- * @swagger
  * /api/v1/boletin/add-boletin:
  *   post:
- *     summary: Create a new bulletin.
+ *     summary: Crear el boletin.
  *     tags: [Bulletin]
  *     requestBody:  
  *       required: true
@@ -155,17 +72,18 @@ export const boletinModel = (expressRouter)=>{
  *             $ref: '#/components/schemas/Bulletin'
  *     responses:
  *       200:
- *         description: create a new bulletin
+ *         description: create bulletin  
 */
+
 /**
  * @swagger
  * /api/v1/boletin/getAll-boletin:
  *   get:
- *     summary: Get all Bulletin.
+ *     summary: Retorna todos los boletines.
  *     tags: [Bulletin]
  *     responses:  
  *       200: 
- *         description: get all bulletin
+ *         description: Retorna todos los boletines.
  *         content:
  *           application/json:
  *             schema:
@@ -177,7 +95,7 @@ export const boletinModel = (expressRouter)=>{
  * @swagger
  * /api/v1/boletin/getOne-boletin/{id}:
  *   get:
- *     summary: Get one Bulletin.
+ *     summary: Retorna un boletin.
  *     tags: [Bulletin]
  *     parameters:
  *       - in: path
@@ -185,23 +103,23 @@ export const boletinModel = (expressRouter)=>{
  *         schema:
  *           type: string
  *         required: true
- *         description: the Bulletin id
+ *         description: El id del boletin
  *     responses:  
  *       200: 
- *         description: get one Bulletin 
+ *         description: Retorna un boletin
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               $ref: '#/components/schemas/Bulletin'
  *       400:
- *         description: bulletin not found
+ *         description: Bulletin not found
 */
 /**
  * @swagger
  * /api/v1/boletin/delete-boletin/{id}:
  *   delete:
- *     summary: delete a Bulletin.
+ *     summary: Eliminar un boletin.
  *     tags: [Bulletin]
  *     parameters:
  *       - in: path
@@ -209,18 +127,19 @@ export const boletinModel = (expressRouter)=>{
  *         schema:
  *           type: string
  *         required: true
- *         description: the bulletin id
+ *         description: El id del boletin
  *     responses:  
  *       200: 
- *         description: bulletin deleted
+ *         description: bulletin delete
  *       400:
  *         description: bulletin not found
 */
+
 /**
  * @swagger
- * /api/v1/boletin/update-boletin/{id}:
+ * /api/v1/boletin/addCourses-boletin/{id}:
  *   put:
- *     summary: update a bulletin.
+ *     summary: Agregar un curso al boletin.
  *     tags: [Bulletin]
  *     parameters:
  *       - in: path
@@ -228,77 +147,30 @@ export const boletinModel = (expressRouter)=>{
  *         schema:
  *           type: string
  *         required: true
- *         description: the bulletin id
+ *         description: El id del boletin
  *     requestBody:  
  *       required: true
  *       content: 
  *         application/json:
  *           schema:
  *             type: object
- *             $ref: '#/components/schemas/Bulletin'
+ *             properties:
+ *               name_grade:
+ *                 type: string
+ *                 description: el nombre del grado.
+ *                 example: curso 1 
  *     responses:  
  *       200: 
  *         description: bulletin updated!
  *       400:
  *         description: bulletin not found
 */
-/**
- * @swagger
- * /api/v1/boletin/addNote-boletin/{id}:
- *   put:
- *     summary: update a bulletin.
- *     tags: [Bulletin]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: the bulletin id
- *     requestBody:  
- *       required: true
- *       content: 
- *         application/json:
- *           schema:
- *             type: object
- *             $ref: '#/components/schemas/CourseBulletin'
- *     responses:  
- *       200: 
- *         description: the course was added!
- *       400:
- *         description: the course was not added
-*/
-/**
- * @swagger
- * /api/v1/boletin/addNote-boletin/{id}:
- *   put:
- *     summary: update a bulletin.
- *     tags: [Bulletin]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: the bulletin id
- *     requestBody:  
- *       required: true
- *       content: 
- *         application/json:
- *           schema:
- *             type: object
- *             $ref: '#/components/schemas/AddNoteBulletin'
- *     responses:  
- *       200: 
- *         description: the note was added!
- *       400:
- *         description: could not add note
-*/
+
 /**
  * @swagger
  * /api/v1/boletin/deleteCourses-boletin/{id}:
  *   put:
- *     summary: update a bulletin.
+ *     summary: Eliminar un curso de un boletin.
  *     tags: [Bulletin]
  *     parameters:
  *       - in: path
@@ -306,17 +178,109 @@ export const boletinModel = (expressRouter)=>{
  *         schema:
  *           type: string
  *         required: true
- *         description: the bulletin id
+ *         description: El id del boletin
  *     requestBody:  
  *       required: true
  *       content: 
  *         application/json:
  *           schema:
  *             type: object
- *             $ref: '#/components/schemas/deleteCourseBulletin'
+ *             properties:
+ *               name_course:
+ *                 type: string
+ *                 description: el nombre del grado.
+ *                 example: curso 1 
  *     responses:  
  *       200: 
- *         description: the course was deleted!
+ *         description: bulletin updated!
  *       400:
- *         description: the course was not deleted
+ *         description: bulletin not found
+*/
+
+/**
+ * @swagger
+ * /api/v1/boletin/addNote-boletin/{id}:
+ *   put:
+ *     summary: Agregar una nota al curso de un boletin.
+ *     tags: [Bulletin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: El id del boletin
+ *     requestBody:  
+ *       required: true
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name_course:
+ *                 type: string
+ *                 description: el nombre del grado.
+ *                 example: curso 5 
+ *               note:
+ *                 type: Number
+ *                 description: La nota a asignar.
+ *                 example: 60.7
+ *               unit:
+ *                 type: Integer
+ *                 description: La unidad del curso.
+ *                 example: 3
+ *     responses:  
+ *       200: 
+ *         description: bulletin updated!
+ *       400:
+ *         description: bulletin not found
+*/
+
+/**
+ * @swagger
+ * /api/v1/boletin/createPdf-boletin/{id}:
+ *   put:
+ *     summary: Crear PDF
+ *     tags: [Bulletin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: El id del boletin
+ *     responses:  
+ *       200: 
+ *         description: informacion de autenticacion.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name_file:
+ *                   type: string
+ *                   description: Retorna el nombre del archivo que se acaba de crear.
+ *                   example: estudiante52022Boletin
+ *       400:
+ *         description: bulletin not found
+*/
+
+/**
+ * @swagger
+ * /api/v1/boletin/download-boletin/{name}:
+ *   put:
+ *     summary: Descargar el PDF
+ *     tags: [Bulletin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: El nombre del archivo pdf que se acaba de crear.
+ *     responses:  
+ *       200: 
+ *         description: descarga el boletin.
+ *       400:
+ *         description: bulletin not found
 */
