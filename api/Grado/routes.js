@@ -13,6 +13,26 @@ export class GradeRouter {
       '/update-grade/:id',
       this.handleUpdateGrade.bind(this)
     );
+    // this._router.put(
+    //   '/set-teacher/:id',
+    //   this.handleSetTeacher.bind(this)
+    // );
+    // this._router.put(
+    //   '/add-student/:id',
+    //   this.handleAddStudent.bind(this)
+    // );
+    // this._router.put(
+    //   '/add-course/:id',
+    //   this.handleAddCourse.bind(this)
+    // );
+    // this._router.put(
+    //   '/remove-student/:id',
+    //   this.handleRemoveStudent.bind(this)
+    // );
+    // this._router.put(
+    //   '/remove-course/:id',
+    //   this.handleRemoveCourse.bind(this)
+    // );
     this._router.get('/getall-grades', this.handleGetAllGrades.bind(this))
     this._router.get('/getone-grade/:id', this.handleGetOneGrade.bind(this))
   }
