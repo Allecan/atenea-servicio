@@ -38,7 +38,7 @@ export class ControllerGrade {
 
         const teacherRef = await this._service.getDocRef('User', grade.teacherRef)
         newGrade.teacherRef = teacherRef
-        
+
         const response = await this._service.updateData('Grades', id, newGrade);
         return response;
     }
@@ -54,4 +54,17 @@ export class ControllerGrade {
         return response
     }
 
+    async addStudent(idGrade, idStudent) {
+        const studentModel = await this._service.getOneData('Students', idStudent)
+        studentModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
+        const response = await this._service.updateData('Students', idStudent, studentModel);
+        return response
+    }
+
+    async addCourse(idGrade, idCourse) {
+        const courseModel = await this._service.getOneData('Courses', idCourse)
+        courseModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
+        const response = await this._service.updateData('Courses', idCourse, courseModel);
+        return response
+    }
 }

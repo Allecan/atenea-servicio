@@ -13,26 +13,14 @@ export class GradeRouter {
       '/update-grade/:id',
       this.handleUpdateGrade.bind(this)
     );
-    // this._router.put(
-    //   '/set-teacher/:id',
-    //   this.handleSetTeacher.bind(this)
-    // );
-    // this._router.put(
-    //   '/add-student/:id',
-    //   this.handleAddStudent.bind(this)
-    // );
-    // this._router.put(
-    //   '/add-course/:id',
-    //   this.handleAddCourse.bind(this)
-    // );
-    // this._router.put(
-    //   '/remove-student/:id',
-    //   this.handleRemoveStudent.bind(this)
-    // );
-    // this._router.put(
-    //   '/remove-course/:id',
-    //   this.handleRemoveCourse.bind(this)
-    // );
+    this._router.put(
+      '/add-student/',
+      this.handleAddStudent.bind(this)
+    );
+    this._router.put(
+      '/add-course/',
+      this.handleAddCourse.bind(this)
+    );
     this._router.get('/getall-grades', this.handleGetAllGrades.bind(this))
     this._router.get('/getone-grade/:id', this.handleGetOneGrade.bind(this))
   }
@@ -77,4 +65,37 @@ export class GradeRouter {
     }
   }
 
+  async handleAddStudent(req, res) {
+    try {
+      const idGrade = req.query.idGrade
+      const idStudent = req.query.idStudent
+      if (idGrade === "" || idStudent === "") {
+        this._response.error(req, res, 'No se envio ningun parametro', this._httpcode.BAD_REQUEST)
+      } else if (idGrade === undefined || idStudent === undefined) {
+        this._response.error(req, res, 'Revisar el parametro de informacion', this._httpcode.BAD_REQUEST)
+      } else {
+        const result = await this._controller.addStudent(idGrade, idStudent)
+        this._response.succes(req, res, result, this._httpcode.OK)
+      }
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+    }
+  }
+
+  async handleAddCourse(req, res) {
+    try {
+      const idGrade = req.query.idGrade
+      const idCourse = req.query.idCourse
+      if (idGrade === "" || idCourse === "") {
+        this._response.error(req, res, 'No se envio ningun parametro', this._httpcode.BAD_REQUEST)
+      } else if (idGrade === undefined || idCourse === undefined) {
+        this._response.error(req, res, 'Revisar el parametro de informacion', this._httpcode.BAD_REQUEST)
+      } else {
+        const result = await this._controller.addStudent(idGrade, idCourse)
+        this._response.succes(req, res, result, this._httpcode.OK)
+      }
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+    }
+  }
 }
