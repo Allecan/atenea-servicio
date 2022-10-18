@@ -30,12 +30,29 @@ export class FireBase {
     async getData(name) {
         const allData = collection(this.getDB(), name);
         const dataDocs = await getDocs(allData);
-        const docsList = dataDocs.docs.map(doc => doc.data());
+        const docsList = dataDocs.docs.map(doc => Object.assign(doc.data(), {id : doc.id}));
         return docsList;
     }
 
     async saveData(name, data) {
         console.log(name, data)
+        const docRef = await addDoc(collection(this.getDB(), name), data)
+        return 'Data Save'
+    }
+
+    async saveGrade(name, data) {
+        const allData = collection(this.getDB(), name);
+        const dataDocs = await getDocs(allData);
+        const docsList = dataDocs.docs.map(doc => doc.data());
+        let pos = 0
+        for (const elements of docsList) {
+            if (elements.levelRef == data.levelRef) {
+                console.log("ellevref " + elements.levelRef + " datalevref" + data.levelRef)
+                pos++
+            }
+        }
+
+        data.position = pos
         const docRef = await addDoc(collection(this.getDB(), name), data)
         return 'Data Save'
     }
@@ -68,11 +85,45 @@ export class FireBase {
             return error
         }
     }
+    async deleteGrade(name, id) {
+        // Datos del grado que se va a eliminar
+        const oldGradeRef = doc(this.getDB(), name, id)
+        const oldGradeSnap = await getDoc(oldGradeRef);
+        const oldGrade = oldGradeSnap.data()
+
+        // Lista de los grados, la posicion de los grados que vayan despues de este grado, va a decrementar en 1
+        const allData = collection(this.getDB(), name);
+        const dataDocs = await getDocs(allData);
+        const docsList = dataDocs.docs.map(doc => Object.assign(doc.data(), {id : doc.id}));
+
+        for (const elements of docsList) {
+            if (elements.position > oldGrade.position) {
+                elements.position--
+                console.log("hola")
+                console.log(elements)
+                const gradeRef = doc(this.getDB(), name, elements.id);
+                console.log("tu")
+                const gradeSnap = await updateDoc(gradeRef, elements);
+            }
+        }
+
+        try {
+            const docRef = doc(this.getDB(), name, id)
+            const docSnap = await deleteDoc(docRef);
+            return "Delete Data"
+        } catch (error) {
+            console.log("Error")
+            return error
+        }
+    }
     async getOneData(name, id) {
         try {
             const docRef = doc(this.getDB(), name, id)
             const docSnap = await getDoc(docRef);
             const oneData = docSnap.data()
+
+            oneData.id = id
+
             return oneData
         } catch (error) {
             return error
@@ -90,6 +141,7 @@ export class FireBase {
             const teacherData = teacherSnap.data()
 
             oneData.teacherRef = teacherData
+            oneData.id = id
 
             return oneData
         } catch (error) {
@@ -101,6 +153,8 @@ export class FireBase {
         const docRef = doc(this.getDB(), name, id)
         return docRef
     }
+
+    //hacer funcion getdocbyref
 
     async addGradesToTeacher(name, id, data, oldGrades) {
         try {
@@ -129,7 +183,7 @@ export class FireBase {
                 }
             }
             data.gradesList = newGradesList
-            
+
             if (gradeFinded) {
                 const docSnap = await updateDoc(docRef, data);
                 return "Grade Removed";

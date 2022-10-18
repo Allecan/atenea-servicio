@@ -18,7 +18,7 @@ export class ControllerGrade {
         const teacherRef = await this._service.getDocRef('User', grade.teacherRef)
         newGrade.teacherRef = teacherRef
 
-        const response = await this._service.saveData('Grades', newGrade)
+        const response = await this._service.saveGrade('Grades', newGrade)
         return response
     }
 
@@ -42,6 +42,12 @@ export class ControllerGrade {
         const response = await this._service.updateData('Grades', id, newGrade);
         return response;
     }
+
+    async deleteAGrade(id) {
+        const response = await this._service.deleteGrade('Grades', id)
+        return response
+    }
+
 
     async getAllGrades() {
         const response = await this._service.getData('Grades')
