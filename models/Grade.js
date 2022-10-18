@@ -1,7 +1,8 @@
 export class Grade{
-    constructor(grade){
-        this.grade_name = grade.grade_name
-        this.teacher_id = grade.teacher_id
+    constructor(grade, oldGrade){
+        this.grade_name = grade.grade_name || oldGrade.grade_name
+        this.teacherRef = grade.teacherRef || oldGrade.teacherRef
+        this.levelRef = grade.levelRef || oldGrade.levelRef
     }
 
 }

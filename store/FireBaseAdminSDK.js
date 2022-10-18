@@ -252,8 +252,7 @@ export class FireBaseAdminSDK {
             
             if (type == "teacher") {
                 await this.getFireStoreDatabase().collection("User").doc(uid).update({
-                    rol: type,
-                    gradesList: []
+                    rol: type
                 })
             } else {
                 await this.getFireStoreDatabase().collection("User").doc(uid).update({
