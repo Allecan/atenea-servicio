@@ -63,7 +63,7 @@ export class FireBase {
         const docsList = dataDocs.docs.map(doc => doc.data());
         let pos = 0
         for (const elements of docsList) {
-            if (elements.levelRef == data.levelRef) {
+            if (elements.levelRef._key.path.segments.at(-1) == data.levelRef._key.path.segments.at(-1)) {
                 pos++
             }
         }
@@ -81,6 +81,50 @@ export class FireBase {
             return error;
         }
     }
+
+    async updateGrade(name, id, data, oldData) {
+        try {
+            const docRef = doc(this.getDB(), name, id);
+
+            if (oldData.position == undefined || oldData.levelRef == undefined || data.levelRef._key.path.segments.at(-1) != oldData.levelRef._key.path.segments.at(-1)) {
+                //Se obtiene la lista de grados
+                const gradesData = collection(this.getDB(), name);
+                const gradesDocs = await getDocs(gradesData);
+                const grades = gradesDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+
+                //Al grado se le asigna la ultima posicion en su nuevo nivel, la variable pos se suma cada vez
+                //que encuentra un grado con referencia al nuevo nivel del grado a actualizar
+                let pos = 0
+                for (const elements of grades) {
+                    if (elements.levelRef != undefined && elements.levelRef._key.path.segments.at(-1) == data.levelRef._key.path.segments.at(-1)) {
+                        pos++
+                    }
+                }
+                data.position = pos
+
+                //Si el antiguo modelo del grado no tenia referencia a ningun nivel, la siguiente parte se omite
+                if (oldData.levelRef != undefined) {
+                    //Los grados que estaban por delante del grado en su antiguo nivel se corren hacia atras
+                    for (const elements of grades) {
+                        if (elements.levelRef != undefined && elements.levelRef._key.path.segments.at(-1) == oldData.levelRef._key.path.segments.at(-1) && elements.position > oldData.position) {
+                            elements.position--
+                            const gradeRef = doc(this.getDB(), name, elements.id);
+                            // se elimina el atributo id para que no se guarde junto con el grado con la posicion ya actualizada
+                            delete elements.id
+                            const gradeSnap = await updateDoc(gradeRef, elements);
+                        }
+                    }
+                }
+            }
+
+            const docSnap = await updateDoc(docRef, data);
+
+            return "Data Updated";
+        } catch (error) {
+            return error;
+        }
+    }
+
     async setData(name, id, data) {
         try {
             const db = this.getDB()
@@ -112,9 +156,8 @@ export class FireBase {
         const docsList = dataDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
 
         for (const elements of docsList) {
-            if (elements.position > oldGrade.position) {
+            if (elements.levelRef._key.path.segments.at(-1) == oldGrade.levelRef._key.path.segments.at(-1) && elements.position > oldGrade.position) {
                 elements.position--
-                console.log(elements)
                 const gradeRef = doc(this.getDB(), name, elements.id);
                 // se elimina el atributo id para que no se guarde junto con el grado con la posicion ya actualizada
                 delete elements.id

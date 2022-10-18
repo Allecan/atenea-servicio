@@ -30,7 +30,7 @@ export class ControllerGrade {
     }
 
     async updateAGrade(id, grade) {
-        const oldGrade = await this._service.getOneGrade('Grades', id)
+        const oldGrade = await this._service.getOneData('Grades', id)
         const newModel = new this._model(grade, oldGrade);
         const newGrade = Object.assign({}, newModel);
         const teacher = await this._service.getOneData('User', newGrade.teacherRef)
@@ -46,13 +46,13 @@ export class ControllerGrade {
             return "El id de este nivel no existe"
         }
 
-        const teacherRef = await this._service.getDocRef('User', grade.teacherRef)
-        const levelRef = await this._service.getDocRef('Levels', grade.levelRef)
+        const teacherRef = await this._service.getDocRef('User', newGrade.teacherRef)
+        const levelRef = await this._service.getDocRef('Levels', newGrade.levelRef)
 
         newGrade.teacherRef = teacherRef
         newGrade.levelRef = levelRef
 
-        const response = await this._service.updateData('Grades', id, newGrade);
+        const response = await this._service.updateGrade('Grades', id, newGrade, oldGrade);
         return response;
     }
 
