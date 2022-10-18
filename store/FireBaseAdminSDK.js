@@ -168,7 +168,7 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: ''})
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', rol: ''})
             return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
@@ -229,10 +229,12 @@ export class FireBaseAdminSDK {
 
     async deleteUser(id, state){
         try {
+            let msg = ''
             const auth = getAuth(appFirebase)
             const deleteUser = await auth.updateUser(id, {disabled: state})
             this.setRolUser(id, '')
-            return `Se ha borrado exitosamente el usuario ${deleteUser.displayName}`
+            state === true ? msg='deshabilitado': msg='habilitado'
+            return `Se ha ${msg} exitosamente el usuario ${deleteUser.displayName}`
         } catch (error) {
             return error
         }
@@ -249,6 +251,7 @@ export class FireBaseAdminSDK {
         try {
             const auth = getAuth(appFirebase)
             await auth.setCustomUserClaims(uid, {rol: type})
+            await this.getFireStoreDatabase().collection('User').doc(uid).update({rol:type})
             return 'Se ha actualizado el rol del usuario correctamente.'
         } catch (error) {
             return error
@@ -280,7 +283,3 @@ export class FireBaseAdminSDK {
     }
 
 }
-
-// const firebase = new FireBaseAdminSDK()
-// const result = await firebase.deleteUser('Ljdjq4rZ5JUyeTqnzyZtsafoBgl2', false)
-// console.log(result)
