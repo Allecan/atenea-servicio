@@ -35,6 +35,7 @@ export class ControllerStudent{
 
 
     async deleteStudent(student){
+        console.log(student.uid, student.enable);
         const response = await this._service.deleteData('Students', student.uid, student.enable)
         return response
     }
