@@ -166,18 +166,21 @@ export class FireBase {
 
             //Se obtiene la lista de estudiantes del grado
             const studentsRef = collection(this.getDB(), "Students");
-            const gradosQuery = query(studentsRef, where("gradeRef", "==", docRef))
-            const gradosDocs = await getDocs(gradosQuery)
-            const grados = gradosDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+            const studentsQuery = query(studentsRef, where("gradeRef", "==", docRef))
+            const studentsDocs = await getDocs(studentsQuery)
+            const students = studentsDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
             //Se elimina el campo de la referencia de los grados de cada estudiante
-            for (const estudiante of grados) {
-                grados[estudiante] = delete estudiante.gradeRef
+            for (const estudiante of students) {
+                students[estudiante] = delete estudiante.gradeRef
             }
 
             oneData.teacherRef = teacherData
             oneData.levelRef = levelData
             oneData.id = id
-            oneData.grados = grados
+            oneData.students = students
+
+            // se organizan los datos a como fernando los pidio >:v
+
 
             return oneData
         } catch (error) {
