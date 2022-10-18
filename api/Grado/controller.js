@@ -9,14 +9,21 @@ export class ControllerGrade {
         const newGrade = Object.assign({}, newModel)
 
         const teacher = await this._service.getOneData('User', newGrade.teacherRef)
+        const level = await this._service.getOneData('Levels', newGrade.levelRef)
+
         if (teacher == undefined) {
             return "El id de este usuario no existe"
         } else if (teacher.rol != 'docente') {
             return "Este usuario no es un docente"
+        } else if (level == undefined) {
+            return "El id de este nivel no existe"
         }
 
         const teacherRef = await this._service.getDocRef('User', grade.teacherRef)
+        const levelRef = await this._service.getDocRef('Levels', grade.levelRef)
+
         newGrade.teacherRef = teacherRef
+        newGrade.levelRef = levelRef
 
         const response = await this._service.saveGrade('Grades', newGrade)
         return response
@@ -27,6 +34,7 @@ export class ControllerGrade {
         const newModel = new this._model(grade, oldGrade);
         const newGrade = Object.assign({}, newModel);
         const teacher = await this._service.getOneData('User', newGrade.teacherRef)
+        const level = await this._service.getOneData('Levels', newGrade.levelRef)
 
         if (oldGrade == undefined) {
             return "El id de este grado no existe"
@@ -34,10 +42,15 @@ export class ControllerGrade {
             return "El id de este usuario no existe"
         } else if (teacher.rol != 'docente') {
             return "Este usuario no es un docente"
+        } else if (level == undefined) {
+            return "El id de este nivel no existe"
         }
 
         const teacherRef = await this._service.getDocRef('User', grade.teacherRef)
+        const levelRef = await this._service.getDocRef('Levels', grade.levelRef)
+
         newGrade.teacherRef = teacherRef
+        newGrade.levelRef = levelRef
 
         const response = await this._service.updateData('Grades', id, newGrade);
         return response;
@@ -50,13 +63,12 @@ export class ControllerGrade {
 
 
     async getAllGrades() {
-        const response = await this._service.getData('Grades')
+        const response = await this._service.getGrades('Grades')
         return response
     }
 
     async getOneGrade(uid) {
         const response = await this._service.getOneGrade('Grades', uid)
-        response.totalStudents = response.studentsList.length
         return response
     }
 
