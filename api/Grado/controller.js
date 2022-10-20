@@ -73,13 +73,68 @@ export class ControllerGrade {
     }
 
     async addStudent(idGrade, idStudent) {
+        //Se verifica el estudiante y se le modifica el campo de "gradeRef"
         const studentModel = await this._service.getOneData('Students', idStudent)
+        const gradeModel = await this._service.getOneData('Grades', idGrade)
         if (studentModel == undefined) {
             return "El id de este estudiante no existe"
+        } else if (gradeModel == undefined) {
+            return "El id de este grado no existe"
         }
+        const oldGradeId = studentModel.gradeRef._key.path.segments.at(-1)
         studentModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
+
         delete studentModel.id
         const response = await this._service.updateData('Students', idStudent, studentModel);
+
+        if (oldGradeId == idGrade) {
+            return response
+        }
+
+        //Se buscan los cursos del grado para buscar sus actividades y agregar al alumno a la
+        //lista de notas
+        const areas = await this._service.getData('Areas')
+        const activities = await this._service.getData('Activities')
+
+        for (const area of areas) {
+            console.log("jhhh")
+            if (area.gradeRef._key.path.segments.at(-1) == idGrade) {
+                console.log("yowputo")
+                for (const activity of activities) {
+                    if (activity.areaRef._key.path.segments.at(-1) == area.id) {
+
+                        activity.scores.push({score : 0, studentRef : await this._service.getDocRef('Students', idStudent)})
+
+                        const idActivity = activity.id
+                        delete activity.id
+                        console.log("holaf")
+                        const addScore = await this._service.updateData('Activities', idActivity, activity);
+                        console.log("holas")
+                    }
+                }
+        // Se eliminan las notas de los cursos en donde estaba el alumno anteriormente
+            } else if (area.gradeRef._key.path.segments.at(-1) == oldGradeId) {
+                console.log("encontre antiguo grado")
+                for (const activity of activities) {
+                    if (activity.areaRef._key.path.segments.at(-1) == area.id) {
+                        let newScores = []
+                        for (const score of activity.scores) {
+                            if (score.studentRef._key.path.segments.at(-1) != idStudent) {
+                                console.log("econtre eliminar " + newScores.length)
+                                newScores.push(score)
+                                console.log("lo elimine " + newScores.length)
+                            }
+                        }
+                        const idActivity = activity.id
+                        delete activity.id
+                        activity.scores = newScores
+                        const deleteScore = await this._service.updateData('Activities', idActivity, activity);
+
+                    }
+                }
+            }
+        }
+
         return response
     }
 
