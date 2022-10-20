@@ -9,10 +9,10 @@ export class AreaRouter {
 
   registerRouter() {
     this._router.post('/add-area', this.handleSingUp.bind(this));
-    // this._router.put(
-    //   '/update-grade/:id',
-    //   this.handleUpdateGrade.bind(this)
-    // );
+    this._router.put(
+      '/update-area/:id',
+      this.handleUpdateArea.bind(this)
+    );
     // this._router.delete('/delete-grade/:id', this.handleDeleteGrade.bind(this))
     // this._router.put(
     //   '/add-student/',
@@ -36,16 +36,16 @@ export class AreaRouter {
     }
   }
 
-  // async handleUpdateGrade(req, res) {
-  //   try {
-  //     const updateGrade = req.body;
-  //     const idGrade = req.params["id"];
-  //     const result = await this._controller.updateAGrade(idGrade, updateGrade);
-  //     this._response.succes(req, res, result, this._httpcode.OK);
-  //   } catch (error) {
-  //     this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
-  //   }
-  // }
+  async handleUpdateArea(req, res) {
+    try {
+      const updateArea = req.body;
+      const idArea = req.params["id"];
+      const result = await this._controller.updateAnArea(idArea, updateArea);
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
+    }
+  }
 
   // async handleGetAllGrades(req, res) {
   //   try {

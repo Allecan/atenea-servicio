@@ -30,32 +30,25 @@ export class ControllerArea {
         return response
     }
 
-    // async updateAGrade(id, grade) {
-    //     const oldGrade = await this._service.getOneData('Grades', id)
-    //     const newModel = new this._model(grade, oldGrade);
-    //     const newGrade = Object.assign({}, newModel);
-    //     const teacher = await this._service.getOneData('User', newGrade.teacherRef)
-    //     const level = await this._service.getOneData('Levels', newGrade.levelRef)
+    async updateAnArea(id, area) {
+        const oldArea = await this._service.getOneData('Areas', id)
+        const newModel = new this._model(area, oldArea);
+        const newArea = Object.assign({}, newModel);
+        const grade = await this._service.getOneData('Grades', newArea.gradeRef)
 
-    //     if (oldGrade == undefined) {
-    //         return "El id de este grado no existe"
-    //     } else if (teacher == undefined) {
-    //         return "El id de este usuario no existe"
-    //     } else if (teacher.rol != 'docente') {
-    //         return "Este usuario no es un docente"
-    //     } else if (level == undefined) {
-    //         return "El id de este nivel no existe"
-    //     }
+        if (oldArea == undefined) {
+            return "El id de esta area no existe"
+        } else if (grade == undefined) {
+            return "El id de este grado no existe"
+        }
 
-    //     const teacherRef = await this._service.getDocRef('User', newGrade.teacherRef)
-    //     const levelRef = await this._service.getDocRef('Levels', newGrade.levelRef)
+        const gradeRef = await this._service.getDocRef('Grades', newArea.gradeRef)
 
-    //     newGrade.teacherRef = teacherRef
-    //     newGrade.levelRef = levelRef
+        newArea.gradeRef = gradeRef
 
-    //     const response = await this._service.updateGrade('Grades', id, newGrade, oldGrade);
-    //     return response;
-    // }
+        const response = await this._service.updateData('Areas', id, newArea);
+        return response;
+    }
 
     // async deleteAGrade(id) {
     //     const response = await this._service.deleteGrade('Grades', id)
