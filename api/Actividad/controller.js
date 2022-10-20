@@ -40,25 +40,20 @@ export class ControllerActivity {
         return response
     }
 
-    // async updateAnArea(id, area) {
-    //     const oldArea = await this._service.getOneData('Areas', id)
-    //     const newModel = new this._model(area, oldArea);
-    //     const newArea = Object.assign({}, newModel);
-    //     const grade = await this._service.getOneData('Grades', newArea.gradeRef)
+    async updateAnActivity(id, activity) {
+        const oldActivity = await this._service.getOneData('Activities', id)
 
-    //     if (oldArea == undefined) {
-    //         return "El id de esta area no existe"
-    //     } else if (grade == undefined) {
-    //         return "El id de este grado no existe"
-    //     }
+        if (oldActivity == undefined) {
+            return "El id de esta actividad no existe"
+        }
 
-    //     const gradeRef = await this._service.getDocRef('Grades', newArea.gradeRef)
+        oldActivity.activity_name = activity.activity_name
+        oldActivity.activity_value = activity.activity_value
+        delete oldActivity.id
 
-    //     newArea.gradeRef = gradeRef
-
-    //     const response = await this._service.updateData('Areas', id, newArea);
-    //     return response;
-    // }
+        const response = await this._service.updateData('Activities', id, oldActivity);
+        return response;
+    }
 
     // async deleteAGrade(id) {
     //     const response = await this._service.deleteGrade('Grades', id)

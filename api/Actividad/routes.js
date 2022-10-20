@@ -9,10 +9,10 @@ export class ActivityRouter {
 
   registerRouter() {
     this._router.post('/add-activity', this.handleSingUp.bind(this));
-    // this._router.put(
-    //   '/update-area/:id',
-    //   this.handleUpdateArea.bind(this)
-    // );
+    this._router.put(
+      '/update-activity/:id',
+      this.handleUpdateActivity.bind(this)
+    );
     // this._router.delete('/delete-grade/:id', this.handleDeleteGrade.bind(this))
     // this._router.put(
     //   '/add-student/',
@@ -36,11 +36,11 @@ export class ActivityRouter {
     }
   }
 
-  async handleUpdateArea(req, res) {
+  async handleUpdateActivity(req, res) {
     try {
-      const updateArea = req.body;
-      const idArea = req.params["id"];
-      const result = await this._controller.updateAnArea(idArea, updateArea);
+      const updateActivity = req.body;
+      const idActivity = req.params["id"];
+      const result = await this._controller.updateAnActivity(idActivity, updateActivity);
       this._response.succes(req, res, result, this._httpcode.OK);
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
