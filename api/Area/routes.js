@@ -22,8 +22,8 @@ export class AreaRouter {
     //   '/add-course/',
     //   this.handleAddCourse.bind(this)
     // );
-    // this._router.get('/getall-grades', this.handleGetAllGrades.bind(this))
-    // this._router.get('/getone-grade/:id', this.handleGetOneGrade.bind(this))
+    this._router.get('/getall-areas', this.handleGetAllAreas.bind(this))
+    this._router.get('/getone-area:id', this.handleGetOneArea.bind(this))
   }
 
   async handleSingUp(req, res) {
@@ -47,24 +47,24 @@ export class AreaRouter {
     }
   }
 
-  // async handleGetAllGrades(req, res) {
-  //   try {
-  //     const result = await this._controller.getAllGrades()
-  //     this._response.succes(req, res, result, this._httpcode.OK)
-  //   } catch (error) {
-  //     this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
-  //   }
-  // }
+  async handleGetAllAreas(req, res) {
+    try {
+      const result = await this._controller.getAllAreas()
+      this._response.succes(req, res, result, this._httpcode.OK)
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+    }
+  }
 
-  // async handleGetOneGrade(req, res) {
-  //   try {
-  //     const uidGradeRef = req.params.id
-  //     const result = await this._controller.getOneGrade(uidGradeRef)
-  //     this._response.succes(req, res, result, this._httpcode.OK)
-  //   } catch (error) {
-  //     this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
-  //   }
-  // }
+  async handleGetOneArea(req, res) {
+    try {
+      const uidAreaRef = req.params.id
+      const result = await this._controller.getOneArea(uidAreaRef)
+      this._response.succes(req, res, result, this._httpcode.OK)
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+    }
+  }
 
   // async handleAddStudent(req, res) {
   //   try {

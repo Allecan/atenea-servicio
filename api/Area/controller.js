@@ -56,15 +56,15 @@ export class ControllerArea {
     // }
 
 
-    // async getAllGrades() {
-    //     const response = await this._service.getGrades('Grades')
-    //     return response
-    // }
+    async getAllAreas() {
+        const response = await this._service.getData('Areas')
+        return response
+    }
 
-    // async getOneGrade(uid) {
-    //     const response = await this._service.getOneGrade('Grades', uid)
-    //     return response
-    // }
+    async getOneArea(uid) {
+        const response = await this._service.getOneGrade('Areas', uid)
+        return response
+    }
 
     // async addStudent(idGrade, idStudent) {
     //     const studentModel = await this._service.getOneData('Students', idStudent)
