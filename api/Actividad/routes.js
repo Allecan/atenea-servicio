@@ -1,4 +1,4 @@
-export class AreaRouter {
+export class ActivityRouter {
   constructor(router, controller, response, httpCode) {
     this._router = router()
     this._controller = controller
@@ -8,11 +8,11 @@ export class AreaRouter {
   }
 
   registerRouter() {
-    this._router.post('/add-area', this.handleSingUp.bind(this));
-    this._router.put(
-      '/update-area/:id',
-      this.handleUpdateAreaName.bind(this)
-    );
+    this._router.post('/add-activity', this.handleSingUp.bind(this));
+    // this._router.put(
+    //   '/update-area/:id',
+    //   this.handleUpdateArea.bind(this)
+    // );
     // this._router.delete('/delete-grade/:id', this.handleDeleteGrade.bind(this))
     // this._router.put(
     //   '/add-student/',
@@ -22,13 +22,13 @@ export class AreaRouter {
     //   '/add-course/',
     //   this.handleAddCourse.bind(this)
     // );
-    this._router.get('/getall-areas', this.handleGetAllAreas.bind(this))
-    this._router.get('/getone-area:id', this.handleGetOneArea.bind(this))
+    // this._router.get('/getall-areas', this.handleGetAllAreas.bind(this))
+    // this._router.get('/getone-area:id', this.handleGetOneArea.bind(this))
   }
 
   async handleSingUp(req, res) {
-    const area = req.body
-    const result = await this._controller.createNewArea(area)
+    const activity = req.body
+    const result = await this._controller.createNewActivity(activity)
     if (result instanceof Error) {
       this._response.error(req, res, result, 201)
     } else {
@@ -41,16 +41,6 @@ export class AreaRouter {
       const updateArea = req.body;
       const idArea = req.params["id"];
       const result = await this._controller.updateAnArea(idArea, updateArea);
-      this._response.succes(req, res, result, this._httpcode.OK);
-    } catch (error) {
-      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
-    }
-  }
-  async handleUpdateAreaName(req, res) {
-    try {
-      const updateArea = req.body;
-      const idArea = req.params["id"];
-      const result = await this._controller.updateAnAreaName(idArea, updateArea);
       this._response.succes(req, res, result, this._httpcode.OK);
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST);

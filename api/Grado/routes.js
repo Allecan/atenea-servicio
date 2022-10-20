@@ -18,10 +18,10 @@ export class GradeRouter {
       '/add-student/',
       this.handleAddStudent.bind(this)
     );
-    this._router.put(
-      '/add-area/',
-      this.handleAddArea.bind(this)
-    );
+    // this._router.put(
+    //   '/add-area/',
+    //   this.handleAddArea.bind(this)
+    // );
     this._router.get('/getall-grades', this.handleGetAllGrades.bind(this))
     this._router.get('/getone-grade/:id', this.handleGetOneGrade.bind(this))
   }
