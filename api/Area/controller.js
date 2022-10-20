@@ -10,8 +10,10 @@ export class ControllerArea {
 
         const grade = await this._service.getOneData('Grades', newArea.gradeRef)
 
-        // if (teacher == undefined) {
-        //     return "El id de este usuario no existe"
+        if (grade == undefined) {
+            return "El id de este grado no existe"
+        }
+
         // } else if (teacher.rol != 'docente') {
         //     return "Este usuario no es un docente"
         // } else if (level == undefined) {
