@@ -19,8 +19,8 @@ export class GradeRouter {
       this.handleAddStudent.bind(this)
     );
     this._router.put(
-      '/add-course/',
-      this.handleAddCourse.bind(this)
+      '/add-area/',
+      this.handleAddArea.bind(this)
     );
     this._router.get('/getall-grades', this.handleGetAllGrades.bind(this))
     this._router.get('/getone-grade/:id', this.handleGetOneGrade.bind(this))
@@ -83,16 +83,16 @@ export class GradeRouter {
     }
   }
 
-  async handleAddCourse(req, res) {
+  async handleAddArea(req, res) {
     try {
       const idGrade = req.query.idGrade
-      const idCourse = req.query.idCourse
-      if (idGrade === "" || idCourse === "") {
+      const idArea = req.query.idArea
+      if (idGrade === "" || idArea === "") {
         this._response.error(req, res, 'No se envio ningun parametro', this._httpcode.BAD_REQUEST)
-      } else if (idGrade === undefined || idCourse === undefined) {
+      } else if (idGrade === undefined || idArea === undefined) {
         this._response.error(req, res, 'Revisar el parametro de informacion', this._httpcode.BAD_REQUEST)
       } else {
-        const result = await this._controller.addStudent(idGrade, idCourse)
+        const result = await this._controller.addArea(idGrade, idArea)
         this._response.succes(req, res, result, this._httpcode.OK)
       }
     } catch (error) {

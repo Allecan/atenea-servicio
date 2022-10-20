@@ -74,15 +74,23 @@ export class ControllerGrade {
 
     async addStudent(idGrade, idStudent) {
         const studentModel = await this._service.getOneData('Students', idStudent)
+        if (studentModel == undefined) {
+            return "El id de este estudiante no existe"
+        }
         studentModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
+        delete studentModel.id
         const response = await this._service.updateData('Students', idStudent, studentModel);
         return response
     }
 
-    async addCourse(idGrade, idCourse) {
-        const courseModel = await this._service.getOneData('Courses', idCourse)
-        courseModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
-        const response = await this._service.updateData('Courses', idCourse, courseModel);
+    async addArea(idGrade, idArea) {
+        const areaModel = await this._service.getOneData('Areas', idArea)
+        if (areaModel == undefined) {
+            return "El id de esta area no existe"
+        }
+        areaModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
+        delete areaModel.id
+        const response = await this._service.updateData('Areas', idArea, areaModel);
         return response
     }
 }
