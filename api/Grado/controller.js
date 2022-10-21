@@ -93,6 +93,10 @@ export class ControllerGrade {
     }
 
     async getOneGrade(uid) {
+        const grade = await this._service.getOneData('Grades', uid)
+        if (grade == undefined) {
+            throw "Este id de grado no existe"
+        }
         const response = await this._service.getOneGrade('Grades', uid)
         return response
     }
