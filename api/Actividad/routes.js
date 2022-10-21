@@ -1,4 +1,4 @@
-export class AreaRouter {
+export class ActivityRouter {
   constructor(router, controller, response, httpCode) {
     this._router = router()
     this._controller = controller
@@ -8,12 +8,12 @@ export class AreaRouter {
   }
 
   registerRouter() {
-    this._router.post('/add-area', this.handleSingUp.bind(this));
+    this._router.post('/add-activity', this.handleSingUp.bind(this));
     this._router.put(
-      '/update-area/:id',
-      this.handleUpdateAreaName.bind(this)
+      '/update-activity/:id',
+      this.handleUpdateActivity.bind(this)
     );
-    this._router.put('/delete-area/:id', this.handleDeleteArea.bind(this))
+    this._router.put('/delete-activity/:id', this.handleDeleteActivity.bind(this))
     // this._router.put(
     //   '/add-student/',
     //   this.handleAddStudent.bind(this)
@@ -22,13 +22,13 @@ export class AreaRouter {
     //   '/add-course/',
     //   this.handleAddCourse.bind(this)
     // );
-    this._router.get('/getall-areas', this.handleGetAllAreas.bind(this))
-    this._router.get('/getone-area/:id', this.handleGetOneArea.bind(this))
+    this._router.get('/getall-activities', this.handleGetAllActivities.bind(this))
+    this._router.get('/getone-activity/:id', this.handleGetOneActivity.bind(this))
   }
 
   async handleSingUp(req, res) {
-    const area = req.body
-    const result = await this._controller.createNewArea(area)
+    const activity = req.body
+    const result = await this._controller.createNewActivity(activity)
     if (result instanceof Error) {
       this._response.error(req, res, result, 201)
     } else {
@@ -36,40 +36,30 @@ export class AreaRouter {
     }
   }
 
-  async handleUpdateArea(req, res) {
+  async handleUpdateActivity(req, res) {
     try {
-      const updateArea = req.body;
-      const idArea = req.params["id"];
-      const result = await this._controller.updateAnArea(idArea, updateArea);
-      this._response.succes(req, res, result, this._httpcode.OK);
-    } catch (error) {
-      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
-    }
-  }
-  async handleUpdateAreaName(req, res) {
-    try {
-      const updateArea = req.body;
-      const idArea = req.params["id"];
-      const result = await this._controller.updateAnAreaName(idArea, updateArea);
+      const updateActivity = req.body;
+      const idActivity = req.params["id"];
+      const result = await this._controller.updateAnActivity(idActivity, updateActivity);
       this._response.succes(req, res, result, this._httpcode.OK);
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
     }
   }
 
-  async handleGetAllAreas(req, res) {
+  async handleGetAllActivities(req, res) {
     try {
-      const result = await this._controller.getAllAreas()
+      const result = await this._controller.getAllActivities()
       this._response.succes(req, res, result, this._httpcode.OK)
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
     }
   }
 
-  async handleGetOneArea(req, res) {
+  async handleGetOneActivity(req, res) {
     try {
-      const uidAreaRef = req.params.id
-      const result = await this._controller.getOneArea(uidAreaRef)
+      const uidActivityRef = req.params.id
+      const result = await this._controller.getOneActivity(uidActivityRef)
       this._response.succes(req, res, result, this._httpcode.OK)
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
@@ -110,10 +100,10 @@ export class AreaRouter {
   //   }
   // }
 
-  async handleDeleteArea(req, res) {
+  async handleDeleteActivity(req, res) {
     try {
-      const uidAreaRef = req.params.id
-      const result = await this._controller.deleteAnArea(uidAreaRef);
+      const uidActivityRef = req.params.id
+      const result = await this._controller.deleteAnActivity(uidActivityRef);
       this._response.succes(req, res, result, this._httpcode.OK);
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST);

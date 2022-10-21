@@ -3,6 +3,7 @@ export class Grade{
         this.grade_name = grade.grade_name || oldGrade.grade_name
         this.teacherRef = grade.teacherRef || oldGrade.teacherRef
         this.levelRef = grade.levelRef || oldGrade.levelRef
+        this.enable = true
     }
 
 }

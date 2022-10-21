@@ -30,39 +30,90 @@ export class ControllerArea {
         return response
     }
 
-    async updateAnArea(id, area) {
+    async updateAnAreaName(id, area) {
         const oldArea = await this._service.getOneData('Areas', id)
-        const newModel = new this._model(area, oldArea);
-        const newArea = Object.assign({}, newModel);
-        const grade = await this._service.getOneData('Grades', newArea.gradeRef)
 
         if (oldArea == undefined) {
             return "El id de esta area no existe"
-        } else if (grade == undefined) {
-            return "El id de este grado no existe"
         }
 
-        const gradeRef = await this._service.getDocRef('Grades', newArea.gradeRef)
+        oldArea.area_name = area.area_name
+        delete oldArea.id
 
-        newArea.gradeRef = gradeRef
-
-        const response = await this._service.updateData('Areas', id, newArea);
-        return response;
+        const response = await this._service.updateData('Areas', id, oldArea)
+        return response
     }
 
-    // async deleteAGrade(id) {
-    //     const response = await this._service.deleteGrade('Grades', id)
-    //     return response
+    // async updateAnArea(id, area) {
+    //     const oldArea = await this._service.getOneData('Areas', id)
+    //     const newModel = new this._model(area, oldArea);
+    //     const newArea = Object.assign({}, newModel);
+    //     const grade = await this._service.getOneData('Grades', newArea.gradeRef)
+
+    //     if (oldArea == undefined) {
+    //         return "El id de esta area no existe"
+    //     } else if (grade == undefined) {
+    //         return "El id de este grado no existe"
+    //     }
+
+    //     const gradeRef = await this._service.getDocRef('Grades', newArea.gradeRef)
+
+    //     newArea.gradeRef = gradeRef
+
+    //     const response = await this._service.updateData('Areas', id, newArea);
+    //     return response;
     // }
+
+    async deleteAnArea(id) {
+        const response = await this._service.getOneData('Areas', id)
+        if (response == undefined) {
+            return "Este id de area no existe"
+        }
+        response.enable = false
+        delete response.id
+        const disableArea = await this._service.updateData('Areas', id, response);
+        const activities = await this._service.getData('Activities')
+        for (const activity of activities) {
+            if (activity.areaRef._key.path.segments.at(-1) == id) {
+                activity.enable = false
+                const activityId = activity.id
+                delete activity.id
+                const disableActivity = await this._service.updateData('Activities', activityId, activity);
+            }
+        }
+        return disableArea
+    }
 
 
     async getAllAreas() {
         const response = await this._service.getData('Areas')
+        for (const area of response) {
+            area.gradeRef = await this._service.getDocByRef(area.gradeRef)
+            delete area.gradeRef.levelRef
+            delete area.gradeRef.teacherRef
+        }
         return response
     }
 
     async getOneArea(uid) {
-        const response = await this._service.getOneGrade('Areas', uid)
+        const response = await this._service.getOneData('Areas', uid)
+        if (response == undefined) {
+            return "Este id de area no existe"
+        }
+        response.gradeRef = await this._service.getDocByRef(response.gradeRef)
+        delete response.gradeRef.levelRef
+        delete response.gradeRef.teacherRef
+
+        //Se buscan las actividades que pertenecen a esta area
+        const activities = await this._service.getData('Activities')
+        response.activities = []
+        for (const activity of activities) {
+            if (activity.areaRef._key.path.segments.at(-1) == uid) {
+                delete activity.areaRef
+                delete activity.scores
+                response.activities.push(activity)
+            }
+        }
         return response
     }
 
