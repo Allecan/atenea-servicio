@@ -13,7 +13,7 @@ export class ActivityRouter {
       '/update-activity/:id',
       this.handleUpdateActivity.bind(this)
     );
-    // this._router.delete('/delete-grade/:id', this.handleDeleteGrade.bind(this))
+    this._router.put('/delete-activity/:id', this.handleDeleteActivity.bind(this))
     // this._router.put(
     //   '/add-student/',
     //   this.handleAddStudent.bind(this)
@@ -100,13 +100,13 @@ export class ActivityRouter {
   //   }
   // }
 
-  // async handleDeleteGrade(req, res) {
-  //   try {
-  //     const uidGradeRef = req.params.id
-  //     const result = await this._controller.deleteAGrade(uidGradeRef);
-  //     this._response.succes(req, res, result, this._httpcode.OK);
-  //   } catch (error) {
-  //     this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
-  //   }
-  // }
+  async handleDeleteActivity(req, res) {
+    try {
+      const uidActivityRef = req.params.id
+      const result = await this._controller.deleteAnActivity(uidActivityRef);
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
+    }
+  }
 }

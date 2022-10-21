@@ -55,10 +55,16 @@ export class ControllerActivity {
         return response;
     }
 
-    // async deleteAGrade(id) {
-    //     const response = await this._service.deleteGrade('Grades', id)
-    //     return response
-    // }
+    async deleteAnActivity(id) {
+        const response = await this._service.getOneData('Activities', id)
+        if (response == undefined) {
+            return "Este id de actividad no existe"
+        }
+        response.enable = false
+        delete response.id
+        const disableActivity = await this._service.updateData('Activities', id, response);
+        return disableActivity
+    }
 
 
     async getAllActivities() {
