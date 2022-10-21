@@ -13,7 +13,7 @@ export class AreaRouter {
       '/update-area/:id',
       this.handleUpdateAreaName.bind(this)
     );
-    // this._router.delete('/delete-grade/:id', this.handleDeleteGrade.bind(this))
+    this._router.put('/delete-area/:id', this.handleDeleteArea.bind(this))
     // this._router.put(
     //   '/add-student/',
     //   this.handleAddStudent.bind(this)
@@ -110,13 +110,13 @@ export class AreaRouter {
   //   }
   // }
 
-  // async handleDeleteGrade(req, res) {
-  //   try {
-  //     const uidGradeRef = req.params.id
-  //     const result = await this._controller.deleteAGrade(uidGradeRef);
-  //     this._response.succes(req, res, result, this._httpcode.OK);
-  //   } catch (error) {
-  //     this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
-  //   }
-  // }
+  async handleDeleteArea(req, res) {
+    try {
+      const uidAreaRef = req.params.id
+      const result = await this._controller.deleteAnArea(uidAreaRef);
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
+    }
+  }
 }

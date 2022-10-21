@@ -64,10 +64,25 @@ export class ControllerArea {
     //     return response;
     // }
 
-    // async deleteAGrade(id) {
-    //     const response = await this._service.deleteGrade('Grades', id)
-    //     return response
-    // }
+    async deleteAnArea(id) {
+        const response = await this._service.getOneData('Areas', id)
+        if (response == undefined) {
+            return "Este id de area no existe"
+        }
+        response.enable = false
+        delete response.id
+        const disableArea = await this._service.updateData('Areas', id, response);
+        const activities = await this._service.getData('Activities')
+        for (const activity of activities) {
+            if (activity.areaRef._key.path.segments.at(-1) == id) {
+                activity.enable = false
+                const activityId = activity.id
+                delete activity.id
+                const disableActivity = await this._service.updateData('Activities', activityId, activity);
+            }
+        }
+        return disableArea
+    }
 
 
     async getAllAreas() {

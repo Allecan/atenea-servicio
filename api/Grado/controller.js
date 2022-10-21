@@ -74,7 +74,7 @@ export class ControllerGrade {
                         activity.enable = false
                         const activityId = activity.id
                         delete activity.id
-                        const disableArea = await this._service.updateData('Activities', activityId, activity);
+                        const disableActivity = await this._service.updateData('Activities', activityId, activity);
                     }
                 }
                 area.enable = false
