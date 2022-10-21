@@ -13,7 +13,7 @@ export class GradeRouter {
       '/update-grade/:id',
       this.handleUpdateGrade.bind(this)
     );
-    this._router.delete('/delete-grade/:id', this.handleDeleteGrade.bind(this))
+    this._router.put('/delete-grade/:id', this.handleDeleteGrade.bind(this))
     this._router.put(
       '/add-student/',
       this.handleAddStudent.bind(this)

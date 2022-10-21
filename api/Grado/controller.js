@@ -57,7 +57,32 @@ export class ControllerGrade {
     }
 
     async deleteAGrade(id) {
-        const response = await this._service.deleteGrade('Grades', id)
+        // const response = await this._service.deleteGrade('Grades', id)
+        const grade = await this._service.getOneData('Grades', id)
+        if (grade == undefined) {
+            return "Este id de grado no existe"
+        }
+        grade.enable = false
+        delete grade.id
+        const response = await this._service.updateData('Grades', id, grade);
+        const areas = await this._service.getData('Areas')
+        const activities = await this._service.getData('Activities')
+        for (const area of areas) {
+            if (area.gradeRef._key.path.segments.at(-1) == id) {
+                for (const activity of activities) {
+                    if (activity.areaRef._key.path.segments.at(-1) == area.id) {
+                        activity.enable = false
+                        const activityId = activity.id
+                        delete activity.id
+                        const disableArea = await this._service.updateData('Activities', activityId, activity);
+                    }
+                }
+                area.enable = false
+                const areaId = area.id
+                delete area.id
+                const disableArea = await this._service.updateData('Areas', areaId, area);
+            }
+        }
         return response
     }
 
@@ -103,7 +128,7 @@ export class ControllerGrade {
                 for (const activity of activities) {
                     if (activity.areaRef._key.path.segments.at(-1) == area.id) {
 
-                        activity.scores.push({score : 0, studentRef : await this._service.getDocRef('Students', idStudent)})
+                        activity.scores.push({ score: 0, studentRef: await this._service.getDocRef('Students', idStudent) })
 
                         const idActivity = activity.id
                         delete activity.id
@@ -112,7 +137,7 @@ export class ControllerGrade {
                         console.log("holas")
                     }
                 }
-        // Se eliminan las notas de los cursos en donde estaba el alumno anteriormente
+                // Se eliminan las notas de los cursos en donde estaba el alumno anteriormente
             } else if (area.gradeRef._key.path.segments.at(-1) == oldGradeId) {
                 console.log("encontre antiguo grado")
                 for (const activity of activities) {
