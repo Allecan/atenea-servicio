@@ -11,7 +11,7 @@ export class ControllerActivity {
         const area = await this._service.getOneData('Areas', newActivity.areaRef)
 
         if (area == undefined) {
-            return "El id de este area no existe"
+            throw "El id de este area no existe"
         }
 
         // } else if (teacher.rol != 'docente') {
@@ -44,7 +44,7 @@ export class ControllerActivity {
         const oldActivity = await this._service.getOneData('Activities', id)
 
         if (oldActivity == undefined) {
-            return "El id de esta actividad no existe"
+            throw "El id de esta actividad no existe"
         }
 
         oldActivity.activity_name = activity.activity_name
@@ -80,7 +80,7 @@ export class ControllerActivity {
     async deleteAnActivity(id) {
         const response = await this._service.getOneData('Activities', id)
         if (response == undefined) {
-            return "Este id de actividad no existe"
+            throw "Este id de actividad no existe"
         }
         response.enable = false
         delete response.id
@@ -102,7 +102,7 @@ export class ControllerActivity {
     async getOneActivity(uid) {
         const response = await this._service.getOneData('Activities', uid)
         if (response == undefined) {
-            return "Este id de actividad no existe"
+            throw "Este id de actividad no existe"
         }
         response.areaRef = await this._service.getDocByRef(response.areaRef)
         delete response.areaRef.gradeRef
