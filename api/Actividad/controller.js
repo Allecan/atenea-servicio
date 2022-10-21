@@ -11,7 +11,7 @@ export class ControllerActivity {
         const area = await this._service.getOneData('Areas', newActivity.areaRef)
 
         if (area == undefined) {
-            return "El id de este area no existe"
+            throw "El id de este area no existe"
         }
 
         // } else if (teacher.rol != 'docente') {
@@ -44,7 +44,7 @@ export class ControllerActivity {
         const oldActivity = await this._service.getOneData('Activities', id)
 
         if (oldActivity == undefined) {
-            return "El id de esta actividad no existe"
+            throw "El id de esta actividad no existe"
         }
 
         oldActivity.activity_name = activity.activity_name
@@ -55,10 +55,32 @@ export class ControllerActivity {
         return response;
     }
 
+    async updateStudentScore(idActivity, idStudent, newScore) {
+        const activity = await this._service.getOneData('Activities', idActivity)
+        const student = await this._service.getOneData('Students', idStudent)
+
+        if (activity == undefined) {
+            throw "El id de esta actividad no existe"
+        } else if (student == undefined) {
+            throw "El id de este estudiante no existe o no esta asignado al grado de esta actividad"
+        } else if (newScore < 0) {
+            throw "El punteo no puede ser un numero negativo"
+        }
+
+        for (const score of activity.scores) {
+            if (score.studentRef._key.path.segments.at(-1) == idStudent) {
+                score.score = newScore
+            }
+        }
+        delete activity.id
+        const response = await this._service.updateData('Activities', idActivity, activity);
+        return response;
+    }
+
     async deleteAnActivity(id) {
         const response = await this._service.getOneData('Activities', id)
         if (response == undefined) {
-            return "Este id de actividad no existe"
+            throw "Este id de actividad no existe"
         }
         response.enable = false
         delete response.id
@@ -80,7 +102,7 @@ export class ControllerActivity {
     async getOneActivity(uid) {
         const response = await this._service.getOneData('Activities', uid)
         if (response == undefined) {
-            return "Este id de actividad no existe"
+            throw "Este id de actividad no existe"
         }
         response.areaRef = await this._service.getDocByRef(response.areaRef)
         delete response.areaRef.gradeRef

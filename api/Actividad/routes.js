@@ -14,6 +14,7 @@ export class ActivityRouter {
       this.handleUpdateActivity.bind(this)
     );
     this._router.put('/delete-activity/:id', this.handleDeleteActivity.bind(this))
+    this._router.put('/update-student-score/', this.handleUpdateStudentScore.bind(this))
     // this._router.put(
     //   '/add-student/',
     //   this.handleAddStudent.bind(this)
@@ -61,6 +62,24 @@ export class ActivityRouter {
       const uidActivityRef = req.params.id
       const result = await this._controller.getOneActivity(uidActivityRef)
       this._response.succes(req, res, result, this._httpcode.OK)
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+    }
+  }
+
+  async handleUpdateStudentScore(req, res) {
+    try {
+      const idActivity = req.query.idActivity
+      const idStudent = req.query.idStudent
+      const score = req.query.score
+      if (idActivity === "" || idStudent === "" || score === "") {
+        this._response.error(req, res, 'No se envio ningun parametro', this._httpcode.BAD_REQUEST)
+      } else if (idActivity === undefined || idStudent === undefined || score === "") {
+        this._response.error(req, res, 'Revisar el parametro de informacion', this._httpcode.BAD_REQUEST)
+      } else {
+        const result = await this._controller.updateStudentScore(idActivity, idStudent, score)
+        this._response.succes(req, res, result, this._httpcode.OK)
+      }
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
     }

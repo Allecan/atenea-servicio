@@ -11,7 +11,7 @@ export class ControllerArea {
         const grade = await this._service.getOneData('Grades', newArea.gradeRef)
 
         if (grade == undefined) {
-            return "El id de este grado no existe"
+            throw "El id de este grado no existe"
         }
 
         // } else if (teacher.rol != 'docente') {
@@ -34,7 +34,7 @@ export class ControllerArea {
         const oldArea = await this._service.getOneData('Areas', id)
 
         if (oldArea == undefined) {
-            return "El id de esta area no existe"
+            throw "El id de esta area no existe"
         }
 
         oldArea.area_name = area.area_name
@@ -67,7 +67,7 @@ export class ControllerArea {
     async deleteAnArea(id) {
         const response = await this._service.getOneData('Areas', id)
         if (response == undefined) {
-            return "Este id de area no existe"
+            throw "Este id de area no existe"
         }
         response.enable = false
         delete response.id
@@ -98,7 +98,7 @@ export class ControllerArea {
     async getOneArea(uid) {
         const response = await this._service.getOneData('Areas', uid)
         if (response == undefined) {
-            return "Este id de area no existe"
+            throw "Este id de area no existe"
         }
         response.gradeRef = await this._service.getDocByRef(response.gradeRef)
         delete response.gradeRef.levelRef
