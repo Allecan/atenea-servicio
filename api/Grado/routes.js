@@ -13,15 +13,15 @@ export class GradeRouter {
       '/update-grade/:id',
       this.handleUpdateGrade.bind(this)
     );
-    this._router.delete('/delete-grade/:id', this.handleDeleteGrade.bind(this))
+    this._router.put('/delete-grade/:id', this.handleDeleteGrade.bind(this))
     this._router.put(
       '/add-student/',
       this.handleAddStudent.bind(this)
     );
-    this._router.put(
-      '/add-area/',
-      this.handleAddArea.bind(this)
-    );
+    // this._router.put(
+    //   '/add-area/',
+    //   this.handleAddArea.bind(this)
+    // );
     this._router.get('/getall-grades', this.handleGetAllGrades.bind(this))
     this._router.get('/getone-grade/:id', this.handleGetOneGrade.bind(this))
   }
