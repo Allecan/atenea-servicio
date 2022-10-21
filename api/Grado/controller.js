@@ -12,11 +12,11 @@ export class ControllerGrade {
         const level = await this._service.getOneData('Levels', newGrade.levelRef)
 
         if (teacher == undefined) {
-            return "El id de este usuario no existe"
+            throw "El id de este usuario no existe"
         } else if (teacher.rol != 'docente') {
-            return "Este usuario no es un docente"
+            throw "Este usuario no es un docente"
         } else if (level == undefined) {
-            return "El id de este nivel no existe"
+            throw "El id de este nivel no existe"
         }
 
         const teacherRef = await this._service.getDocRef('User', grade.teacherRef)
@@ -37,13 +37,13 @@ export class ControllerGrade {
         const level = await this._service.getOneData('Levels', newGrade.levelRef)
 
         if (oldGrade == undefined) {
-            return "El id de este grado no existe"
+            throw "El id de este grado no existe"
         } else if (teacher == undefined) {
-            return "El id de este usuario no existe"
+            throw "El id de este usuario no existe"
         } else if (teacher.rol != 'docente') {
-            return "Este usuario no es un docente"
+            throw "Este usuario no es un docente"
         } else if (level == undefined) {
-            return "El id de este nivel no existe"
+            throw "El id de este nivel no existe"
         }
 
         const teacherRef = await this._service.getDocRef('User', newGrade.teacherRef)
@@ -60,7 +60,7 @@ export class ControllerGrade {
         // const response = await this._service.deleteGrade('Grades', id)
         const grade = await this._service.getOneData('Grades', id)
         if (grade == undefined) {
-            return "Este id de grado no existe"
+            throw "Este id de grado no existe"
         }
         grade.enable = false
         delete grade.id
@@ -93,6 +93,10 @@ export class ControllerGrade {
     }
 
     async getOneGrade(uid) {
+        const grade = await this._service.getOneData('Grades', uid)
+        if (grade == undefined) {
+            throw "Este id de grado no existe"
+        }
         const response = await this._service.getOneGrade('Grades', uid)
         return response
     }
@@ -102,9 +106,9 @@ export class ControllerGrade {
         const studentModel = await this._service.getOneData('Students', idStudent)
         const gradeModel = await this._service.getOneData('Grades', idGrade)
         if (studentModel == undefined) {
-            return "El id de este estudiante no existe"
+            throw "El id de este estudiante no existe"
         } else if (gradeModel == undefined) {
-            return "El id de este grado no existe"
+            throw "El id de este grado no existe"
         }
         const oldGradeId = studentModel.gradeRef._key.path.segments.at(-1)
         studentModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
@@ -122,9 +126,7 @@ export class ControllerGrade {
         const activities = await this._service.getData('Activities')
 
         for (const area of areas) {
-            console.log("jhhh")
             if (area.gradeRef._key.path.segments.at(-1) == idGrade) {
-                console.log("yowputo")
                 for (const activity of activities) {
                     if (activity.areaRef._key.path.segments.at(-1) == area.id) {
 
@@ -132,22 +134,17 @@ export class ControllerGrade {
 
                         const idActivity = activity.id
                         delete activity.id
-                        console.log("holaf")
                         const addScore = await this._service.updateData('Activities', idActivity, activity);
-                        console.log("holas")
                     }
                 }
                 // Se eliminan las notas de los cursos en donde estaba el alumno anteriormente
             } else if (area.gradeRef._key.path.segments.at(-1) == oldGradeId) {
-                console.log("encontre antiguo grado")
                 for (const activity of activities) {
                     if (activity.areaRef._key.path.segments.at(-1) == area.id) {
                         let newScores = []
                         for (const score of activity.scores) {
                             if (score.studentRef._key.path.segments.at(-1) != idStudent) {
-                                console.log("econtre eliminar " + newScores.length)
                                 newScores.push(score)
-                                console.log("lo elimine " + newScores.length)
                             }
                         }
                         const idActivity = activity.id
@@ -165,8 +162,11 @@ export class ControllerGrade {
 
     async addArea(idGrade, idArea) {
         const areaModel = await this._service.getOneData('Areas', idArea)
+        const grade = await this._service.getOneData('Grades', idGrade)
         if (areaModel == undefined) {
-            return "El id de esta area no existe"
+            throw "El id de esta area no existe"
+        } else if (grade == undefined) {
+            throw "El id de este grado no existe"
         }
         areaModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
         delete areaModel.id

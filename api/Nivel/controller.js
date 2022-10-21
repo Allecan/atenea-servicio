@@ -69,6 +69,9 @@ export class ControllerLevel {
 
     async getOneLevel(uid) {
         const response = await this._service.getOneData('Levels', uid)
+        if (response == undefined) {
+            throw "Este id de nivel no existe"
+        }
         return response
     }
 
