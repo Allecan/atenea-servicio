@@ -239,6 +239,7 @@ export class FireBase {
     async getDocByRef(docRef) {
         const docSnap = await getDoc(docRef);
         const oneData = docSnap.data()
+        oneData.id = docSnap.id
         return oneData
     }
 

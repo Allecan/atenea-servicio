@@ -72,11 +72,33 @@ export class ControllerArea {
 
     async getAllAreas() {
         const response = await this._service.getData('Areas')
+        for (const area of response) {
+            area.gradeRef = await this._service.getDocByRef(area.gradeRef)
+            delete area.gradeRef.levelRef
+            delete area.gradeRef.teacherRef
+        }
         return response
     }
 
     async getOneArea(uid) {
-        const response = await this._service.getOneGrade('Areas', uid)
+        const response = await this._service.getOneData('Areas', uid)
+        if (response == undefined) {
+            return "Este id de area no existe"
+        }
+        response.gradeRef = await this._service.getDocByRef(response.gradeRef)
+        delete response.gradeRef.levelRef
+        delete response.gradeRef.teacherRef
+
+        //Se buscan las actividades que pertenecen a esta area
+        const activities = await this._service.getData('Activities')
+        response.activities = []
+        for (const activity of activities) {
+            if (activity.areaRef._key.path.segments.at(-1) == uid) {
+                delete activity.areaRef
+                delete activity.scores
+                response.activities.push(activity)
+            }
+        }
         return response
     }
 

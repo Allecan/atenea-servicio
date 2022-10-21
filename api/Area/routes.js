@@ -23,7 +23,7 @@ export class AreaRouter {
     //   this.handleAddCourse.bind(this)
     // );
     this._router.get('/getall-areas', this.handleGetAllAreas.bind(this))
-    this._router.get('/getone-area:id', this.handleGetOneArea.bind(this))
+    this._router.get('/getone-area/:id', this.handleGetOneArea.bind(this))
   }
 
   async handleSingUp(req, res) {
