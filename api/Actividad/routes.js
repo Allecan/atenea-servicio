@@ -22,8 +22,8 @@ export class ActivityRouter {
     //   '/add-course/',
     //   this.handleAddCourse.bind(this)
     // );
-    // this._router.get('/getall-areas', this.handleGetAllAreas.bind(this))
-    // this._router.get('/getone-area:id', this.handleGetOneArea.bind(this))
+    this._router.get('/getall-activities', this.handleGetAllActivities.bind(this))
+    this._router.get('/getone-activity/:id', this.handleGetOneActivity.bind(this))
   }
 
   async handleSingUp(req, res) {
@@ -47,19 +47,19 @@ export class ActivityRouter {
     }
   }
 
-  async handleGetAllAreas(req, res) {
+  async handleGetAllActivities(req, res) {
     try {
-      const result = await this._controller.getAllAreas()
+      const result = await this._controller.getAllActivities()
       this._response.succes(req, res, result, this._httpcode.OK)
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
     }
   }
 
-  async handleGetOneArea(req, res) {
+  async handleGetOneActivity(req, res) {
     try {
-      const uidAreaRef = req.params.id
-      const result = await this._controller.getOneArea(uidAreaRef)
+      const uidActivityRef = req.params.id
+      const result = await this._controller.getOneActivity(uidActivityRef)
       this._response.succes(req, res, result, this._httpcode.OK)
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST)

@@ -61,15 +61,29 @@ export class ControllerActivity {
     // }
 
 
-    // async getAllAreas() {
-    //     const response = await this._service.getData('Areas')
-    //     return response
-    // }
+    async getAllActivities() {
+        const response = await this._service.getData('Activities')
+        for (const activity of response) {
+            activity.areaRef = await this._service.getDocByRef(activity.areaRef)
+            delete activity.areaRef.gradeRef
+            delete activity.scores
+        }
+        return response
+    }
 
-    // async getOneArea(uid) {
-    //     const response = await this._service.getOneGrade('Areas', uid)
-    //     return response
-    // }
+    async getOneActivity(uid) {
+        const response = await this._service.getOneData('Activities', uid)
+        if (response == undefined) {
+            return "Este id de actividad no existe"
+        }
+        response.areaRef = await this._service.getDocByRef(response.areaRef)
+        delete response.areaRef.gradeRef
+        for (const score of response.scores) {
+            score.studentRef = await this._service.getDocByRef(score.studentRef)
+            delete score.studentRef.gradeRef
+        }
+        return response
+    }
 
     // async addStudent(idGrade, idStudent) {
     //     const studentModel = await this._service.getOneData('Students', idStudent)
