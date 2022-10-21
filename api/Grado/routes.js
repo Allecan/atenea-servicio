@@ -27,12 +27,12 @@ export class GradeRouter {
   }
 
   async handleSingUp(req, res) {
-    const grade = req.body
-    const result = await this._controller.createNewGrade(grade)
-    if (result instanceof Error) {
-      this._response.error(req, res, result, 201)
-    } else {
-      this._response.succes(req, res, result, this._httpcode.OK)
+    try {
+      const grade = req.body
+      const result = await this._controller.createNewGrade(grade)
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
     }
   }
 

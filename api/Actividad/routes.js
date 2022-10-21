@@ -28,12 +28,12 @@ export class ActivityRouter {
   }
 
   async handleSingUp(req, res) {
-    const activity = req.body
-    const result = await this._controller.createNewActivity(activity)
-    if (result instanceof Error) {
-      this._response.error(req, res, result, 201)
-    } else {
-      this._response.succes(req, res, result, this._httpcode.OK)
+    try {
+      const activity = req.body
+      const result = await this._controller.createNewActivity(activity)
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
     }
   }
 
