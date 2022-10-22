@@ -144,6 +144,23 @@ export class FireBaseAdminSDK {
         }
     }
 
+    async getOneDataU(name, uid){
+        const dataRef = this.getFireStoreDatabase().collection(name).doc(uid);
+        const doc = await dataRef.get();
+        const data = doc.data()
+        if (data != undefined) {
+            data.id = doc.id
+        }
+        return data
+    }
+
+    async getDataU(name){
+        const snapshot = await this.getFireStoreDatabase().collection(name).get()
+        const dataList = []
+        snapshot.forEach(doc => dataList.push(Object.assign(doc.data(), { id: doc.id })))
+        return dataList
+    }
+
     async deleteData(name, uid, enable){
         try {
             if(name === 'Students'){
