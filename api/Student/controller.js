@@ -32,7 +32,6 @@ export class ControllerStudent {
         if (student == undefined) {
             throw "Este id de estudiante no existe"
         }
-        console.log("hola4")
         // Variables para el boletin
         let courses = []
         let grade = ""
@@ -150,7 +149,7 @@ export class ControllerStudent {
             //ingresar a la tabla
             table.push(raw)
         })
-        console.log(table)
+        // console.log(table)
         return table
     }
 

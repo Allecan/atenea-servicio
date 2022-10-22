@@ -20,14 +20,13 @@ export const appPdf =  (information,data)=>{
        // console.log(docDefinition)
         let printer = new PdfPrinter(fonts)
         const name = `${data.name}${data.year}Boletin`
-        console.log(name)
-        const direction = `api/Boletin/pdf/docs/${name}.pdf`
-        console.log(direction)
+        const direction = `api/Student/pdf/docs/${name}.pdf`
         let pdfDoc = printer.createPdfKitDocument(docDefinition)
-        pdfDoc.pipe(fs.createWriteStream(direction))
+        let pdfPipe = pdfDoc.pipe(fs.createWriteStream(direction))
         pdfDoc.end()
         const result = {
-            name_file: name
+            name_file: name,
+            pdfDocPipe : pdfPipe
         }
         return result
     } catch (error) {
