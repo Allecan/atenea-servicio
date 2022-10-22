@@ -58,6 +58,7 @@ export class ControllerActivity {
     async updateStudentScore(idActivity, idStudent, newScore) {
         const activity = await this._service.getOneData('Activities', idActivity)
         const student = await this._service.getOneData('Students', idStudent)
+        newScore = parseInt(newScore)
 
         if (activity == undefined) {
             throw "El id de esta actividad no existe"
