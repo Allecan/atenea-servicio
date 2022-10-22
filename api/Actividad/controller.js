@@ -12,8 +12,10 @@ export class ControllerActivity {
 
         if (area == undefined) {
             throw "El id de este area no existe"
+        } else if (newActivity.unit < 1 || newActivity.unit > 4) {
+            throw "El valor de la unidad no puede ser menor a 1 o mayor a 4"
         }
-
+        
         // } else if (teacher.rol != 'docente') {
         //     return "Este usuario no es un docente"
         // } else if (level == undefined) {
@@ -45,10 +47,13 @@ export class ControllerActivity {
 
         if (oldActivity == undefined) {
             throw "El id de esta actividad no existe"
+        } else if (activity.unit < 1 || activity.unit > 4) {
+            throw "El valor de la unidad no puede ser menor a 1 o mayor a 4"
         }
 
         oldActivity.activity_name = activity.activity_name
         oldActivity.activity_value = activity.activity_value
+        oldActivity.unit = activity.unit
         delete oldActivity.id
 
         const response = await this._service.updateData('Activities', id, oldActivity);
@@ -58,6 +63,7 @@ export class ControllerActivity {
     async updateStudentScore(idActivity, idStudent, newScore) {
         const activity = await this._service.getOneData('Activities', idActivity)
         const student = await this._service.getOneData('Students', idStudent)
+        newScore = parseInt(newScore)
 
         if (activity == undefined) {
             throw "El id de esta actividad no existe"

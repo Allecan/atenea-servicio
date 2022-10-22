@@ -1,23 +1,24 @@
-export class StudentRouter{
-    constructor(router, controller, response, httpCode){
+import { helpers } from "../../lib/helpers.js"
+export class StudentRouter {
+    constructor(router, controller, response, httpCode) {
         this._router = router()
         this._controller = controller
         this._response = response
         this._httpcode = httpCode
-        this.registerRouter() 
+        this.registerRouter()
     }
 
-    registerRouter(){
+    registerRouter() {
         this._router.post('/create-student', this.handleCreateStudent.bind(this))
         this._router.get('/getall-students', this.handleGetAllStudents.bind(this))
         this._router.get('/getone-bygrade/:id', this.handleGetStudentsByGrade.bind(this))
         this._router.get('/getone-student/:id', this.handleGetOneStudent.bind(this))
         this._router.put('/update-student/:id', this.handleUpdateStudent.bind(this))
         this._router.put('/delete-student/', this.handleDeleteStudent.bind(this))
-
+        this._router.get('/get-student-boletin/:id', this.handleGetStudentBoletin.bind(this))
     }
 
-    async handleCreateStudent(req, res){
+    async handleCreateStudent(req, res) {
         try {
             const student = req.body
             const result = await this._controller.createNewStudent(student)
@@ -27,7 +28,7 @@ export class StudentRouter{
         }
     }
 
-    async handleGetAllStudents(req, res){
+    async handleGetAllStudents(req, res) {
         try {
             const result = await this._controller.getAllStudents()
             this._response.succes(req, res, result, this._httpcode.OK)
@@ -36,7 +37,7 @@ export class StudentRouter{
         }
     }
 
-    async handleGetStudentsByGrade(req, res){
+    async handleGetStudentsByGrade(req, res) {
         try {
             const uidGradeRef = req.params.id
             const result = await this._controller.getStudentsByGrade(uidGradeRef)
@@ -46,7 +47,7 @@ export class StudentRouter{
         }
     }
 
-    async handleGetOneStudent(req, res){
+    async handleGetOneStudent(req, res) {
         try {
             const uid = req.params.id
             const result = await this._controller.getOneStudent(uid)
@@ -56,7 +57,34 @@ export class StudentRouter{
         }
     }
 
-    async handleUpdateStudent(req, res){
+    async handleGetStudentBoletin(req, res) {
+        try {
+            const uid = req.params.id
+            const result = await this._controller.getStudentBoletin(uid)
+            const direction = `api/Student/pdf/docs/${result.name_file}.pdf`
+            await new Promise((resolve, reject) => {
+                result.pdfDocPipe.on('finish', resolve)
+                result.pdfDocPipe.on('error', reject)
+            })
+            res.download(direction, `${result.name_file}.pdf`, function (err) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    const direction_file = "api/Student/pdf/docs"
+                    const name_file = `${result.name_file}.pdf`
+
+                    helpers.deleteFile(direction_file, name_file)
+                    console.log("downloaded file")
+
+                }
+            })
+            // this._response.succes(req, res, "Pdf downloaded successfully", this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+
+    async handleUpdateStudent(req, res) {
         try {
             const student = req.body
             const uid = req.params.id
@@ -67,7 +95,7 @@ export class StudentRouter{
         }
     }
 
-    async handleDeleteStudent(req, res){
+    async handleDeleteStudent(req, res) {
         try {
             const student = req.body
             const result = await this._controller.deleteStudent(student)
