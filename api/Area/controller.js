@@ -87,18 +87,23 @@ export class ControllerArea {
 
     async getAllAreas() {
         const response = await this._service.getData('Areas')
+        let enabledData = []
         for (const area of response) {
             area.gradeRef = await this._service.getDocByRef(area.gradeRef)
+            if (area.gradeRef == undefined || area.enable == false) {
+                continue
+            }
             delete area.gradeRef.levelRef
             delete area.gradeRef.teacherRef
+            enabledData.push(area)
         }
-        return response
+        return enabledData
     }
 
     async getOneArea(uid) {
         const response = await this._service.getOneData('Areas', uid)
-        if (response == undefined) {
-            throw "Este id de area no existe"
+        if (response == undefined || response.enable == false) {
+            throw "Este id de area no existe o no esta habilitado"
         }
         response.gradeRef = await this._service.getDocByRef(response.gradeRef)
         delete response.gradeRef.levelRef
