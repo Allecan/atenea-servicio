@@ -94,8 +94,8 @@ export class ControllerGrade {
 
     async getOneGrade(uid) {
         const grade = await this._service.getOneData('Grades', uid)
-        if (grade == undefined) {
-            throw "Este id de grado no existe"
+        if (grade == undefined || grade.enable == false) {
+            throw "Este id de grado no existe o no esta habilitado"
         }
         const response = await this._service.getOneGrade('Grades', uid)
         return response

@@ -38,8 +38,9 @@ export class FireBase {
         const allData = collection(this.getDB(), name);
         const dataDocs = await getDocs(allData);
         const docsList = dataDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+        let enabledData = []
         for (const grade of docsList) {
-            if (grade.levelRef == undefined || grade.teacherRef == undefined) {
+            if (grade.levelRef == undefined || grade.teacherRef == undefined || grade.enable == false) {
                 continue
             }
             const levelSnap = await getDoc(grade.levelRef);
@@ -47,8 +48,9 @@ export class FireBase {
             grade.levelRef = levelSnap.data()
             grade.teacherRef = teacherSnap.data()
             docsList[grade] = grade
+            enabledData.push(grade)
         }
-        return docsList;
+        return enabledData;
     }
 
     async saveData(name, data) {
