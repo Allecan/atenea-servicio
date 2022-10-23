@@ -97,25 +97,36 @@ export class ControllerActivity {
 
     async getAllActivities() {
         const response = await this._service.getData('Activities')
+        let enabledData = []
         for (const activity of response) {
             activity.areaRef = await this._service.getDocByRef(activity.areaRef)
+            if (activity.areaRef == undefined || activity.enable == false) {
+                continue
+            }
             delete activity.areaRef.gradeRef
             delete activity.scores
+            enabledData.push(activity)
         }
-        return response
+        return enabledData
     }
 
     async getOneActivity(uid) {
         const response = await this._service.getOneData('Activities', uid)
-        if (response == undefined) {
-            throw "Este id de actividad no existe"
+        if (response == undefined || response.enable == false) {
+            throw "Este id de actividad no existe o no esta habilitada"
         }
         response.areaRef = await this._service.getDocByRef(response.areaRef)
         delete response.areaRef.gradeRef
+        let enabledScores = []
         for (const score of response.scores) {
             score.studentRef = await this._service.getDocByRef(score.studentRef)
+            if (score.studentRef == undefined || score.studentRef.enable == false) {
+                continue
+            }
             delete score.studentRef.gradeRef
+            enabledScores.push(score)
         }
+        response.scores = enabledScores
         return response
     }
 
