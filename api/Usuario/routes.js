@@ -13,6 +13,8 @@ export class UserRouter{
         this._router.get('/get-users', this.handleGetAllUsers.bind(this))
         this._router.get('/get-user/', this.handleGetOneUser.bind(this))
         this._router.get('/get-teachers', this.handleGetAllTeachers.bind(this))
+        this._router.get('/get-enabled-teachers', this.handleGetAllEnabledTeachers.bind(this))
+        this._router.get('/get-disabled-teachers', this.handleGetAllDisabledTeachers.bind(this))
         // this._router.get('/get-teacher/:id', this.handleGetOneUser.bind(this))
         // this._router.get('/get-principal', this.handleGetOneUser.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
@@ -43,6 +45,24 @@ export class UserRouter{
     }
 
     async handleGetAllTeachers(req, res){
+        try {
+            const result = await this._controller.getAllTeachers()
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+
+    async handleGetAllEnabledTeachers(req, res){
+        try {
+            const result = await this._controller.getAllTeachers()
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+
+    async handleGetAllDisabledTeachers(req, res){
         try {
             const result = await this._controller.getAllTeachers()
             this._response.succes(req, res, result, this._httpcode.OK)

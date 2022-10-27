@@ -27,6 +27,28 @@
         return teachers
     }
 
+    async getAllEnabledTeachers(){
+        const users = await this._service.getDataU('User')
+        const teachers = []
+        for (const user of users) {
+            if (user.rol == 'docente' && user.enable == true) {
+                teachers.push(user)
+            }
+        }
+        return teachers
+    }
+
+    async getAllDisabledTeachers(){
+        const users = await this._service.getDataU('User')
+        const teachers = []
+        for (const user of users) {
+            if (user.rol == 'docente' && user.enable == false) {
+                teachers.push(user)
+            }
+        }
+        return teachers
+    }
+
     async getOneUser(id){
         const response = await this._service.getDataUser(id)
         return response
