@@ -91,13 +91,13 @@
         return response
     }
 
-    async enableTeacher(id, data){
-        const response = await this._service.enableTeacher(id, data)
+    async enableTeacher(id){
+        const response = await this._service.enableTeacher(id)
         return response
     }
 
-    async disableTeacher(id, data){
-        const response = await this._service.disableTeahcer(id, data)
+    async disableTeacher(id){
+        const response = await this._service.disableTeacher(id)
         return response
     }
 
