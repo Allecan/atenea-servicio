@@ -76,6 +76,8 @@
         const grades = await this._service.getDataU('Grades')
         for (const grade of grades) {
             if (grade.teacherRef._path.segments.at(-1) == id) {
+                delete grade.levelRef
+                delete grade.teacherRef
                 gradesList.push(grade)
             }
         }
