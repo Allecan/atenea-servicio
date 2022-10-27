@@ -59,6 +59,16 @@
         return response
     }
 
+    async enableTeacher(id, data){
+        const response = await this._service.enableTeacher(id, data)
+        return response
+    }
+
+    async disableTeacher(id, data){
+        const response = await this._service.disableTeahcer(id, data)
+        return response
+    }
+
     async deleteUserController(data){
         console.log(data);
         const response = await this._service.deleteUser(data.uid, data.enable)

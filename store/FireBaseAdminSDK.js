@@ -244,6 +244,27 @@ export class FireBaseAdminSDK {
         }
     }
 
+    async updateUser(id, data){
+        try {
+            const auth = getAuth(appFirebase)
+            const update = await auth.updateUser(id, data)
+            await this.getFireStoreDatabase().collection('User').doc(id).update({displayName: data.displayName, email: data.email, phoneNumber: data.phoneNumber || ''})
+            return `Se actualizo la informacio para el Usuario ${update.displayName}`
+        } catch (error) {
+            return error
+        }
+    }
+
+    async enableTeacher(id){
+        await this.getFireStoreDatabase().collection('User').doc(id).update({enable: true})
+        return `Se desabilito al docente`
+    }
+
+    async disableTeacher(id){
+        await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
+        return `Se desabilito al docente`
+    }
+
     async deleteUser(id, state){
         try {
             const auth = getAuth(appFirebase)
