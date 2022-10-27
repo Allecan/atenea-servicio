@@ -78,6 +78,7 @@
             if (grade.teacherRef._path.segments.at(-1) == id) {
                 delete grade.levelRef
                 delete grade.teacherRef
+                delete grade.position
                 gradesList.push(grade)
             }
         }
