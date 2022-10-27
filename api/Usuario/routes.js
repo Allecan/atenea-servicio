@@ -15,7 +15,7 @@ export class UserRouter{
         this._router.get('/get-teachers', this.handleGetAllTeachers.bind(this))
         this._router.get('/get-enabled-teachers', this.handleGetAllEnabledTeachers.bind(this))
         this._router.get('/get-disabled-teachers', this.handleGetAllDisabledTeachers.bind(this))
-        this._router.get('/get-teacher/:id', this.handleGetOneUser.bind(this))
+        this._router.get('/get-teacher/:id', this.handleGetOneTeacher.bind(this))
         this._router.get('/get-principals', this.handleGetAllPrincipals.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
         this._router.put('/disable-teacher/:id', this.handleDisableTeacher.bind(this))
@@ -99,6 +99,16 @@ export class UserRouter{
             }else{
                 this._response.error(req, res, 'Error.Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
             }
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+
+    async handleGetOneTeacher(req, res){
+        try {
+            const idUser = req.params['id']
+            const result = await this._controller.getOneTeacher(idUser)
+            this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
