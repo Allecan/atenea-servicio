@@ -27,6 +27,17 @@
         return teachers
     }
 
+    async getAllPrincipals(){
+        const users = await this._service.getDataU('User')
+        const principals = []
+        for (const user of users) {
+            if (user.rol == 'director') {
+                principals.push(user)
+            }
+        }
+        return principals
+    }
+
     async getAllEnabledTeachers(){
         const users = await this._service.getDataU('User')
         const teachers = []
