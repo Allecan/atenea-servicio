@@ -65,7 +65,7 @@ export class UserRouter{
 
     async handleGetAllEnabledTeachers(req, res){
         try {
-            const result = await this._controller.getAllTeachers()
+            const result = await this._controller.getAllEnabledTeachers()
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
@@ -74,7 +74,7 @@ export class UserRouter{
 
     async handleGetAllDisabledTeachers(req, res){
         try {
-            const result = await this._controller.getAllTeachers()
+            const result = await this._controller.getAllDisabledTeachers()
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
