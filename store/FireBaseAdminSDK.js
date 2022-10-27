@@ -203,7 +203,11 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', rol: ''})
+            const date = new Date();
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            let year = date.getFullYear();
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', createdAt: `${day} de ${month} de ${year}`, enable: true})
             return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
@@ -259,6 +263,16 @@ export class FireBaseAdminSDK {
         } catch (error) {
             return error
         }
+    }
+
+    async enableTeacher(id){
+        await this.getFireStoreDatabase().collection('User').doc(id).update({enable: true})
+        return `Se desabilito al docente`
+    }
+
+    async disableTeacher(id){
+        await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
+        return `Se desabilito al docente`
     }
 
     async deleteUser(id, state){
