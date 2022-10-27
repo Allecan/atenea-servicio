@@ -15,7 +15,7 @@ export class UserRouter{
         this._router.get('/get-teachers', this.handleGetAllTeachers.bind(this))
         this._router.get('/get-enabled-teachers', this.handleGetAllEnabledTeachers.bind(this))
         this._router.get('/get-disabled-teachers', this.handleGetAllDisabledTeachers.bind(this))
-        // this._router.get('/get-teacher/:id', this.handleGetOneUser.bind(this))
+        this._router.get('/get-teacher/:id', this.handleGetOneUser.bind(this))
         this._router.get('/get-principals', this.handleGetAllPrincipals.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
         this._router.put('/disable-teacher/:id', this.handleDisableTeacher.bind(this))
