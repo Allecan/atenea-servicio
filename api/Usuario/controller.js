@@ -76,6 +76,9 @@
         const grades = await this._service.getDataU('Grades')
         for (const grade of grades) {
             if (grade.teacherRef._path.segments.at(-1) == id) {
+                delete grade.levelRef
+                delete grade.teacherRef
+                delete grade.position
                 gradesList.push(grade)
             }
         }
@@ -88,13 +91,13 @@
         return response
     }
 
-    async enableTeacher(id, data){
-        const response = await this._service.enableTeacher(id, data)
+    async enableTeacher(id){
+        const response = await this._service.enableTeacher(id)
         return response
     }
 
-    async disableTeacher(id, data){
-        const response = await this._service.disableTeahcer(id, data)
+    async disableTeacher(id){
+        const response = await this._service.disableTeacher(id)
         return response
     }
 
