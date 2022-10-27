@@ -16,6 +16,17 @@
         return response
     }
 
+    async getAllTeachers(){
+        const users = await this._service.getDataU('User')
+        const teachers = []
+        for (const user of users) {
+            if (user.rol == 'docente') {
+                teachers.push(user)
+            }
+        }
+        return teachers
+    }
+
     async getOneUser(id){
         const response = await this._service.getDataUser(id)
         return response

@@ -12,7 +12,12 @@ export class UserRouter{
         this._router.post('/create-user', this._checkUser, this.handleCreateUser.bind(this))
         this._router.get('/get-users', this.handleGetAllUsers.bind(this))
         this._router.get('/get-user/', this.handleGetOneUser.bind(this))
+        this._router.get('/get-teachers', this.handleGetAllTeachers.bind(this))
+        // this._router.get('/get-teacher/:id', this.handleGetOneUser.bind(this))
+        // this._router.get('/get-principal', this.handleGetOneUser.bind(this))
         this._router.put('/update-user/:id', this.handleUpdateuser.bind(this))
+        // this._router.put('/update-teacher/:id', this.handleUpdateuser.bind(this))
+        // this._router.put('/update-principal/:id', this.handleUpdateuser.bind(this))
         this._router.put('/delete-user/', this.handleDeleteuser.bind(this))
         this._router.put('/update-user-rol/', this.handleUpdateRol.bind(this))
         this._router.get('/reset-password/', this.resetPasswordUser.bind(this))
@@ -31,6 +36,15 @@ export class UserRouter{
     async handleGetAllUsers(req, res){
         try {
             const result = await this._controller.getAllUsers()
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+
+    async handleGetAllTeachers(req, res){
+        try {
+            const result = await this._controller.getAllTeachers()
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
