@@ -75,7 +75,7 @@ export class FireBaseAdminSDK {
             const gradeRef = this.getFireStoreDatabase().collection('Grades').doc(idGrade)
             const snapshot = await this.getFireStoreDatabase().collection("Students").where('gradeRef', '==', gradeRef).where('enable', '==', true).get()
             snapshot.forEach(doc =>{
-                usersObject.students.push(doc.data().name_complete)
+                usersObject.students.push({id: doc.id, name_student: doc.data().name_complete})
             })
             usersObject.size = usersObject.students.length
             return usersObject
@@ -87,19 +87,37 @@ export class FireBaseAdminSDK {
     async saveNewStudent(name, data){
         try {
             if(name === 'Students'){
-                const collectionRef = this.getFireStoreDatabase().collection(name)
-                await collectionRef.add({
-                    name_complete: data.name_complete,
-                    date_birth: data.date_birth,
-                    direction: data.direction,
-                    gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
-                    manager_name: data.manager_name,
-                    manager_phone: data.manager_phone,
-                    enable: data.enable
-                })
-                return 'Alumno Creado'
-            }else {
-                return 'Informacion Creada'
+                try {
+                    const collectionRef = this.getFireStoreDatabase().collection(name)
+                    await collectionRef.add({
+                        name_complete: data.name_complete,
+                        date_birth: data.date_birth,
+                        direction: data.direction,
+                        gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
+                        manager_name: data.manager_name,
+                        manager_phone: data.manager_phone,
+                        enable: data.enable
+                    })
+                    return 'Alumno Creado Correctamente'
+                } catch (error) {
+                    return `Error. Por favor intente mas tarde. ${error}`
+                }
+            }else if(name === 'Attendence'){
+                try {
+                    const arrayStudents = []
+                    data.students.forEach(value =>{
+                        arrayStudents.push({student: this.getFireStoreDatabase().doc(`Students/${value.student}`), attendence: value.attendence})
+                    })
+                    const collectionRef = this.getFireStoreDatabase().collection(name)
+                    await collectionRef.add({
+                        date: data.date,
+                        gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
+                        students: arrayStudents
+                    })
+                    return 'Asistencia Confirmada'
+                } catch (error) {
+                    return `Error. Por favor intente mas tarde. ${error}`
+                }
             }
         } catch (error) {
             return error
@@ -117,7 +135,7 @@ export class FireBaseAdminSDK {
                     manager_name: data.manager_name,
                     manager_phone: data.manager_phone,
                     enable: data.enable
-                }, {merge: true})
+                })
                 return 'Alumno Modificado Correctamente'
             }else {
                 return 'Informacion Creada'
@@ -166,7 +184,7 @@ export class FireBaseAdminSDK {
             if(name === 'Students'){
                 await this.getFireStoreDatabase().collection(name).doc(uid).update({
                     enable: enable
-                }, {merge: true})
+                })
                 return 'Alumno Eliminado Correctamente'
             }else {
                 return 'Eliminacion Creada'
@@ -185,7 +203,7 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: ''})
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', rol: ''})
             return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
@@ -211,7 +229,6 @@ export class FireBaseAdminSDK {
                     const {uid, displayName} = user
                     usersObject.inactiveUsers.data.push({uid, displayName})
                 }
-
             }
             usersObject.newUsers.size = usersObject.newUsers.data.length
             usersObject.activeUsers.size = usersObject.activeUsers.data.length
@@ -246,10 +263,12 @@ export class FireBaseAdminSDK {
 
     async deleteUser(id, state){
         try {
+            let msg = ''
             const auth = getAuth(appFirebase)
             const deleteUser = await auth.updateUser(id, {disabled: state})
             this.setRolUser(id, '')
-            return `Se ha borrado exitosamente el usuario ${deleteUser.displayName}`
+            state === true ? msg='deshabilitado': msg='habilitado'
+            return `Se ha ${msg} exitosamente el usuario ${deleteUser.displayName}`
         } catch (error) {
             return error
         }
@@ -266,7 +285,7 @@ export class FireBaseAdminSDK {
         try {
             const auth = getAuth(appFirebase)
             await auth.setCustomUserClaims(uid, {rol: type})
-            
+            await this.getFireStoreDatabase().collection('User').doc(uid).update({rol:type})
             if (type == "teacher") {
                 await this.getFireStoreDatabase().collection("User").doc(uid).update({
                     rol: type
@@ -276,7 +295,6 @@ export class FireBaseAdminSDK {
                     rol: type
                 })
             }
-
             return 'Se ha actualizado el rol del usuario correctamente.'
         } catch (error) {
             return error
@@ -300,15 +318,44 @@ export class FireBaseAdminSDK {
         }
     }
 
+    async getCoursesByTeacher(id){
+        let arrayData = []
+        let data = {}
+        let count = 1
+        const userRef = this.getFireStoreDatabase().collection('User').doc(id)
+        const citiesRef = this.getFireStoreDatabase().collection('Grades');
+        const snapshot = await citiesRef.where('teacherRef', '==', userRef).get();
+        for (let index = 0; index < snapshot.size; index++) {
+            arrayData.push(data[`grade${index+1}`] = {grade_name: '', size: 0, students: []})
+        }
+        if (snapshot.empty) {
+            return 'No hay grados a cargo del docente por el momento'
+        }
+        const array = []
+        snapshot.forEach(doc => {
+            array.push(doc.id)
+            data[`grade${count}`].grade_name = doc.data().grade_name
+            count++ 
+        })
+        count = 1
+        for (const child of array) {
+            const result = await this.getEnableStudentsByGrade(child)
+            data[`grade${count}`].size = result.size
+            data[`grade${count}`].students = result.students
+            count++
+        }
+        return arrayData
+    }
+
     dateToSpanish(string){
         const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
         const data = new Date(string)
         const date = data.getDate() + ' de ' + meses[data.getMonth()] + ' de ' + data.getUTCFullYear()
         return date
     }
-
 }
 
 // const firebase = new FireBaseAdminSDK()
-// const result = await firebase.deleteUser('Ljdjq4rZ5JUyeTqnzyZtsafoBgl2', false)
-// console.log(result)
+// const result = await firebase.getAllUser()
+
+

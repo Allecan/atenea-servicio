@@ -27,8 +27,8 @@
     }
 
     async deleteUserController(data){
-        console.log(data);
         const response = await this._service.deleteUser(data.uid, data.enable)
+        console.log(response)
         return response
     }
 

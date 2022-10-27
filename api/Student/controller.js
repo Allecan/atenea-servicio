@@ -178,8 +178,7 @@ export class ControllerStudent {
         const response = await this._service.updateData('Students', uid, newStudent)
         return response
     }
-
-
+    
     async deleteStudent(student) {
         const response = await this._service.deleteData('Students', student.uid, student.enable)
         return response
