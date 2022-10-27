@@ -22,7 +22,11 @@ export class UserRouter{
         try {
             const user = req.body
             const result = await this._controller.createNewUser(user)
-            this._response.succes(req, res, result, this._httpcode.CREATED)
+            if (!result.errorInfo) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error.Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
@@ -31,7 +35,11 @@ export class UserRouter{
     async handleGetAllUsers(req, res){
         try {
             const result = await this._controller.getAllUsers()
-            this._response.succes(req, res, result, this._httpcode.OK)
+            if (!result.errorInfo) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error.Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
@@ -41,7 +49,11 @@ export class UserRouter{
         try {
             const idUser = req.query.id
             const result = await this._controller.getOneUser(idUser)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            if (!result.errorInfo) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error.Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
@@ -52,7 +64,11 @@ export class UserRouter{
             const idUser = req.params['id']
             const infoUser = req.body
             const result = await this._controller.updateInfoUser(idUser, infoUser)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            if (!result.errorInfo) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error. Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
@@ -62,7 +78,12 @@ export class UserRouter{
         try {
             const idUser = req.body
             const result = await this._controller.deleteUserController(idUser)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            console.log(result);
+            if (!result.errorInfo) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error. Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
@@ -78,7 +99,11 @@ export class UserRouter{
                 this._response.error(req, res, 'Revisar el parametro de informacion', this._httpcode.BAD_REQUEST)
             }else{
                 const result = await this._controller.updateRolUser(idUser, type)
-                this._response.succes(req, res, result, this._httpcode.OK)
+                if (!result.errorInfo) {
+                    this._response.succes(req, res, result, this._httpcode.OK)
+                }else{
+                    this._response.error(req, res, 'Error. Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
+                }
             }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
@@ -89,7 +114,11 @@ export class UserRouter{
         try {
             const userEmail = req.query.email
             const result = await this._controller.resetPasswordLink(userEmail)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            if (result.errorInfo) {
+                this._response.error(req, res, `Lo sentimos. El Correo ${userEmail} no esta asociado a una cuenta de Atenea. Verifica el correo electronico.`, this._httpcode.BAD_REQUEST)
+            }else{
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }

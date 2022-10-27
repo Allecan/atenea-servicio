@@ -40,7 +40,11 @@ export class StudentRouter{
         try {
             const uidGradeRef = req.params.id
             const result = await this._controller.getStudentsByGrade(uidGradeRef)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            if (result.size === 0) {
+                this._response.error(req, res, 'Error. Por favor verifica los datos e intenta de nuevo.', this._httpcode.BAD_REQUEST)
+            }else{
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
@@ -50,7 +54,11 @@ export class StudentRouter{
         try {
             const uid = req.params.id
             const result = await this._controller.getOneStudent(uid)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            if (!result.code) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error.  Por favor verifica los datos e intenta de nuevo.', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
@@ -61,7 +69,11 @@ export class StudentRouter{
             const student = req.body
             const uid = req.params.id
             const result = await this._controller.updateStudent(student, uid)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            if (!result.code) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error.  Por favor verifica los datos e intenta de nuevo.', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
@@ -71,7 +83,11 @@ export class StudentRouter{
         try {
             const student = req.body
             const result = await this._controller.deleteStudent(student)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            if (!result.code) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error.  Por favor verifica los datos e intenta de nuevo.', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }

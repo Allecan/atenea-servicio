@@ -12,6 +12,7 @@ import { gradeModel } from './Grado/index.js'
 import { studentModel } from './Student/index.js'
 import { boletinModel } from "./Boletin/index.js"
 import { teacherModel } from "./Profesor/index.js"
+import { attendenceModel } from './Attendence/index.js'
 
 
 // Configuracion de paths
@@ -57,6 +58,7 @@ class Server {
     this._app.use('/api/v1/student', studentModel(express.Router))
     this._app.use('/api/v1/boletin',boletinModel(express.Router))
     this._app.use('/api/v1/teacher',teacherModel(express.Router))
+    this._app.use('/api/v1/attendence', attendenceModel(express.Router))
   }
 
   start () {
