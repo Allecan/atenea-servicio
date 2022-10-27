@@ -185,7 +185,7 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: ''})
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', enable: true})
             return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
