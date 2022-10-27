@@ -67,4 +67,11 @@ npm i
 ```sh
 npm run dev
 ```
+<div align="center">
+<h1>Documentación</h1>
+</div>
+<div align="center">
+ <a href = "https://atenea-servicio.onrender.com/api-doc"><img height="180em" src="https://user-images.githubusercontent.com/42653664/196009008-5e5a5abf-ccea-460f-9d94-81d3c9653b30.png"></a> 
+ <p>Click al icono</p>
 
+</div>

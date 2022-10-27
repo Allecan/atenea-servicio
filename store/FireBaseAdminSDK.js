@@ -162,6 +162,23 @@ export class FireBaseAdminSDK {
         }
     }
 
+    async getOneDataU(name, uid){
+        const dataRef = this.getFireStoreDatabase().collection(name).doc(uid);
+        const doc = await dataRef.get();
+        const data = doc.data()
+        if (data != undefined) {
+            data.id = doc.id
+        }
+        return data
+    }
+
+    async getDataU(name){
+        const snapshot = await this.getFireStoreDatabase().collection(name).get()
+        const dataList = []
+        snapshot.forEach(doc => dataList.push(Object.assign(doc.data(), { id: doc.id })))
+        return dataList
+    }
+
     async deleteData(name, uid, enable){
         try {
             if(name === 'Students'){
@@ -269,6 +286,15 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             await auth.setCustomUserClaims(uid, {rol: type})
             await this.getFireStoreDatabase().collection('User').doc(uid).update({rol:type})
+            if (type == "teacher") {
+                await this.getFireStoreDatabase().collection("User").doc(uid).update({
+                    rol: type
+                })
+            } else {
+                await this.getFireStoreDatabase().collection("User").doc(uid).update({
+                    rol: type
+                })
+            }
             return 'Se ha actualizado el rol del usuario correctamente.'
         } catch (error) {
             return error

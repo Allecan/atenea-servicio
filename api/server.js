@@ -13,7 +13,9 @@ import { studentModel } from './Student/index.js'
 import { boletinModel } from "./Boletin/index.js"
 import { teacherModel } from "./Profesor/index.js"
 import { attendenceModel } from './Attendence/index.js'
-
+import { levelModel } from './Nivel/index.js'
+import { areaModel } from './Area/index.js'
+import { activityModel } from './Actividad/index.js'
 
 // Configuracion de paths
 
@@ -59,6 +61,10 @@ class Server {
     this._app.use('/api/v1/boletin',boletinModel(express.Router))
     this._app.use('/api/v1/teacher',teacherModel(express.Router))
     this._app.use('/api/v1/attendence', attendenceModel(express.Router))
+    this._app.use('/api/v1/level',levelModel(express.Router))
+    this._app.use('/api/v1/area',areaModel(express.Router))
+    this._app.use('/api/v1/activity',activityModel(express.Router))
+
   }
 
   start () {
