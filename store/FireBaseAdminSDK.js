@@ -203,11 +203,7 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            const date = new Date();
-            let day = date.getDate();
-            let month = date.getMonth() + 1;
-            let year = date.getFullYear();
-            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', createdAt: `${day} de ${month} de ${year}`, enable: true})
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', createdAt: new Date(), enable: true})
             return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
@@ -266,11 +262,15 @@ export class FireBaseAdminSDK {
     }
 
     async enableTeacher(id){
+        const auth = getAuth(appFirebase)
+        const deleteUser = await auth.updateUser(id, {disabled: false})
         await this.getFireStoreDatabase().collection('User').doc(id).update({enable: true})
-        return `Se desabilito al docente`
+        return `Se habilito al docente`
     }
 
     async disableTeacher(id){
+        const auth = getAuth(appFirebase)
+        const deleteUser = await auth.updateUser(id, {disabled: true})
         await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
         return `Se desabilito al docente`
     }
@@ -280,8 +280,8 @@ export class FireBaseAdminSDK {
             let msg = ''
             const auth = getAuth(appFirebase)
             const deleteUser = await auth.updateUser(id, {disabled: state})
-            this.setRolUser(id, '')
             state === true ? msg='deshabilitado': msg='habilitado'
+            await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
             return `Se ha ${msg} exitosamente el usuario ${deleteUser.displayName}`
         } catch (error) {
             return error
@@ -297,6 +297,9 @@ export class FireBaseAdminSDK {
 
     async setRolUser(uid, type){
         try {
+            if (type != "docente" && type != "admin" && type != "director") {
+                throw "Solo se permiten los roles de docente, director o admin"
+            }
             const auth = getAuth(appFirebase)
             await auth.setCustomUserClaims(uid, {rol: type})
             await this.getFireStoreDatabase().collection('User').doc(uid).update({rol:type})
