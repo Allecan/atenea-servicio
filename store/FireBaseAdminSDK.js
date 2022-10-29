@@ -284,6 +284,7 @@ export class FireBaseAdminSDK {
             const deleteUser = await auth.updateUser(id, {disabled: state})
             this.setRolUser(id, '')
             state === true ? msg='deshabilitado': msg='habilitado'
+            await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
             return `Se ha ${msg} exitosamente el usuario ${deleteUser.displayName}`
         } catch (error) {
             return error
