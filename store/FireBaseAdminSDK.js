@@ -2,6 +2,10 @@ import { initializeApp } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { getFirestore } from 'firebase-admin/firestore'
 import { SendCustomVerificationEmail } from '../email/nodeMailer.js'
+import { ControllerGrade } from '../api/Grado/controller.js'
+import { FireBase } from './FireBase.js'
+import { config } from '../config/default.js'
+import { Grade } from '../models/Grade.js' 
 
 const appFirebase = initializeApp()
 
@@ -89,15 +93,18 @@ export class FireBaseAdminSDK {
             if(name === 'Students'){
                 try {
                     const collectionRef = this.getFireStoreDatabase().collection(name)
-                    await collectionRef.add({
+                    const studentRef = await collectionRef.add({
                         name_complete: data.name_complete,
                         date_birth: data.date_birth,
                         direction: data.direction,
-                        gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
                         manager_name: data.manager_name,
                         manager_phone: data.manager_phone,
                         enable: data.enable
                     })
+                    const studentId = studentRef._path.segments.at(-1)
+                    const gradeServices = new FireBase(config.fireBase)
+                    const gradeController = new ControllerGrade(gradeServices, Grade)
+                    await gradeController.addStudent(data.gradeRef, studentId)
                     return 'Alumno Creado Correctamente'
                 } catch (error) {
                     return `Error. Por favor intente mas tarde. ${error}`
