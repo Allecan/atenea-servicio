@@ -266,11 +266,13 @@ export class FireBaseAdminSDK {
     }
 
     async enableTeacher(id){
+        await this.deleteUser(id, false)
         await this.getFireStoreDatabase().collection('User').doc(id).update({enable: true})
         return `Se habilito al docente`
     }
 
     async disableTeacher(id){
+        await this.deleteUser(id, true)
         await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
         return `Se desabilito al docente`
     }
