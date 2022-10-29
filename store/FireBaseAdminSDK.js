@@ -262,13 +262,15 @@ export class FireBaseAdminSDK {
     }
 
     async enableTeacher(id){
-        await this.deleteUser(id, false)
+        const auth = getAuth(appFirebase)
+        const deleteUser = await auth.updateUser(id, {disabled: false})
         await this.getFireStoreDatabase().collection('User').doc(id).update({enable: true})
         return `Se habilito al docente`
     }
 
     async disableTeacher(id){
-        await this.deleteUser(id, true)
+        const auth = getAuth(appFirebase)
+        const deleteUser = await auth.updateUser(id, {disabled: true})
         await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
         return `Se desabilito al docente`
     }
