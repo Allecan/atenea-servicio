@@ -297,6 +297,9 @@ export class FireBaseAdminSDK {
 
     async setRolUser(uid, type){
         try {
+            if (type != "docente" && type != "admin" && type != "director") {
+                throw "Solo se permiten los roles de docente, director o admin"
+            }
             const auth = getAuth(appFirebase)
             await auth.setCustomUserClaims(uid, {rol: type})
             await this.getFireStoreDatabase().collection('User').doc(uid).update({rol:type})
