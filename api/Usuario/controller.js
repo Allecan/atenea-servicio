@@ -18,13 +18,26 @@
 
     async getAllTeachers(){
         const users = await this._service.getDataU('User')
-        const teachers = []
+        let newTeachers = []
+        let activeTeachers = []
+        let inactiveTeachers = []
         for (const user of users) {
+            user.uid = user.id
+            delete user.id
+            user.date = user.createdAt
+            delete user.createdAt
             if (user.rol == 'docente') {
-                teachers.push(user)
+                if (user.enable) {
+                    activeTeachers.push(user)
+                } else if (!user.enable){
+                    inactiveTeachers.push(user)
+                }
+            } else if (user.rol == '') {
+                newTeachers.push(user)
             }
         }
-        return teachers
+        const response = {newUsers: {size: newTeachers.length, data : newTeachers}, activeUsers: {size: activeTeachers.length, data : activeTeachers}, inactiveUsers: {size: inactiveTeachers.length, data : inactiveTeachers}}
+        return response
     }
 
     async getAllPrincipals(){
