@@ -203,7 +203,10 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', createdAt: new Date(), enable: true})
+            const date = new Date()
+            const today = this.dateToSpanish(date)
+            const time = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', createdAt: today + " a las " + time, enable: true})
             return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
@@ -262,13 +265,15 @@ export class FireBaseAdminSDK {
     }
 
     async enableTeacher(id){
-        await this.deleteUser(id, false)
+        const auth = getAuth(appFirebase)
+        const deleteUser = await auth.updateUser(id, {disabled: false})
         await this.getFireStoreDatabase().collection('User').doc(id).update({enable: true})
         return `Se habilito al docente`
     }
 
     async disableTeacher(id){
-        await this.deleteUser(id, true)
+        const auth = getAuth(appFirebase)
+        const deleteUser = await auth.updateUser(id, {disabled: true})
         await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
         return `Se desabilito al docente`
     }
@@ -278,7 +283,6 @@ export class FireBaseAdminSDK {
             let msg = ''
             const auth = getAuth(appFirebase)
             const deleteUser = await auth.updateUser(id, {disabled: state})
-            this.setRolUser(id, '')
             state === true ? msg='deshabilitado': msg='habilitado'
             await this.getFireStoreDatabase().collection('User').doc(id).update({enable: false})
             return `Se ha ${msg} exitosamente el usuario ${deleteUser.displayName}`
@@ -296,6 +300,9 @@ export class FireBaseAdminSDK {
 
     async setRolUser(uid, type){
         try {
+            if (type != "docente" && type != "admin" && type != "director") {
+                throw "Solo se permiten los roles de docente, director o admin"
+            }
             const auth = getAuth(appFirebase)
             await auth.setCustomUserClaims(uid, {rol: type})
             await this.getFireStoreDatabase().collection('User').doc(uid).update({rol:type})
