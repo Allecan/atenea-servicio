@@ -1,6 +1,6 @@
 import { config } from '../config/default.js'
 import { initializeApp } from 'firebase/app'
-import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc, query, where } from 'firebase/firestore'
+import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc, query, where, orderBy } from 'firebase/firestore'
 
 export class FireBase {
     constructor(config) {
@@ -34,6 +34,14 @@ export class FireBase {
         return docsList;
     }
 
+    async getLevels() {
+        const levelsRef = collection(this.getDB(), "Levels");
+        const levelsQuery = query(levelsRef, orderBy("position"))
+        const levelsDocs = await getDocs(levelsQuery)
+        const levels = levelsDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+        return levels;
+    }
+
     async getGrades(name) {
         const allData = collection(this.getDB(), name);
         const dataDocs = await getDocs(allData);
@@ -43,14 +51,35 @@ export class FireBase {
             if (grade.levelRef == undefined || grade.teacherRef == undefined || grade.enable == false) {
                 continue
             }
-            const levelSnap = await getDoc(grade.levelRef);
-            const teacherSnap = await getDoc(grade.teacherRef);
-            grade.levelRef = levelSnap.data()
-            grade.teacherRef = teacherSnap.data()
+            const levelDoc = await this.getDocByRef(grade.levelRef);
+            const teacherDoc = await this.getDocByRef(grade.teacherRef);
+            grade.levelRef = levelDoc
+            grade.teacherRef = teacherDoc
             docsList[grade] = grade
             enabledData.push(grade)
         }
-        return enabledData;
+        // Proceso para ordenar la informacion de los grados segun su nivel y posicion
+        let levels = await this.getLevels()
+        let students = await this.getData('Students')
+        for (const level of levels) {
+            level.grades = []
+            for (const data of enabledData) {
+                if (data.levelRef.id == level.id) {
+                    // Obtener la cantidad de estudiantes de un grado
+                    let totalStudents = 0
+                    for (const student of students) {
+                        if (student.gradeRef._key.path.segments.at(-1) == data.id) {
+                            totalStudents++
+                        }
+                    }
+                    data.totalStudents = totalStudents
+                    data.levelRef = data.levelRef.id
+                    level.grades[data.position] = data
+                }
+            }
+        }
+        const response = levels
+        return response;
     }
 
     async saveData(name, data) {

@@ -63,7 +63,7 @@ export class ControllerLevel {
 
 
     async getAllLevels() {
-        const response = await this._service.getData('Levels')
+        const response = await this._service.getLevels()
         return response
     }
 
