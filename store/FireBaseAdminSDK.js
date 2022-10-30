@@ -138,11 +138,14 @@ export class FireBaseAdminSDK {
                     name_complete: data.name_complete,
                     date_birth: data.date_birth,
                     direction: data.direction,
-                    gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
                     manager_name: data.manager_name,
                     manager_phone: data.manager_phone,
                     enable: data.enable
                 })
+                const studentId = uid
+                const gradeServices = new FireBase(config.fireBase)
+                const gradeController = new ControllerGrade(gradeServices, Grade)
+                await gradeController.addStudent(data.gradeRef, studentId)
                 return 'Alumno Modificado Correctamente'
             }else {
                 return 'Informacion Creada'
