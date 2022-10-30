@@ -1,6 +1,6 @@
 import { config } from '../config/default.js'
 import { initializeApp } from 'firebase/app'
-import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc, query, where } from 'firebase/firestore'
+import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc, query, where, orderBy } from 'firebase/firestore'
 
 export class FireBase {
     constructor(config) {
@@ -32,6 +32,14 @@ export class FireBase {
         const dataDocs = await getDocs(allData);
         const docsList = dataDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
         return docsList;
+    }
+
+    async getLevels() {
+        const levelsRef = collection(this.getDB(), "Levels");
+        const levelsQuery = query(levelsRef, orderBy("position"))
+        const levelsDocs = await getDocs(levelsQuery)
+        const levels = levelsDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+        return levels;
     }
 
     async getGrades(name) {
