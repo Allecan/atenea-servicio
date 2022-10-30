@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase-admin/app";
+import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { SendCustomVerificationEmail } from "../email/nodeMailer.js";
