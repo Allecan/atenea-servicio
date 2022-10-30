@@ -82,8 +82,8 @@
         const teacher = await this._service.getOneDataU('User',id)
         if (teacher == undefined) {
             throw 'Este usuario no existe'
-        } else if (teacher.rol != 'docente') {
-            throw 'Este usuario no es un docente'
+        } else if (teacher.rol != 'docente' && teacher.rol != '') {
+            throw 'Este usuario no es un docente ni docente sin confirmar'
         }
         let gradesList = []
         const grades = await this._service.getDataU('Grades')
