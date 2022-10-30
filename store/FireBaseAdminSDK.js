@@ -203,7 +203,10 @@ export class FireBaseAdminSDK {
             const auth = getAuth(appFirebase)
             const result = await auth.createUser(data)
             this.setRolUser(result.uid, '')
-            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', createdAt: new Date(), enable: true})
+            const date = new Date()
+            const today = this.dateToSpanish(date)
+            const time = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
+            await this.saveUserFirestore(result.uid, {displayName: result.displayName, email: result.email, phoneNumber: '', createdAt: today + " a las " + time, enable: true})
             return 'Usuario Guardado Correctamente'
         } catch (error) {
             return error.message
