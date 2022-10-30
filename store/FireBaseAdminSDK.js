@@ -300,7 +300,7 @@ export class FireBaseAdminSDK {
 
     async setRolUser(uid, type){
         try {
-            if (type != "docente" && type != "admin" && type != "director") {
+            if (type != "docente" && type != "admin" && type != "director" && type != "") {
                 throw "Solo se permiten los roles de docente, director o admin"
             }
             const auth = getAuth(appFirebase)
