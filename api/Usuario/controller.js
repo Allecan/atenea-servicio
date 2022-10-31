@@ -36,8 +36,33 @@
                 newTeachers.push(user)
             }
         }
-        const response = {newUsers: {size: newTeachers.length, data : newTeachers}, activeUsers: {size: activeTeachers.length, data : activeTeachers}, inactiveUsers: {size: inactiveTeachers.length, data : inactiveTeachers}}
-        return response
+        let teachers = {newUsers: {size: newTeachers.length, data : newTeachers}, activeUsers: {size: activeTeachers.length, data : activeTeachers}, inactiveUsers: {size: inactiveTeachers.length, data : inactiveTeachers}}
+        // Proceso para obtener un grado por cada maestro activo
+        let grades = await this._service.getDataU('Grades')
+        for (const teacher of teachers.activeUsers.data) {
+            teacher.grade = {}
+            for (const grade of grades) {
+                if (grade.teacherRef != undefined && grade.teacherRef._path.segments.at(-1) == teacher.uid) {
+                    delete grade.teacherRef
+                    delete grade.levelRef
+                    teacher.grade = grade
+                    break
+                }
+            }
+        }
+        // Proceso para obtener un grado por cada maestro inactivo
+        for (const teacher of teachers.inactiveUsers.data) {
+            teacher.grade = {}
+            for (const grade of grades) {
+                if (grade.teacherRef != undefined && grade.teacherRef._path.segments.at(-1) == teacher.uid) {
+                    delete grade.teacherRef
+                    delete grade.levelRef
+                    teacher.grade = grade
+                    break
+                }
+            }
+        }
+        return teachers
     }
 
     async getAllPrincipals(){
