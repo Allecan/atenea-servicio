@@ -1,3 +1,7 @@
+import { ControllerGrade } from '../api/Grado/controller.js'
+import { FireBase } from './FireBase.js'
+import { config } from '../config/default.js'
+import { Grade } from '../models/Grade.js' 
 import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
@@ -151,48 +155,42 @@ export class FireBaseAdminSDK {
 
   async saveNewStudent(name, data) {
     try {
-      if (name === "Students") {
-        try {
-          const collectionRef = this.getFireStoreDatabase().collection(name);
-          await collectionRef.add({
-            name_complete: data.name_complete,
-            date_birth: data.date_birth,
-            direction: data.direction,
-            gradeRef: this.getFireStoreDatabase().doc(
-              `Grades/${data.gradeRef}`
-            ),
-            manager_name: data.manager_name,
-            manager_phone: data.manager_phone,
-            enable: data.enable,
-          });
-          return "Alumno Creado Correctamente";
-        } catch (error) {
-          return `Error. Por favor intente mas tarde. ${error}`;
-        }
-      } else if (name === "Attendence") {
-        try {
-          const arrayStudents = [];
-          data.students.forEach((value) => {
-            arrayStudents.push({
-              student: this.getFireStoreDatabase().doc(
-                `Students/${value.student}`
-              ),
-              attendence: value.attendence,
-            });
-          });
-          const collectionRef = this.getFireStoreDatabase().collection(name);
-          await collectionRef.add({
-            date: data.date,
-            gradeRef: this.getFireStoreDatabase().doc(
-              `Grades/${data.gradeRef}`
-            ),
-            students: arrayStudents,
-          });
-          return "Asistencia Confirmada";
-        } catch (error) {
-          return `Error. Por favor intente mas tarde. ${error}`;
-        }
-      }
+            if(name === 'Students'){
+                try {
+                    const collectionRef = this.getFireStoreDatabase().collection(name)
+                    const studentRef = await collectionRef.add({
+                        name_complete: data.name_complete,
+                        date_birth: data.date_birth,
+                        direction: data.direction,
+                        manager_name: data.manager_name,
+                        manager_phone: data.manager_phone,
+                        enable: data.enable
+                    })
+                    const studentId = studentRef._path.segments.at(-1)
+                    const gradeServices = new FireBase(config.fireBase)
+                    const gradeController = new ControllerGrade(gradeServices, Grade)
+                    await gradeController.addStudent(data.gradeRef, studentId)
+                    return 'Alumno Creado Correctamente'
+                } catch (error) {
+                    return `Error. Por favor intente mas tarde. ${error}`
+                }
+            }else if(name === 'Attendence'){
+                try {
+                    const arrayStudents = []
+                    data.students.forEach(value =>{
+                        arrayStudents.push({student: this.getFireStoreDatabase().doc(`Students/${value.student}`), attendence: value.attendence})
+                    })
+                    const collectionRef = this.getFireStoreDatabase().collection(name)
+                    await collectionRef.add({
+                        date: data.date,
+                        gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
+                        students: arrayStudents
+                    })
+                    return 'Asistencia Confirmada'
+                } catch (error) {
+                    return `Error. Por favor intente mas tarde. ${error}`
+                }
+            }
     } catch (error) {
       return error;
     }
@@ -200,25 +198,23 @@ export class FireBaseAdminSDK {
 
   async updateData(name, uid, data) {
     try {
-      if (name === "Students") {
-        await this.getFireStoreDatabase()
-          .collection(name)
-          .doc(uid)
-          .update({
-            name_complete: data.name_complete,
-            date_birth: data.date_birth,
-            direction: data.direction,
-            gradeRef: this.getFireStoreDatabase().doc(
-              `Grades/${data.gradeRef}`
-            ),
-            manager_name: data.manager_name,
-            manager_phone: data.manager_phone,
-            enable: data.enable,
-          });
-        return "Alumno Modificado Correctamente";
-      } else {
-        return "Informacion Creada";
-      }
+            if(name === 'Students'){
+                await this.getFireStoreDatabase().collection(name).doc(uid).update({
+                    name_complete: data.name_complete,
+                    date_birth: data.date_birth,
+                    direction: data.direction,
+                    manager_name: data.manager_name,
+                    manager_phone: data.manager_phone,
+                    enable: data.enable
+                })
+                const studentId = uid
+                const gradeServices = new FireBase(config.fireBase)
+                const gradeController = new ControllerGrade(gradeServices, Grade)
+                await gradeController.addStudent(data.gradeRef, studentId)
+                return 'Alumno Modificado Correctamente'
+            }else {
+                return 'Informacion Creada'
+            }
     } catch (error) {
       return error;
     }

@@ -110,7 +110,10 @@ export class ControllerGrade {
         } else if (gradeModel == undefined) {
             throw "El id de este grado no existe"
         }
-        const oldGradeId = studentModel.gradeRef._key.path.segments.at(-1)
+        let oldGradeId = ""
+        if (studentModel.gradeRef != undefined) {
+            oldGradeId = studentModel.gradeRef._key.path.segments.at(-1)
+        }
         studentModel.gradeRef = await this._service.getDocRef('Grades', idGrade)
 
         delete studentModel.id
