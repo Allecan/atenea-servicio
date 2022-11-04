@@ -111,12 +111,17 @@ export class ControllerArea {
 
         //Se buscan las actividades que pertenecen a esta area
         const activities = await this._service.getData('Activities')
-        response.activities = []
+        response.activities = {}
         for (const activity of activities) {
-            if (activity.areaRef._key.path.segments.at(-1) == uid) {
+            if (activity.areaRef._key.path.segments.at(-1) == uid && activity.enable == true) {
                 delete activity.areaRef
                 delete activity.scores
-                response.activities.push(activity)
+                const unidad = "unit"+activity.unit
+                if (response.activities[unidad] == undefined) {
+                    response.activities[unidad] = []
+                }
+                delete activity.unit
+                response.activities[unidad].push(activity)
             }
         }
         return response
