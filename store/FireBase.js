@@ -77,7 +77,14 @@ export class FireBase {
                     level.grades[data.position] = data
                 }
             }
+            // Proceso para eliminar los espacios en blanco que dejan los grados que estan deshabilitados
+            for (var x = 0; x < level.grades.length; x++) {
+                if (level.grades[x] == null) {
+                    level.grades.splice(x,1)
+                }
+            }
         }
+
         const response = levels
         return response;
     }
@@ -252,6 +259,66 @@ export class FireBase {
             oneData.levelRef = levelData
             oneData.id = id
             oneData.students = students
+
+            // se organizan los datos a como fernando los pidio >:v
+
+
+            return oneData
+        } catch (error) {
+            return error
+        }
+    }
+
+    async getOneGradeDetailed(name, id) {
+        try {
+            //Se obtiene el documento del grado
+            const docRef = doc(this.getDB(), name, id)
+            const docSnap = await getDoc(docRef);
+            const oneData = docSnap.data()
+
+            //Se obtiene el documento del docente en base a su referencia
+            const teacherRef = oneData.teacherRef
+            const teacherSnap = await getDoc(teacherRef);
+            const teacherData = teacherSnap.data()
+
+            //Se obtiene el documento del nivel en base a su referencia
+            const levelRef = oneData.levelRef
+            const levelSnap = await getDoc(levelRef);
+            const levelData = levelSnap.data()
+
+            //Se obtienen las areas del grado
+            const areasData = collection(this.getDB(), "Areas");
+            const areasDocs = await getDocs(areasData);
+            const areas = areasDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+            let areasList = []
+            for (const area of areas) {
+                if (area.gradeRef._key.path.segments.at(-1) == id && area.enable == true) {
+                    areasList.push(area)
+                }
+            }
+            areasList.map(area => delete area.gradeRef)
+
+            //Se obtienen las actividades de cada area
+            console.log("hola")
+            const activitiesData = collection(this.getDB(), "Activities");
+            const activitiesDocs = await getDocs(activitiesData);
+            let activitiesList = activitiesDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+            for (const area of areasList) {
+                area.activities = []
+                for (const activity of activitiesList) {
+                    if (activity.areaRef._key.path.segments.at(-1) == area.id && activity.enable == true) {
+                        let addedActivity = activity
+                        delete addedActivity.areaRef
+                        delete addedActivity.scores
+                        area.activities.push(activity)
+                    }
+                }
+            }
+
+            oneData.teacherRef = teacherData
+            oneData.levelRef = levelData
+            oneData.id = id
+            oneData.areas = areasList
 
             // se organizan los datos a como fernando los pidio >:v
 
