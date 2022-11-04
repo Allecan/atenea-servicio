@@ -24,6 +24,7 @@ export class GradeRouter {
     // );
     this._router.get('/getall-grades', this.handleGetAllGrades.bind(this))
     this._router.get('/getone-grade/:id', this.handleGetOneGrade.bind(this))
+    this._router.get('/getone-grade-detailed/:id', this.handleGetOneGradeDetailed.bind(this))
   }
 
   async handleSingUp(req, res) {
@@ -60,6 +61,16 @@ export class GradeRouter {
     try {
       const uidGradeRef = req.params.id
       const result = await this._controller.getOneGrade(uidGradeRef)
+      this._response.succes(req, res, result, this._httpcode.OK)
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+    }
+  }
+
+  async handleGetOneGradeDetailed(req, res) {
+    try {
+      const uidGradeRef = req.params.id
+      const result = await this._controller.getOneGradeDetailed(uidGradeRef)
       this._response.succes(req, res, result, this._httpcode.OK)
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
