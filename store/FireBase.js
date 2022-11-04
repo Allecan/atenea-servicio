@@ -77,7 +77,14 @@ export class FireBase {
                     level.grades[data.position] = data
                 }
             }
+            // Proceso para eliminar los espacios en blanco que dejan los grados que estan deshabilitados
+            for (var x = 0; x < level.grades.length; x++) {
+                if (level.grades[x] == null) {
+                    level.grades.splice(x,1)
+                }
+            }
         }
+
         const response = levels
         return response;
     }
