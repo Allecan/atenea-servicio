@@ -101,6 +101,16 @@ export class ControllerGrade {
         return response
     }
 
+    
+    async getOneGradeDetailed(uid) {
+        const grade = await this._service.getOneData('Grades', uid)
+        if (grade == undefined || grade.enable == false) {
+            throw "Este id de grado no existe o no esta habilitado"
+        }
+        const response = await this._service.getOneGradeDetailed('Grades', uid)
+        return response
+    }
+
     async addStudent(idGrade, idStudent) {
         //Se verifica el estudiante y se le modifica el campo de "gradeRef"
         const studentModel = await this._service.getOneData('Students', idStudent)

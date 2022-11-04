@@ -494,6 +494,7 @@ export class FireBaseAdminSDK {
     snapshot.forEach((doc) => {
       array.push(doc.id);
       data[`grade${count}`].grade_name = doc.data().grade_name;
+      data[`grade${count}`].id = doc.id;
       count++;
     });
     count = 1;
