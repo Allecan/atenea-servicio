@@ -78,11 +78,13 @@ export class FireBase {
                 }
             }
             // Proceso para eliminar los espacios en blanco que dejan los grados que estan deshabilitados
-            for (var x = 0; x < level.grades.length; x++) {
-                if (level.grades[x] == null) {
-                    level.grades.splice(x,1)
+            let fixedGradesList = []
+            for (const grade of level.grades) {
+                if (grade != null) {
+                    fixedGradesList.push(grade)
                 }
             }
+            level.grades = fixedGradesList
         }
 
         const response = levels
