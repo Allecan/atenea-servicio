@@ -16,6 +16,7 @@ export class StudentRouter {
         this._router.put('/update-student/:id', this.handleUpdateStudent.bind(this))
         this._router.put('/delete-student/', this.handleDeleteStudent.bind(this))
         this._router.get('/get-student-boletin/:id', this.handleGetStudentBoletin.bind(this))
+        this._router.get('/get-student-scores/:id', this.handleGetStudentScores.bind(this))
     }
 
     async handleCreateStudent(req, res) {
@@ -87,6 +88,20 @@ export class StudentRouter {
                 }
             })
             // this._response.succes(req, res, "Pdf downloaded successfully", this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+
+    async handleGetStudentScores(req, res) {
+        try {
+            const uid = req.params.id
+            const result = await this._controller.getStudentScores(uid)
+            if (!result.code) {
+                this._response.succes(req, res, result, this._httpcode.OK)
+            }else{
+                this._response.error(req, res, 'Error.  Por favor verifica los datos e intenta de nuevo.', this._httpcode.BAD_REQUEST)
+            }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
