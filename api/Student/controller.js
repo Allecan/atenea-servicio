@@ -171,6 +171,62 @@ export class ControllerStudent {
         }
     }
 
+    async getStudentScores(uid) {
+        const student = await this._service.getOneDataU('Students', uid)
+        // Se verifican los datos
+        if (student == undefined || student.enable == false) {
+            throw "Este estudiante no existe o no esta habilitado"
+        }
+        // Se obtiene el grado al que pertenece el estudiante
+        const gradeRef = student.gradeRef._path.segments.at(-1)
+        const grade = await this._service.getOneDataU('Grades',gradeRef)
+        // Se advierte si el estudiante no esta asignado a ningun grado o si este grado esta deshabilitado
+        if (grade == undefined || grade.enable == false) {
+            throw "Este estudiante no esta asignado a ningun grado"
+        }
+        // Inicializacion de la variable que contendra el JSON completo
+        let data = {unit1: [], unit2: [], unit3: [], unit4: []}
+        // Proceso para obtener las areas y actividades del grado
+        const areas = await this._service.getDataU('Areas')
+        const activities = await this._service.getDataU('Activities')
+        for (const area of areas) {
+            // Se encuentra el area del grado
+            if (area.gradeRef._path.segments.at(-1) == gradeRef && area.enable == true) {
+                // Se agregan las notas de los alumnos en cada unidad
+                let unit1 = 0
+                let unit2 = 0
+                let unit3 = 0
+                let unit4 = 0
+                for (const activity of activities) {
+                    if (activity.areaRef._path.segments.at(-1) == area.id && activity.enable == true) {
+                        // Proceso para hallar la nota del estudiante
+                        let studentScore = 0
+                        for (const score of activity.scores) {
+                            if (score.studentRef._path.segments.at(-1) == uid) {
+                                studentScore = score.score
+                            }
+                        }
+                        // Proceso para determinar a que unidad pertenece esa nota
+                        if (activity.unit == 1) {
+                            unit1 += studentScore
+                        } else if (activity.unit == 2) {
+                            unit2 += studentScore
+                        } else if (activity.unit == 3) {
+                            unit3 += studentScore
+                        } else if (activity.unit == 4) {
+                            unit4 += studentScore
+                        }
+                    }
+                }
+                data.unit1.push({area_name: area.area_name, score: unit1})
+                data.unit2.push({area_name: area.area_name, score: unit2})
+                data.unit3.push({area_name: area.area_name, score: unit3})
+                data.unit4.push({area_name: area.area_name, score: unit4})
+            }
+        }
+        return data
+    }
+
 
     async updateStudent(student, uid) {
         const newModel = new this._model(student)
