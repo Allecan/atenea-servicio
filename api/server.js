@@ -41,7 +41,7 @@ class Server {
   // Middlewares
   setMiddlewares () {
     //this._app.use("/api-doc",swaggerUI.serve,swaggerUI.setup(helpers.swaggerSpec))
-    this._app.use("/api-doc",swaggerUI.serve,swaggerUI.setup(swaggerJsDoc(helpers.swaggerSpec)))
+    this._app.use("/api/v1/api-doc",swaggerUI.serve,swaggerUI.setup(swaggerJsDoc(helpers.swaggerSpec)))
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: true }))
     const corsOptions = {
