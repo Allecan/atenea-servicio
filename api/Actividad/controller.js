@@ -83,6 +83,40 @@ export class ControllerActivity {
         return response;
     }
 
+    async updateAllStudentsScore(data) {
+        const activity = await this._service.getOneData('Activities', data.activityRef)
+
+        if (activity == undefined) {
+            throw "El id de esta actividad no existe"
+        }
+
+        // Proceso para verificar que la informacion enviada sea correcta
+        const students = await this._service.getData('Students')
+        for (const score of data.scores) {
+            let studentExists = false
+            for (const student of activity.scores) {
+                if (student.studentRef._key.path.segments.at(-1) == score.studentRef) {
+                    studentExists = true
+                }
+            }
+            if (!studentExists) {
+                throw "El estudiante " + score.studentRef + " no existe o no esta asignado al grado de esta actividad"
+            }
+            if (parseInt(score.score) < 0) {
+                throw "La nota debe ser mayor o igual a cero"
+            }
+            // Se actualiza la lista de notas de la actividad
+            for (const oldScore of activity.scores) {
+                if (oldScore.studentRef._key.path.segments.at(-1) == score.studentRef) {
+                    oldScore.score = score.score
+                }
+            }
+        }
+        delete activity.id
+        const response = await this._service.updateData('Activities', data.activityRef, activity);
+        return response;
+    }
+
     async deleteAnActivity(id) {
         const response = await this._service.getOneData('Activities', id)
         if (response == undefined) {
