@@ -65,7 +65,7 @@ class Server {
     this._app.use('/api/v1/area',areaModel(express.Router))
     this._app.use('/api/v1/activity',activityModel(express.Router))
     this._app.get('/api/v1/test',(req,res)=>{
-      res.send("Hello World")
+      res.send("Hola JnyAlyx Ryze")
     })
 
   }

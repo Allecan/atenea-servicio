@@ -18,10 +18,48 @@
 
     async getAllTeachers(){
         const users = await this._service.getDataU('User')
-        const teachers = []
+        let newTeachers = []
+        let activeTeachers = []
+        let inactiveTeachers = []
         for (const user of users) {
+            user.uid = user.id
+            delete user.id
+            user.date = user.createdAt
+            delete user.createdAt
             if (user.rol == 'docente') {
-                teachers.push(user)
+                if (user.enable) {
+                    activeTeachers.push(user)
+                } else if (!user.enable){
+                    inactiveTeachers.push(user)
+                }
+            } else if (user.rol == '') {
+                newTeachers.push(user)
+            }
+        }
+        let teachers = {newUsers: {size: newTeachers.length, data : newTeachers}, activeUsers: {size: activeTeachers.length, data : activeTeachers}, inactiveUsers: {size: inactiveTeachers.length, data : inactiveTeachers}}
+        // Proceso para obtener un grado por cada maestro activo
+        let grades = await this._service.getDataU('Grades')
+        for (const teacher of teachers.activeUsers.data) {
+            teacher.grade = {}
+            for (const grade of grades) {
+                if (grade.teacherRef != undefined && grade.teacherRef._path.segments.at(-1) == teacher.uid) {
+                    delete grade.teacherRef
+                    delete grade.levelRef
+                    teacher.grade = grade
+                    break
+                }
+            }
+        }
+        // Proceso para obtener un grado por cada maestro inactivo
+        for (const teacher of teachers.inactiveUsers.data) {
+            teacher.grade = {}
+            for (const grade of grades) {
+                if (grade.teacherRef != undefined && grade.teacherRef._path.segments.at(-1) == teacher.uid) {
+                    delete grade.teacherRef
+                    delete grade.levelRef
+                    teacher.grade = grade
+                    break
+                }
             }
         }
         return teachers
@@ -69,8 +107,8 @@
         const teacher = await this._service.getOneDataU('User',id)
         if (teacher == undefined) {
             throw 'Este usuario no existe'
-        } else if (teacher.rol != 'docente') {
-            throw 'Este usuario no es un docente'
+        } else if (teacher.rol != 'docente' && teacher.rol != '') {
+            throw 'Este usuario no es un docente ni docente sin confirmar'
         }
         let gradesList = []
         const grades = await this._service.getDataU('Grades')

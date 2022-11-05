@@ -1,6 +1,6 @@
 import { config } from '../config/default.js'
 import { initializeApp } from 'firebase/app'
-import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc, query, where } from 'firebase/firestore'
+import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc, query, where, orderBy } from 'firebase/firestore'
 
 export class FireBase {
     constructor(config) {
@@ -34,6 +34,14 @@ export class FireBase {
         return docsList;
     }
 
+    async getLevels() {
+        const levelsRef = collection(this.getDB(), "Levels");
+        const levelsQuery = query(levelsRef, orderBy("position"))
+        const levelsDocs = await getDocs(levelsQuery)
+        const levels = levelsDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+        return levels;
+    }
+
     async getGrades(name) {
         const allData = collection(this.getDB(), name);
         const dataDocs = await getDocs(allData);
@@ -43,14 +51,42 @@ export class FireBase {
             if (grade.levelRef == undefined || grade.teacherRef == undefined || grade.enable == false) {
                 continue
             }
-            const levelSnap = await getDoc(grade.levelRef);
-            const teacherSnap = await getDoc(grade.teacherRef);
-            grade.levelRef = levelSnap.data()
-            grade.teacherRef = teacherSnap.data()
+            const levelDoc = await this.getDocByRef(grade.levelRef);
+            const teacherDoc = await this.getDocByRef(grade.teacherRef);
+            grade.levelRef = levelDoc
+            grade.teacherRef = teacherDoc
             docsList[grade] = grade
             enabledData.push(grade)
         }
-        return enabledData;
+        // Proceso para ordenar la informacion de los grados segun su nivel y posicion
+        let levels = await this.getLevels()
+        let students = await this.getData('Students')
+        for (const level of levels) {
+            level.grades = []
+            for (const data of enabledData) {
+                if (data.levelRef.id == level.id) {
+                    // Obtener la cantidad de estudiantes de un grado
+                    let totalStudents = 0
+                    for (const student of students) {
+                        if (student.gradeRef._key.path.segments.at(-1) == data.id) {
+                            totalStudents++
+                        }
+                    }
+                    data.totalStudents = totalStudents
+                    data.levelRef = data.levelRef.id
+                    level.grades[data.position] = data
+                }
+            }
+            // Proceso para eliminar los espacios en blanco que dejan los grados que estan deshabilitados
+            for (var x = 0; x < level.grades.length; x++) {
+                if (level.grades[x] == null) {
+                    level.grades.splice(x,1)
+                }
+            }
+        }
+
+        const response = levels
+        return response;
     }
 
     async saveData(name, data) {
@@ -223,6 +259,66 @@ export class FireBase {
             oneData.levelRef = levelData
             oneData.id = id
             oneData.students = students
+
+            // se organizan los datos a como fernando los pidio >:v
+
+
+            return oneData
+        } catch (error) {
+            return error
+        }
+    }
+
+    async getOneGradeDetailed(name, id) {
+        try {
+            //Se obtiene el documento del grado
+            const docRef = doc(this.getDB(), name, id)
+            const docSnap = await getDoc(docRef);
+            const oneData = docSnap.data()
+
+            //Se obtiene el documento del docente en base a su referencia
+            const teacherRef = oneData.teacherRef
+            const teacherSnap = await getDoc(teacherRef);
+            const teacherData = teacherSnap.data()
+
+            //Se obtiene el documento del nivel en base a su referencia
+            const levelRef = oneData.levelRef
+            const levelSnap = await getDoc(levelRef);
+            const levelData = levelSnap.data()
+
+            //Se obtienen las areas del grado
+            const areasData = collection(this.getDB(), "Areas");
+            const areasDocs = await getDocs(areasData);
+            const areas = areasDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+            let areasList = []
+            for (const area of areas) {
+                if (area.gradeRef._key.path.segments.at(-1) == id && area.enable == true) {
+                    areasList.push(area)
+                }
+            }
+            areasList.map(area => delete area.gradeRef)
+
+            //Se obtienen las actividades de cada area
+            console.log("hola")
+            const activitiesData = collection(this.getDB(), "Activities");
+            const activitiesDocs = await getDocs(activitiesData);
+            let activitiesList = activitiesDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+            for (const area of areasList) {
+                area.activities = []
+                for (const activity of activitiesList) {
+                    if (activity.areaRef._key.path.segments.at(-1) == area.id && activity.enable == true) {
+                        let addedActivity = activity
+                        delete addedActivity.areaRef
+                        delete addedActivity.scores
+                        area.activities.push(activity)
+                    }
+                }
+            }
+
+            oneData.teacherRef = teacherData
+            oneData.levelRef = levelData
+            oneData.id = id
+            oneData.areas = areasList
 
             // se organizan los datos a como fernando los pidio >:v
 
