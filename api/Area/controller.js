@@ -111,7 +111,7 @@ export class ControllerArea {
 
         //Se buscan las actividades que pertenecen a esta area
         const activities = await this._service.getData('Activities')
-        response.activities = {}
+        response.activities = {unit1 : [], unit2 : [], unit3 : [], unit4 : []}
         for (const activity of activities) {
             if (activity.areaRef._key.path.segments.at(-1) == uid && activity.enable == true) {
                 delete activity.areaRef
