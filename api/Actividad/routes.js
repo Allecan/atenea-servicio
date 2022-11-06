@@ -15,6 +15,7 @@ export class ActivityRouter {
     );
     this._router.put('/delete-activity/:id', this.handleDeleteActivity.bind(this))
     this._router.put('/update-student-score/', this.handleUpdateStudentScore.bind(this))
+    this._router.put('/update-all-students-scores', this.handleUpdateAllStudentsScore.bind(this))
     // this._router.put(
     //   '/add-student/',
     //   this.handleAddStudent.bind(this)
@@ -82,6 +83,16 @@ export class ActivityRouter {
       }
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+    }
+  }
+
+  async handleUpdateAllStudentsScore(req, res) {
+    try {
+      const data = req.body;
+      const result = await this._controller.updateAllStudentsScore(data);
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
     }
   }
 
