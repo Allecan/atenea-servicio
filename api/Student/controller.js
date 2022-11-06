@@ -1,4 +1,5 @@
-import {appPdf} from "./pdf/app.js"
+import {appPdf} from "../../pdf/app.js"
+import {contentFunction} from "../../pdf/content/pdfContent.js"
 export class ControllerStudent {
     constructor(serciceStudent, student) {
         this._service = serciceStudent
@@ -101,7 +102,10 @@ export class ControllerStudent {
             name: documentPdf.name_student.replace(/ /g, '_'),
             year: documentPdf.year
         }
-        const pdfResult = appPdf(documentPdf, data)
+        //se crea la direccion
+        const direction = `docs/boletin/${data.name}${data.year}Boletin.pdf` 
+        const content = contentFunction(documentPdf)
+        const pdfResult = appPdf(content, direction,data)
         return pdfResult
     }
 
