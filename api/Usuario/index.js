@@ -28,6 +28,10 @@ export const userModel = (expressRouter)=>{
  *           type: boolean
  *           description: The user's email verified.
  *           example: false || true
+ *         phoneNumber:
+ *           type: string
+ *           description: The user number.
+ *           example: 12313
  *         password:
  *           type: string
  *           description: The user's password
@@ -53,11 +57,12 @@ export const userModel = (expressRouter)=>{
  *         displayName: josue
  *         disable: false
  */
+
 /**
  * @swagger
- * /api/v1/user/create-user:
+ * /api/v1/product/create-user:
  *   post:
- *     summary: Create a new user.
+ *     summary: Crear un nuevo usuario.
  *     tags: [User]
  *     requestBody:  
  *       required: true
@@ -68,13 +73,14 @@ export const userModel = (expressRouter)=>{
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: create a new user
+ *         description: product created 
 */
+
 /**
  * @swagger
  * /api/v1/user/get-users:
  *   get:
- *     summary: Get all users.
+ *     summary: Retorna todos los usuarios.
  *     tags: [User]
  *     responses:  
  *       200: 
@@ -86,11 +92,12 @@ export const userModel = (expressRouter)=>{
  *               items:
  *                 $ref: '#/components/schemas/User'
 */
+
 /**
  * @swagger
  * /api/v1/user/get-user/{id}:
  *   get:
- *     summary: Get one user.
+ *     summary: Retorna un usuario.
  *     tags: [User]
  *     parameters:
  *       - in: path
@@ -112,28 +119,9 @@ export const userModel = (expressRouter)=>{
 */
 /**
  * @swagger
- * /api/v1/user/delete-user/{id}:
- *   delete:
- *     summary: delete a user.
- *     tags: [User]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: the user id
- *     responses:  
- *       200: 
- *         description: user deleted
- *       400:
- *         description: user not found
-*/
-/**
- * @swagger
- * /api/v1/user/update-user/{id}:
+ * /api/v1/product/get-user/{id}:
  *   put:
- *     summary: update a user.
+ *     summary: Editar el usuario.
  *     tags: [User]
  *     parameters:
  *       - in: path
@@ -141,7 +129,7 @@ export const userModel = (expressRouter)=>{
  *         schema:
  *           type: string
  *         required: true
- *         description: the user id
+ *         description: id del usuario
  *     requestBody:  
  *       required: true
  *       content: 
@@ -151,15 +139,16 @@ export const userModel = (expressRouter)=>{
  *             $ref: '#/components/schemas/User'
  *     responses:  
  *       200: 
- *         description: user updated!
+ *         description: product updated!
  *       400:
- *         description: user not found
+ *         description: product not found
 */
+
 /**
  * @swagger
- * /api/v1/user/update-user-rol/{id}/{type}:
- *   put:
- *     summary: modify user role.
+ * /api/v1/user/get-teachers:
+ *   get:
+ *     summary: Retorna todos los maestros.
  *     tags: [User]
  *     parameters:
  *       - in: path
@@ -168,22 +157,86 @@ export const userModel = (expressRouter)=>{
  *           type: string
  *         required: true
  *         description: the user id
+ *     responses:  
+ *       200: 
+ *         description: get all users 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: user not found
+*/
+/**
+ * @swagger
+ * /api/v1/user/get-enabled-teachers:
+ *   get:
+ *     summary: Retorna todos los maestros.
+ *     tags: [User]
+ *     parameters:
  *       - in: path
- *         name: type
+ *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: type user
- *     requestBody:  
- *       required: true
- *       content: 
- *         application/json:
- *           schema:
- *             type: object
- *             $ref: '#/components/schemas/User'
+ *         description: the user id
  *     responses:  
  *       200: 
- *         description: user updated!
+ *         description: get all users 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: user not found
+*/
+/**
+ * @swagger
+ * /api/v1/user/get-disabled-teachers:
+ *   get:
+ *     summary: Retorna todos los maestros.
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user id
+ *     responses:  
+ *       200: 
+ *         description: get all users 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: user not found
+*/
+/**
+ * @swagger
+ * /api/v1/user/get-teacher/{id}:
+ *   get:
+ *     summary: Retorna todos los maestros.
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user id
+ *     responses:  
+ *       200: 
+ *         description: get all users 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/User'
  *       400:
  *         description: user not found
 */

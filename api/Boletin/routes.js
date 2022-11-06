@@ -1,4 +1,6 @@
 import { helpers } from "../../lib/helpers.js"
+import path from "path"
+import {fileURLToPath} from 'url'
 export class BoletinRouter{
     constructor(router, controller, response, httpCode){
         this._router = router()

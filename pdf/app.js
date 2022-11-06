@@ -5,29 +5,31 @@ import fs from "fs";
 import {fonts} from "./font.js"
 import { style } from "./styles.js";
 
-import {contentFunction} from "./pdfContent.js"
 
-export const appPdf =  (information,data)=>{
+export const appPdf =  (content,direction,data)=>{
    // console.log(data)
     try {
-        const content = contentFunction(information)
+        
         let docDefinition ={
             content:content.content,
             styles:style,
-            pageOrientation: 'landscape'
+            pageOrientation: content.pageOrientation,
+            pageSize: content.pageSize
         }
 
-       // console.log(docDefinition)
+        //console.log(docDefinition)
         let printer = new PdfPrinter(fonts)
-        const name = `${data.name}${data.year}Boletin`
-        console.log(name)
-        const direction = `api/Boletin/pdf/docs/${name}.pdf`
+        //devemos de crear el nombre del pdf para devolverlo y descargarlo
+        const name = `${data.name}${data.year}Boletin.pdf`
+        //console.log(name)
+        
         console.log(direction)
         let pdfDoc = printer.createPdfKitDocument(docDefinition)
-        pdfDoc.pipe(fs.createWriteStream(direction))
+        let pdfPipe = pdfDoc.pipe(fs.createWriteStream(direction))
         pdfDoc.end()
         const result = {
-            name_file: name
+            name_file: name,
+            pdfDocPipe : pdfPipe
         }
         return result
     } catch (error) {

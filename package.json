@@ -5,11 +5,12 @@
   "type": "module",
   "main": "index.js",
   "engines": {
-    "node": "14.x"
+    "node": "16.17.0"
   },
   "scripts": {
     "test-entity": "mocha ./test/entity/*.spec.js",
-    "dev": "nodemon api/index.js"
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js"
   },
   "author": "Backend-Atenea",
   "license": "ISC",
@@ -28,9 +29,7 @@
     "firebase": "^9.9.4",
     "firebase-admin": "^11.0.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.4.3",
     "morgan": "^1.10.0",
-    "mysql2": "^2.3.3",
     "nodemailer": "^6.7.8",
     "pdfmake": "^0.2.5",
     "pg": "^8.7.3",
