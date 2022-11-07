@@ -30,17 +30,17 @@ export class FireBaseAdminSDK {
       "4ipYcYTWIx9IlnS11tmh",
     ];
     const preschool = {
-      preKinder: { size: null, data: [] },
-      kinder: { size: null, data: [] },
-      parvulos: { size: null, data: [] },
+      preKinder: { id_grade: 'F4537f0syHtPiMoUXWTC', size: null, data: [] },
+      kinder: { id_grade: 'RTx9zOnTYhY2WEryDgsK',  size: null, data: [] },
+      parvulos: { id_grade: 'ivli0dl1dneP7az5uL12',  size: null, data: [] },
     };
     const primary = {
-      primero: { size: null, data: [] },
-      segundo: { size: null, data: [] },
-      tercero: { size: null, data: [] },
-      cuarto: { size: null, data: [] },
-      quinto: { size: null, data: [] },
-      sexto: { size: null, data: [] },
+      primero: { id_grade: 'UCayKbzRghLfrbgx8qBM',  size: null, data: [] },
+      segundo: { id_grade: 'rGo2rjlpgkZUfnVjmZhu',  size: null, data: [] },
+      tercero: { id_grade: 'CSK8sQa9XG5tVHhjz1Il',  size: null, data: [] },
+      cuarto: { id_grade: 'jPFMpu7oTalTrsPwTWOL',  size: null, data: [] },
+      quinto: { id_grade: '1sabonHrVsMMqRIsHFEy',  size: null, data: [] },
+      sexto: { id_grade: '4ipYcYTWIx9IlnS11tmh',  size: null, data: [] },
     };
     const studentObject = { prePrimaria: preschool, primaria: primary };
     try {
@@ -131,10 +131,11 @@ export class FireBaseAdminSDK {
 
   async getEnableStudentsByGrade(idGrade) {
     try {
-      const usersObject = { size: null, students: [] };
+      const usersObject = { id_grade: '', grade_name: '', size: null, students: [] };
       const gradeRef = this.getFireStoreDatabase()
         .collection("Grades")
         .doc(idGrade);
+      const doc = await gradeRef.get();
       const snapshot = await this.getFireStoreDatabase()
         .collection("Students")
         .where("gradeRef", "==", gradeRef)
@@ -146,6 +147,8 @@ export class FireBaseAdminSDK {
           name_student: doc.data().name_complete,
         });
       });
+      usersObject.id_grade = idGrade
+      usersObject.grade_name = doc.data().grade_name
       usersObject.size = usersObject.students.length;
       return usersObject;
     } catch (error) {
@@ -184,6 +187,7 @@ export class FireBaseAdminSDK {
                     await collectionRef.add({
                         date: data.date,
                         gradeRef: this.getFireStoreDatabase().doc(`Grades/${data.gradeRef}`),
+                        unit: data.unit,
                         students: arrayStudents
                     })
                     return 'Asistencia Confirmada'
@@ -484,7 +488,7 @@ export class FireBaseAdminSDK {
     const snapshot = await citiesRef.where("teacherRef", "==", userRef).get();
     for (let index = 0; index < snapshot.size; index++) {
       arrayData.push(
-        (data[`grade${index + 1}`] = { grade_name: "", size: 0, students: [] })
+        (data[`grade${index + 1}`] = { id_grade: "", grade_name: "", size: 0, students: [] })
       );
     }
     if (snapshot.empty) {
@@ -493,6 +497,7 @@ export class FireBaseAdminSDK {
     const array = [];
     snapshot.forEach((doc) => {
       array.push(doc.id);
+      data[`grade${count}`].id_grade = doc.id;
       data[`grade${count}`].grade_name = doc.data().grade_name;
       count++;
     });
@@ -533,4 +538,4 @@ export class FireBaseAdminSDK {
 }
 
 // const firebase = new FireBaseAdminSDK()
-// const result = await firebase.getAllUser()
+// const result = await firebase.prueba('oFv8IkgEjoZOctXmDMRvT0LXZju1')
