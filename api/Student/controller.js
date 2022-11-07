@@ -1,4 +1,5 @@
-import {appPdf} from "./pdf/app.js"
+import {appPdf} from "../../pdf/app.js"
+import {contentFunction} from "../../pdf/content/pdfContent.js"
 export class ControllerStudent {
     constructor(serciceStudent, student) {
         this._service = serciceStudent
@@ -101,7 +102,10 @@ export class ControllerStudent {
             name: documentPdf.name_student.replace(/ /g, '_'),
             year: documentPdf.year
         }
-        const pdfResult = appPdf(documentPdf, data)
+        //se crea la direccion
+        const direction = `docs/boletin/${data.name}${data.year}Boletin.pdf` 
+        const content = contentFunction(documentPdf)
+        const pdfResult = appPdf(content, direction,data)
         return pdfResult
     }
 
@@ -185,7 +189,7 @@ export class ControllerStudent {
             throw "Este estudiante no esta asignado a ningun grado"
         }
         // Inicializacion de la variable que contendra el JSON completo
-        let data = {unit1: [], unit2: [], unit3: [], unit4: []}
+        let data = {unit1: {areas:[], average:0, absences:0}, unit2: {areas:[], average:0, absences:0}, unit3: {areas:[], average:0, absences:0}, unit4: {areas:[], average:0, absences:0}}
         // Proceso para obtener las areas y actividades del grado
         const areas = await this._service.getDataU('Areas')
         const activities = await this._service.getDataU('Activities')
@@ -218,10 +222,39 @@ export class ControllerStudent {
                         }
                     }
                 }
-                data.unit1.push({area_name: area.area_name, score: unit1})
-                data.unit2.push({area_name: area.area_name, score: unit2})
-                data.unit3.push({area_name: area.area_name, score: unit3})
-                data.unit4.push({area_name: area.area_name, score: unit4})
+                data.unit1.areas.push({area_name: area.area_name, score: unit1})
+                data.unit2.areas.push({area_name: area.area_name, score: unit2})
+                data.unit3.areas.push({area_name: area.area_name, score: unit3})
+                data.unit4.areas.push({area_name: area.area_name, score: unit4})
+            }
+        }
+        // Proceso para obtener el promedio de cada unidad
+        for (let x = 1; x <= 4; x++) {
+            const unitName = "unit"+x
+            let totalPoints = 0
+            let totalAreas = 0
+            for (const area of data[unitName].areas) {
+                totalPoints += area.score
+                totalAreas++
+            }
+            // Se verifica que la cantidad de cursos sea de al menos 1 para que no ocurra un error tipo totalPoints/0
+            if (totalAreas > 0) {
+                data[unitName].average = totalPoints / totalAreas
+            }
+        }
+        // Proceso para obtener las inasistencias del estudiante
+        const attendence = await this._service.getDataU('Attendence')
+        for (const atten of attendence) {
+            const attenYear = atten.date.substring(6,10)
+            const todayYear = new Date().getFullYear()
+            if (atten.gradeRef._path.segments.at(-1) == gradeRef && attenYear == todayYear) {
+                // Se busca al estudiante dentro de la lista y se detecta si estuvo ausente o no
+                for (const student of atten.students) {
+                    if (student.student._path.segments.at(-1) == uid && student.attendence == false) {
+                        const unitName = "unit"+atten.unit
+                        data[unitName].absences++
+                    }
+                }
             }
         }
         return data

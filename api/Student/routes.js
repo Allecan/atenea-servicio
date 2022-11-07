@@ -70,17 +70,19 @@ export class StudentRouter {
         try {
             const uid = req.params.id
             const result = await this._controller.getStudentBoletin(uid)
-            const direction = `api/Student/pdf/docs/${result.name_file}.pdf`
+            const direction = `docs/boletin/${result.name_file}`
             await new Promise((resolve, reject) => {
                 result.pdfDocPipe.on('finish', resolve)
                 result.pdfDocPipe.on('error', reject)
             })
-            res.download(direction, `${result.name_file}.pdf`, function (err) {
+            console.log(direction)
+            console.log(result.name_file)
+            res.download(direction, result.name_file, function (err) {
                 if (err) {
                     console.log(err)
                 } else {
-                    const direction_file = "api/Student/pdf/docs"
-                    const name_file = `${result.name_file}.pdf`
+                    const direction_file = "docs/boletin"
+                    const name_file = result.name_file
 
                     helpers.deleteFile(direction_file, name_file)
                     console.log("downloaded file")

@@ -41,16 +41,16 @@ class Server {
   // Middlewares
   setMiddlewares () {
     //this._app.use("/api-doc",swaggerUI.serve,swaggerUI.setup(helpers.swaggerSpec))
-    this._app.use("/api-doc",swaggerUI.serve,swaggerUI.setup(swaggerJsDoc(helpers.swaggerSpec)))
+    this._app.use("/api/v1/api-doc",swaggerUI.serve,swaggerUI.setup(swaggerJsDoc(helpers.swaggerSpec)))
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: true }))
-    const corsOptions = {
-      origin : ['http://localhost:3000', 'http://localhost:4000', 'https://ateneaq.netlify.app/', 'https://ateneaq.netlify.app/register/', 'https://ateneaq.netlify.app', 'https://ateneaq.netlify.app/register', /(^|^[^:]+:\/\/|[^\.]+\.)ateneaq\.netlify\.app(\/)(.*)/],
-      credentials: true,
-      methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
-    }
+    // const corsOptions = {
+    //   origin : ['http://localhost:3000', 'http://localhost:4000', 'https://ateneaq.netlify.app/', 'https://ateneaq.netlify.app/register/', 'https://ateneaq.netlify.app', 'https://ateneaq.netlify.app/register', /(^|^[^:]+:\/\/|[^\.]+\.)ateneaq\.netlify\.app(\/)(.*)/],
+    //   credentials: true,
+    //   methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
+    // }
 
-    this._app.use(cors(corsOptions))
+    // this._app.use(cors(corsOptions))
     this._app.use(morgan('dev'))
   }
 

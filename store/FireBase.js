@@ -301,18 +301,18 @@ export class FireBase {
             areasList.map(area => delete area.gradeRef)
 
             //Se obtienen las actividades de cada area
-            console.log("hola")
             const activitiesData = collection(this.getDB(), "Activities");
             const activitiesDocs = await getDocs(activitiesData);
             let activitiesList = activitiesDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
             for (const area of areasList) {
-                area.activities = []
+                area.activities = {unit1: [], unit2: [], unit3: [], unit4: []}
                 for (const activity of activitiesList) {
                     if (activity.areaRef._key.path.segments.at(-1) == area.id && activity.enable == true) {
                         let addedActivity = activity
                         delete addedActivity.areaRef
                         delete addedActivity.scores
-                        area.activities.push(activity)
+                        let unit = "unit"+addedActivity.unit
+                        area.activities[unit].push(activity)
                     }
                 }
             }
