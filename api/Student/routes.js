@@ -76,8 +76,8 @@ export class StudentRouter {
                 result.pdfDocPipe.on('finish', resolve)
                 result.pdfDocPipe.on('error', reject)
             })
-            console.log(direction)
-            console.log(result.name_file)
+            //console.log(direction)
+            //console.log(result.name_file)
             res.download(direction, result.name_file, function (err) {
                 if (err) {
                     console.log(err)
@@ -100,7 +100,24 @@ export class StudentRouter {
         try {
             const uid = req.params.id
             const result = await this._controller.unifyAllPdf(uid)
-            this._response.succes(req, res, result, this._httpcode.OK)
+            const direction = `docs/boletin/${result.name_file}`
+            await new Promise((resolve, reject) => {
+                result.pdfDocPipe.on('finish', resolve)
+                result.pdfDocPipe.on('error', reject)
+            })
+            res.download(direction, result.name_file, function (err) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    const direction_file = "docs/boletin"
+                    const name_file = result.name_file
+
+                    helpers.deleteFile(direction_file, name_file)
+                    console.log("downloaded file")
+
+                }
+            })
+          //  this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }

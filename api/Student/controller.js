@@ -131,9 +131,9 @@ export class ControllerStudent {
 
             const courses = await this.getStudentBoletin(student.id)
             const documentPdf = await this.createPdfInformation(courses,student.id)
-            const bodyContent = simpleContent(documentPdf)          
-            content.push({text: '', pageBreak: 'before'})
+            const bodyContent = simpleContent(documentPdf)           
             content.push(...bodyContent)
+            content.push({text: '', pageBreak: 'before'})
 
         }
         const data = {
@@ -141,7 +141,7 @@ export class ControllerStudent {
             year: new Date().getFullYear()
         }
         //se crea la direccion
-        const direction = `docs/boletin/${data.name}${data.year}.pdf` 
+        const direction = `docs/boletin/${data.name}${data.year}Boletin.pdf` 
         const contentFinal = contentFunction(content)
         return this.savePdf(contentFinal,direction,data)
     }
