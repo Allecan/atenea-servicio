@@ -122,8 +122,28 @@ export class ControllerStudent {
     }
 
     async unifyAllPdf(idGrade){
-       const  listStudent  = await this.getStudentsByGrade(idGrade)
-       return listStudent
+        const  listStudent  = await this.getStudentsByGrade(idGrade)
+        const sizeList = listStudent.students.length
+        console.log(sizeList)
+        
+        let content = []
+        for(const student of listStudent.students){
+
+            const courses = await this.getStudentBoletin(student.id)
+            const documentPdf = await this.createPdfInformation(courses,student.id)
+            const bodyContent = simpleContent(documentPdf)          
+            content.push({text: '', pageBreak: 'before'})
+            content.push(...bodyContent)
+
+        }
+        const data = {
+            name: "Registro",
+            year: new Date().getFullYear()
+        }
+        //se crea la direccion
+        const direction = `docs/boletin/${data.name}${data.year}.pdf` 
+        const contentFinal = contentFunction(content)
+        return this.savePdf(contentFinal,direction,data)
     }
 
     savePdf(content,direction,data){
