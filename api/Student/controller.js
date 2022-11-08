@@ -101,7 +101,7 @@ export class ControllerStudent {
             return documentPdf
             
     }
-
+    //unifica las funciones para crear un pdf de boletin particular
     async unifyOnePdf(iud){
         
         const courses = await this.getStudentBoletin(iud)
@@ -119,6 +119,11 @@ export class ControllerStudent {
         const content = contentFunction(bodyContent)
         console.log(content)
         return this.savePdf(content,direction,data)
+    }
+
+    async unifyAllPdf(idGrade){
+       const  listStudent  = await this.getStudentsByGrade(idGrade)
+       return listStudent
     }
 
     savePdf(content,direction,data){

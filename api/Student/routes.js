@@ -17,6 +17,7 @@ export class StudentRouter {
         this._router.put('/delete-student/', this.handleDeleteStudent.bind(this))
         this._router.get('/get-student-boletin/:id', this.handleGetStudentBoletin.bind(this))
         this._router.get('/get-student-scores/:id', this.handleGetStudentScores.bind(this))
+        this._router.get('/get-student-AllBoletinByGrade/:id', this.handleGetAllStudentBoletin.bind(this))
     }
 
     async handleCreateStudent(req, res) {
@@ -90,6 +91,16 @@ export class StudentRouter {
                 }
             })
             // this._response.succes(req, res, "Pdf downloaded successfully", this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+    //se obtiene un pdf con todos los boletines de los estudiantes 
+    async handleGetAllStudentBoletin(req, res) {
+        try {
+            const uid = req.params.id
+            const result = await this._controller.unifyAllPdf(uid)
+            this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
