@@ -69,7 +69,7 @@ export class StudentRouter {
     async handleGetStudentBoletin(req, res) {
         try {
             const uid = req.params.id
-            const result = await this._controller.getStudentBoletin(uid)
+            const result = await this._controller.unifyOnePdf(uid)
             const direction = `docs/boletin/${result.name_file}`
             await new Promise((resolve, reject) => {
                 result.pdfDocPipe.on('finish', resolve)

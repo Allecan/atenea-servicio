@@ -1,5 +1,6 @@
 import {appPdf} from "../../pdf/app.js"
 import {contentFunction} from "../../pdf/content/pdfContent.js"
+import { simpleContent } from "../../pdf/content/simpleContent.js"
 export class ControllerStudent {
     constructor(serciceStudent, student) {
         this._service = serciceStudent
@@ -35,11 +36,6 @@ export class ControllerStudent {
         }
         // Variables para el boletin
         let courses = []
-        let grade = ""
-        let keyCode = ""
-        let name_student = ""
-        let teacher = ""
-        let year = ""
 
         // Se ingresan los datos necesarios a las variables del boletin
         const areas = await this._service.getDataU('Areas')
@@ -76,35 +72,56 @@ export class ControllerStudent {
 
             }
         }
+        return courses
+    }
 
-        // Se ingresa el nombre del grado
-        const gradeDoc = await this._service.getOneDataU('Grades', student.gradeRef._path.segments.at(-1))
-        grade = gradeDoc.grade_name
+   async createPdfInformation(courses,uid){
+            // Se ingresa el nombre del grado
+            console.log("entro")
+            const student = await this._service.getOneDataU('Students', uid)
+            const gradeDoc = await this._service.getOneDataU('Grades', student.gradeRef._path.segments.at(-1))        
+            const grade = gradeDoc.grade_name       
+            // Se ingresa el id del estudiante
+            const keyCode = student.id
 
-        // Se ingresa el id del estudiante
-        keyCode = student.id
+            // Se ingresa el nombre del estudiante
+            const name_student = student.name_complete
+    
+            // Se ingresa el nombre del docente a cargo
+            const teacherDoc = await this._service.getOneDataU('User', gradeDoc.teacherRef._path.segments.at(-1))
+            const teacher = teacherDoc.displayName
+    
+            // Se ingresa el ano
+            const year = new Date().getFullYear()
+    
+            // Creacion del boletin
+            const boletin = { courses: courses, grade: grade, keyCode: keyCode, name_student: name_student, teacher: teacher, year: year }
+        
+            const documentPdf = this.createDocumentPdf(boletin)
+            return documentPdf
+            
+    }
 
-        // Se ingresa el nombre del estudiante
-        name_student = student.name_complete
+    async unifyOnePdf(iud){
+        
+        const courses = await this.getStudentBoletin(iud)
 
-        // Se ingresa el nombre del docente a cargo
-        const teacherDoc = await this._service.getOneDataU('User', gradeDoc.teacherRef._path.segments.at(-1))
-        teacher = teacherDoc.displayName
+        const documentPdf = await this.createPdfInformation(courses,iud)
 
-        // Se ingresa el ano
-        year = new Date().getFullYear()
-
-        // Creacion del boletin
-        const boletin = { courses: courses, grade: grade, keyCode: keyCode, name_student: name_student, teacher: teacher, year: year }
-
-        const documentPdf = this.createDocumentPdf(boletin)
+        const bodyContent = simpleContent(documentPdf)
+        console.log(bodyContent)
         const data = {
             name: documentPdf.name_student.replace(/ /g, '_'),
             year: documentPdf.year
         }
         //se crea la direccion
         const direction = `docs/boletin/${data.name}${data.year}Boletin.pdf` 
-        const content = contentFunction(documentPdf)
+        const content = contentFunction(bodyContent)
+        console.log(content)
+        return this.savePdf(content,direction,data)
+    }
+
+    savePdf(content,direction,data){
         const pdfResult = appPdf(content, direction,data)
         return pdfResult
     }
