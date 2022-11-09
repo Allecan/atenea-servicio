@@ -140,4 +140,8 @@ export class ControllerArea {
     //     const response = await this._service.updateData('Courses', idCourse, courseModel);
     //     return response
     // }
+    unifyOnePdf(idArea){
+        
+    }
+
 }

@@ -24,6 +24,7 @@ export class AreaRouter {
     // );
     this._router.get('/getall-areas', this.handleGetAllAreas.bind(this))
     this._router.get('/getone-area/:id', this.handleGetOneArea.bind(this))
+    this._router.get('/download-notes/:id', this.handleDownloadNotes.bind(this))
   }
 
   async handleSingUp(req, res) {
@@ -114,6 +115,15 @@ export class AreaRouter {
     try {
       const uidAreaRef = req.params.id
       const result = await this._controller.deleteAnArea(uidAreaRef);
+      this._response.succes(req, res, result, this._httpcode.OK);
+    } catch (error) {
+      this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
+    }
+  }
+  async handleDownloadNotes(req, res) {
+    try {
+      const uidAreaRef = req.params.id
+      const result = await this._controller.unifyOnePdf(uidAreaRef);
       this._response.succes(req, res, result, this._httpcode.OK);
     } catch (error) {
       this._response.error(req, res, error, this._httpcode.BAD_REQUEST);
