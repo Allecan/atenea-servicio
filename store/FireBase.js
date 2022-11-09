@@ -257,10 +257,21 @@ export class FireBase {
                 students[estudiante] = delete estudiante.gradeRef
             }
 
+            //Se obtiene la lista de areas del grado
+            const areasRef = collection(this.getDB(), "Areas");
+            const areasQuery = query(areasRef, where("gradeRef", "==", docRef))
+            const areasDocs = await getDocs(areasQuery)
+            const areas = areasDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+            //Se elimina el campo de la referencia de los grados de cada area
+            for (const area of areas) {
+                areas[area] = delete area.gradeRef
+            }
+
             oneData.teacherRef = teacherData
             oneData.levelRef = levelData
             oneData.id = id
             oneData.students = students
+            oneData.areas = areas
 
             // se organizan los datos a como fernando los pidio >:v
 

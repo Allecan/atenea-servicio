@@ -17,6 +17,7 @@ export class StudentRouter {
         this._router.put('/delete-student/', this.handleDeleteStudent.bind(this))
         this._router.get('/get-student-boletin/:id', this.handleGetStudentBoletin.bind(this))
         this._router.get('/get-student-scores/:id', this.handleGetStudentScores.bind(this))
+        this._router.get('/get-student-AllBoletinByGrade/:id', this.handleGetAllStudentBoletin.bind(this))
     }
 
     async handleCreateStudent(req, res) {
@@ -69,14 +70,14 @@ export class StudentRouter {
     async handleGetStudentBoletin(req, res) {
         try {
             const uid = req.params.id
-            const result = await this._controller.getStudentBoletin(uid)
+            const result = await this._controller.unifyOnePdf(uid)
             const direction = `docs/boletin/${result.name_file}`
             await new Promise((resolve, reject) => {
                 result.pdfDocPipe.on('finish', resolve)
                 result.pdfDocPipe.on('error', reject)
             })
-            console.log(direction)
-            console.log(result.name_file)
+            //console.log(direction)
+            //console.log(result.name_file)
             res.download(direction, result.name_file, function (err) {
                 if (err) {
                     console.log(err)
@@ -90,6 +91,33 @@ export class StudentRouter {
                 }
             })
             // this._response.succes(req, res, "Pdf downloaded successfully", this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+    //se obtiene un pdf con todos los boletines de los estudiantes 
+    async handleGetAllStudentBoletin(req, res) {
+        try {
+            const uid = req.params.id
+            const result = await this._controller.unifyAllPdf(uid)
+            const direction = `docs/boletin/${result.name_file}`
+            await new Promise((resolve, reject) => {
+                result.pdfDocPipe.on('finish', resolve)
+                result.pdfDocPipe.on('error', reject)
+            })
+            res.download(direction, result.name_file, function (err) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    const direction_file = "docs/boletin"
+                    const name_file = result.name_file
+
+                    helpers.deleteFile(direction_file, name_file)
+                    console.log("downloaded file")
+
+                }
+            })
+          //  this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
         }
