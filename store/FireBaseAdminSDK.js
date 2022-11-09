@@ -382,6 +382,9 @@ export class FireBaseAdminSDK {
   async updateUser(id, data) {
     try {
       const auth = getAuth(appFirebase);
+      if (data.password == "") {
+        delete data.password
+      }
       const update = await auth.updateUser(id, data);
       await this.getFireStoreDatabase()
         .collection("User")
