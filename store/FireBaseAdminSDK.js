@@ -411,6 +411,18 @@ export class FireBaseAdminSDK {
   }
 
   async disableTeacher(id) {
+    // Se verifica antes si el docente tiene grados a cargo
+    const teacher = await this.getOneDataU('User', id)
+    const grades = await this.getDataU('Grades')
+    let teacherGrades = ""
+    for (const grade of grades) {
+      if (grade.teacherRef._path.segments.at(-1) == id && grade.enable == true) {
+        teacherGrades += "\\" + grade.grade_name
+      }
+    }
+    if (teacherGrades.length != '') {
+      throw 'Este docente aun tiene grados a cargo: ' + teacherGrades
+    }
     const auth = getAuth(appFirebase);
     const deleteUser = await auth.updateUser(id, { disabled: true });
     await this.getFireStoreDatabase()
