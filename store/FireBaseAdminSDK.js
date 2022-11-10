@@ -307,7 +307,7 @@ export class FireBaseAdminSDK {
       });
       return "Usuario Guardado Correctamente";
     } catch (error) {
-      return error.message;
+      return error;
     }
   }
 
@@ -554,4 +554,11 @@ export class FireBaseAdminSDK {
 }
 
 // const firebase = new FireBaseAdminSDK()
-// const result = await firebase.prueba('oFv8IkgEjoZOctXmDMRvT0LXZju1')
+// const result = await firebase.saveUser({
+//   email: "docente7@gmail.com",
+//   emailVerified: false,
+//   password: "docenteEscuela7",
+//   displayName: "Fernando Luis Tavez Cruz",
+//   disable: false
+// })
+// console.log(result)
