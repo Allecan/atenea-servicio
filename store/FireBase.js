@@ -318,7 +318,7 @@ export class FireBase {
             for (const area of areasList) {
                 area.activities = {unit1: [], unit2: [], unit3: [], unit4: []}
                 for (const activity of activitiesList) {
-                    if (activity.areaRef._key.path.segments.at(-1) == area.id && activity.enable == true) {
+                    if (activity.areaRef != null && activity.areaRef._key.path.segments.at(-1) == area.id && activity.enable == true) {
                         let addedActivity = activity
                         delete addedActivity.areaRef
                         delete addedActivity.scores
