@@ -140,8 +140,26 @@ export class ControllerArea {
     //     const response = await this._service.updateData('Courses', idCourse, courseModel);
     //     return response
     // }
-    unifyOnePdf(idArea){
-        
+
+    async unifyOnePdf(idArea){
+        let doc = {}
+        const area = await this.getOneArea(idArea)
+        const activities = area.activities
+        const grade = await this._service.getOneGrade('Grades',area.gradeRef.id)
+        //return activities.unit1.length
+        doc.docente = grade.teacherRef.displayName
+        doc.area = area.area_name
+        doc.grado = grade.grade_name
+        return doc 
+    }
+
+    createInformationPdf(information){
+        content = {
+            docente:information.docente,
+            area: information.area,
+            grado: information.grado,
+            seccion: information.seccion
+        }
     }
 
 }
