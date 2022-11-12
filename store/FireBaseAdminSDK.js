@@ -291,7 +291,6 @@ export class FireBaseAdminSDK {
     try {
       const auth = getAuth(appFirebase);
       const result = await auth.createUser(data);
-      this.setRolUser(result.uid, "");
       const date = new Date();
       const today = this.dateToSpanish(date);
       const time =
@@ -305,6 +304,7 @@ export class FireBaseAdminSDK {
         createdAt: today + " a las " + time,
         enable: true,
       });
+      this.setRolUser(result.uid, "");
       return "Usuario Guardado Correctamente";
     } catch (error) {
       return error;
