@@ -167,7 +167,27 @@ export class ControllerArea {
         return auxUnit
         
     }
-
+    //ingresamos la informacion del estudinte y el numero de estudiente con el estilo que debe de llevar en el pdf 
+    styleToStudent(studentInfo,number){
+        let style = [{text:number},{text:studentInfo.name_complete}
+        ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ]
+        return style
+    }
+    //creamos el formato que debe de llevar los estudiantes y las notas 
+    studentAndNote(students){
+        let newStudents = []
+        let cont = 1
+        for(const student of students){
+            newStudents.push(this.styleToStudent(student,cont))
+            cont++
+        }
+        return newStudents
+    }
+    //creamos la informacion que debe llevar el pdf
     async createInformation(idArea){
         let doc = {}
         const area = await this.getOneArea(idArea)
@@ -178,6 +198,8 @@ export class ControllerArea {
         doc.docente = grade.teacherRef.displayName
         doc.area = area.area_name
         doc.grado = grade.grade_name
+        //agregar estudiantes
+        doc.students = this.studentAndNote(grade.students)
         //creamos el espacion para las actividades
         doc.activities = {}
         doc.activities.unit1 = this.addActivities(activities.unit1)
@@ -186,6 +208,7 @@ export class ControllerArea {
         doc.activities.unit4 = this.addActivities(activities.unit4)
         return doc 
     }
+    //crea la direccion y el documento formato final del pdf 
     async unifyOnePdf(idArea){
         const doc = await this.createInformation(idArea)
         const data = {
@@ -196,7 +219,7 @@ export class ControllerArea {
         const contentFinal = contentFunction(doc)
         return this.savePdf(contentFinal,direction,data)
     }
-
+    //crea el pdf y lo guarda en la direccion deseada
     savePdf(content,direction,data){
         const pdfResult = appPdf(content, direction,data)
         return pdfResult
