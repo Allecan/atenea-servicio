@@ -1,3 +1,5 @@
+import {contentFunction} from "../../pdf/content/pdfContentArea.js"
+import { appPdf } from "../../pdf/app.js"
 export class ControllerArea {
     constructor(serviceArea, area) {
         this._service = serviceArea
@@ -166,7 +168,7 @@ export class ControllerArea {
         
     }
 
-    async unifyOnePdf(idArea){
+    async createInformation(idArea){
         let doc = {}
         const area = await this.getOneArea(idArea)
         const activities = area.activities
@@ -184,7 +186,21 @@ export class ControllerArea {
         doc.activities.unit4 = this.addActivities(activities.unit4)
         return doc 
     }
+    async unifyOnePdf(idArea){
+        const doc = await this.createInformation(idArea)
+        const data = {
+            name:"Registro_Area",
+            year: new Date().getFullYear()
+        }
+        const direction = `docs/area/${data.name}${data.year}Boletin.pdf` 
+        const contentFinal = contentFunction(doc)
+        return this.savePdf(contentFinal,direction,data)
+    }
 
+    savePdf(content,direction,data){
+        const pdfResult = appPdf(content, direction,data)
+        return pdfResult
+    }
     createInformationPdf(information){
         content = {
             docente:information.docente,

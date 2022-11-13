@@ -9,9 +9,9 @@ export const contentFunction = (information)=>{
                    
                     widths: [80,200,80,150,80,130,80,60],
                     body: [
-                        [{text:"Docente:",style:"",bold:true,border: [false, false, false,false]},{text:"Jose Daniel Tistoj Reyes",style:"",border: [false, false, false,true]},
-                        {text:"Area:",style:"",bold:true,border: [false, false, false,false]},{text:"",style:"",border: [false, false, false,true]},
-                        {text:"Grado:",style:"",bold:true,border: [false, false, false,false]},{text:"",style:"",border: [false, false, false,true]},
+                        [{text:"Docente:",style:"",bold:true,border: [false, false, false,false]},{text:information.docente,style:"",border: [false, false, false,true]},
+                        {text:"Area:",style:"",bold:true,border: [false, false, false,false]},{text:information.area,style:"",border: [false, false, false,true]},
+                        {text:"Grado:",style:"",bold:true,border: [false, false, false,false]},{text:information.grado,style:"",border: [false, false, false,true]},
                         {text:"Sección:",style:"",bold:true,border: [false, false, false,false]},{text:"",style:"",border: [false, false, false,true]}
                         ]
                     
@@ -38,10 +38,10 @@ export const contentFunction = (information)=>{
                         {text:"Unidad IV",bold:true,colSpan: 12,style:"tableHeader"},{},{},{},{},{},{},{},{},{},{},{},
                         ],
                         [{},{}
-                            ,{},{},{},{},{},{},{},{},{},{text:"TOTAL Z.",style:"tableHeaderTotal"},{text:"PRUEBA OBJETVA",style:"tableHeaderPrueba"},{text:"TOTAL GENERAL",style:"tableHeaderTotalGeneral"}
-                            ,{},{},{},{},{},{},{},{},{},{text:"TOTAL Z.",style:"tableHeaderTotal"},{text:"PRUEBA OBJETVA",style:"tableHeaderPrueba"},{text:"TOTAL GENERAL",style:"tableHeaderTotalGeneral"}
-                            ,{},{},{},{},{},{},{},{},{},{text:"TOTAL Z.",style:"tableHeaderTotal"},{text:"PRUEBA OBJETVA",style:"tableHeaderPrueba"},{text:"TOTAL GENERAL",style:"tableHeaderTotalGeneral"}
-                            ,{},{},{},{},{},{},{},{},{},{text:"TOTAL Z.",style:"tableHeaderTotal"},{text:"PRUEBA OBJETVA",style:"tableHeaderPrueba"},{text:"TOTAL GENERAL",style:"tableHeaderTotalGeneral"}
+                            ,...information.activities.unit1,{text:"TOTAL Z.",style:"tableHeaderTotal"},{text:"PRUEBA OBJETVA",style:"tableHeaderPrueba"},{text:"TOTAL GENERAL",style:"tableHeaderTotalGeneral"}
+                            ,...information.activities.unit2,{text:"TOTAL Z.",style:"tableHeaderTotal"},{text:"PRUEBA OBJETVA",style:"tableHeaderPrueba"},{text:"TOTAL GENERAL",style:"tableHeaderTotalGeneral"}
+                            ,...information.activities.unit3,{text:"TOTAL Z.",style:"tableHeaderTotal"},{text:"PRUEBA OBJETVA",style:"tableHeaderPrueba"},{text:"TOTAL GENERAL",style:"tableHeaderTotalGeneral"}
+                            ,...information.activities.unit4,{text:"TOTAL Z.",style:"tableHeaderTotal"},{text:"PRUEBA OBJETVA",style:"tableHeaderPrueba"},{text:"TOTAL GENERAL",style:"tableHeaderTotalGeneral"}
                             ],
                         [{},{}
                             ,{text:1},{text:2},{text:3},{text:4},{text:5},{text:6},{text:7},{text:8},{text:9},{},{},{}
