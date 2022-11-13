@@ -140,6 +140,31 @@ export class ControllerArea {
     //     const response = await this._service.updateData('Courses', idCourse, courseModel);
     //     return response
     // }
+    //le da el formato que debe de ir en el pdf
+    styleToActivity(name){
+        const activity = {text:name ,style:"tableHeader2"}
+        return activity
+    }
+    //debemos tener 9 espacios en cada unidad, si no hay 9 actividades se debe de mandar un string vacio osea = ""
+    //pero se debe de completar los 9 espacios
+    addActivities(unit){
+       let auxUnit = []
+       const sizeUnit = unit.length 
+        for(let i = 0;i<9;i++){
+            if(i<sizeUnit){
+                const name = unit[i].activity_name
+                const activity = this.styleToActivity(name)
+                auxUnit.push(activity)
+            }else{
+                const name = ""
+                const activity = this.styleToActivity(name)
+                auxUnit.push(activity)
+            }
+
+        }
+        return auxUnit
+        
+    }
 
     async unifyOnePdf(idArea){
         let doc = {}
@@ -147,9 +172,16 @@ export class ControllerArea {
         const activities = area.activities
         const grade = await this._service.getOneGrade('Grades',area.gradeRef.id)
         //return activities.unit1.length
+        //agregamo los datos del curso y del profesor
         doc.docente = grade.teacherRef.displayName
         doc.area = area.area_name
         doc.grado = grade.grade_name
+        //creamos el espacion para las actividades
+        doc.activities = {}
+        doc.activities.unit1 = this.addActivities(activities.unit1)
+        doc.activities.unit2 = this.addActivities(activities.unit2)
+        doc.activities.unit3 = this.addActivities(activities.unit3)
+        doc.activities.unit4 = this.addActivities(activities.unit4)
         return doc 
     }
 
