@@ -167,8 +167,36 @@ export class ControllerArea {
         return auxUnit
         
     }
+   async searchNotes(unit,idStudent){
+        let notes = []
+        for(let activity of unit){
+            const auxActivity = await this._service.getOneData("Activities",activity.id)
+            
+            let cont = 0
+            for(const score of auxActivity.scores){
+                if(score.studentRef.id == idStudent){
+                    let note = score.score
+                    const formate = {text:note}
+                    notes.push(formate)
+                    cont++
+                }
+            }
+            if(cont ==0){
+                let note = 0
+                const formate = {text:note}
+                notes.push(formate)
+            }
+        }
+        return notes
+
+    }
     //ingresamos la informacion del estudinte y el numero de estudiente con el estilo que debe de llevar en el pdf 
-    styleToStudent(studentInfo,number){
+  async styleToStudent(studentInfo,number,activities){
+        console.log("Estudiante",studentInfo.name_complete)
+        console.log(await this.searchNotes(activities.unit1,studentInfo.id))
+        console.log(await this.searchNotes(activities.unit2,studentInfo.id))
+        console.log(await this.searchNotes(activities.unit3,studentInfo.id))
+        console.log(await this.searchNotes(activities.unit4,studentInfo.id))
         let style = [{text:number},{text:studentInfo.name_complete}
         ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
         ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
@@ -178,11 +206,11 @@ export class ControllerArea {
         return style
     }
     //creamos el formato que debe de llevar los estudiantes y las notas 
-    studentAndNote(students){
+   async studentAndNote(students,activities){
         let newStudents = []
         let cont = 1
         for(const student of students){
-            newStudents.push(this.styleToStudent(student,cont))
+            newStudents.push(await this.styleToStudent(student,cont,activities))
             cont++
         }
         return newStudents
@@ -199,7 +227,7 @@ export class ControllerArea {
         doc.area = area.area_name
         doc.grado = grade.grade_name
         //agregar estudiantes
-        doc.students = this.studentAndNote(grade.students)
+        doc.students = await this.studentAndNote(grade.students,activities)
         //creamos el espacion para las actividades
         doc.activities = {}
         doc.activities.unit1 = this.addActivities(activities.unit1)
