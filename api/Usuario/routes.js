@@ -34,7 +34,8 @@ export class UserRouter{
             if (!result.errorInfo) {
                 this._response.succes(req, res, result, this._httpcode.OK)
             }else{
-                this._response.error(req, res, 'Error.Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
+                //console.log('Entra aqui');
+                this._response.error(req, res, 'Error. Por favor verifica los datos de usuario', this._httpcode.BAD_REQUEST)
             }
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)

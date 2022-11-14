@@ -291,7 +291,6 @@ export class FireBaseAdminSDK {
     try {
       const auth = getAuth(appFirebase);
       const result = await auth.createUser(data);
-      this.setRolUser(result.uid, "");
       const date = new Date();
       const today = this.dateToSpanish(date);
       const time =
@@ -305,9 +304,10 @@ export class FireBaseAdminSDK {
         createdAt: today + " a las " + time,
         enable: true,
       });
+      this.setRolUser(result.uid, "");
       return "Usuario Guardado Correctamente";
     } catch (error) {
-      return error.message;
+      return error;
     }
   }
 
@@ -554,4 +554,11 @@ export class FireBaseAdminSDK {
 }
 
 // const firebase = new FireBaseAdminSDK()
-// const result = await firebase.prueba('oFv8IkgEjoZOctXmDMRvT0LXZju1')
+// const result = await firebase.saveUser({
+//   email: "docente7@gmail.com",
+//   emailVerified: false,
+//   password: "docenteEscuela7",
+//   displayName: "Fernando Luis Tavez Cruz",
+//   disable: false
+// })
+// console.log(result)

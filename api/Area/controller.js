@@ -1,3 +1,5 @@
+import {contentFunction} from "../../pdf/content/pdfContentArea.js"
+import { appPdf } from "../../pdf/app.js"
 export class ControllerArea {
     constructor(serviceArea, area) {
         this._service = serviceArea
@@ -26,7 +28,7 @@ export class ControllerArea {
         newArea.gradeRef = gradeRef
         // newGrade.levelRef = levelRef
 
-        const response = await this._service.saveData('Areas', newArea)
+        const response = await this._service.saveArea('Areas', newArea)
         return response
     }
 
@@ -140,4 +142,136 @@ export class ControllerArea {
     //     const response = await this._service.updateData('Courses', idCourse, courseModel);
     //     return response
     // }
+    //le da el formato que debe de ir en el pdf
+    styleToActivity(name){
+        const activity = {text:name ,style:"tableHeader2"}
+        return activity
+    }
+    //debemos tener 9 espacios en cada unidad, si no hay 9 actividades se debe de mandar un string vacio osea = ""
+    //pero se debe de completar los 9 espacios
+    addActivities(unit){
+       let auxUnit = []
+       const sizeUnit = unit.length 
+        for(let i = 0;i<9;i++){
+            if(i<sizeUnit){
+                const name = unit[i].activity_name
+                const activity = this.styleToActivity(name)
+                auxUnit.push(activity)
+            }else{
+                const name = ""
+                const activity = this.styleToActivity(name)
+                auxUnit.push(activity)
+            }
+
+        }
+        return auxUnit
+        
+    }
+   async searchNotes(unit,idStudent){
+        let notes = []
+        const sizeUnit = unit.length 
+        for(let i=0;i<9 ;i++){
+            //si tiene el nuemero de actividades 
+            if(i<sizeUnit){
+                const auxActivity = await this._service.getOneData("Activities",unit[i].id)
+                let cont = 0
+                //se busca si el alumno tiene notas en la actividada
+                for(const score of auxActivity.scores){
+                    //si tiene se encuentra se agrega la nota 
+                    if(score.studentRef.id == idStudent){
+                        let note = score.score
+                        const formate = {text:note}
+                        notes.push(formate)
+                        cont++
+                    }
+                }
+                //si el contador es cero es que no se encontro al alumno con nota en la actividad
+                //se le asigna una nota de 0
+                if(cont ==0){
+                    let note = 0
+                    const formate = {text:note}
+                    notes.push(formate)
+                }
+            }
+            //si no tiene 9 actividades se va rellenando con ceros 
+            else{
+                let note = 0
+                const formate = {text:note}
+                notes.push(formate)
+            }
+        }
+        return notes
+
+    }
+    //ingresamos la informacion del estudinte y el numero de estudiente con el estilo que debe de llevar en el pdf 
+  async styleToStudent(studentInfo,number,activities){
+        //se buscan las notaas de las actividades por unidad 
+        const noteUnit1  = await this.searchNotes(activities.unit1,studentInfo.id)
+        const noteUnit2 = await this.searchNotes(activities.unit2,studentInfo.id)
+        const noteUnit3 = await this.searchNotes(activities.unit3,studentInfo.id)
+        const noteUnit4 = await this.searchNotes(activities.unit4,studentInfo.id)
+        let style = [{text:number},{text:studentInfo.name_complete}
+        ,...noteUnit1,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit2,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit3,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit4,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ]
+        return style
+    }
+    //creamos el formato que debe de llevar los estudiantes y las notas 
+   async studentAndNote(students,activities){
+        let newStudents = []
+        let cont = 1
+        for(const student of students){
+            newStudents.push(await this.styleToStudent(student,cont,activities))
+            cont++
+        }
+        return newStudents
+    }
+    //creamos la informacion que debe llevar el pdf
+    async createInformation(idArea){
+        let doc = {}
+        const area = await this.getOneArea(idArea)
+        const activities = area.activities
+        const grade = await this._service.getOneGrade('Grades',area.gradeRef.id)
+        //return activities.unit1.length
+        //agregamo los datos del curso y del profesor
+        doc.docente = grade.teacherRef.displayName
+        doc.area = area.area_name
+        doc.grado = grade.grade_name
+        //agregar estudiantes
+        doc.students = await this.studentAndNote(grade.students,activities)
+        //creamos el espacion para las actividades
+        doc.activities = {}
+        doc.activities.unit1 = this.addActivities(activities.unit1)
+        doc.activities.unit2 = this.addActivities(activities.unit2)
+        doc.activities.unit3 = this.addActivities(activities.unit3)
+        doc.activities.unit4 = this.addActivities(activities.unit4)
+        return doc 
+    }
+    //crea la direccion y el documento formato final del pdf 
+    async unifyOnePdf(idArea){
+        const doc = await this.createInformation(idArea)
+        const data = {
+            name:"Registro_Area",
+            year: new Date().getFullYear()
+        }
+        const direction = `docs/area/${data.name}${data.year}Boletin.pdf` 
+        const contentFinal = contentFunction(doc)
+        return this.savePdf(contentFinal,direction,data)
+    }
+    //crea el pdf y lo guarda en la direccion deseada
+    savePdf(content,direction,data){
+        const pdfResult = appPdf(content, direction,data)
+        return pdfResult
+    }
+    createInformationPdf(information){
+        content = {
+            docente:information.docente,
+            area: information.area,
+            grado: information.grado,
+            seccion: information.seccion
+        }
+    }
+
 }
