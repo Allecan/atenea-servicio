@@ -169,19 +169,32 @@ export class ControllerArea {
     }
    async searchNotes(unit,idStudent){
         let notes = []
-        for(let activity of unit){
-            const auxActivity = await this._service.getOneData("Activities",activity.id)
-            
-            let cont = 0
-            for(const score of auxActivity.scores){
-                if(score.studentRef.id == idStudent){
-                    let note = score.score
+        const sizeUnit = unit.length 
+        for(let i=0;i<9 ;i++){
+            //si tiene el nuemero de actividades 
+            if(i<sizeUnit){
+                const auxActivity = await this._service.getOneData("Activities",unit[i].id)
+                let cont = 0
+                //se busca si el alumno tiene notas en la actividada
+                for(const score of auxActivity.scores){
+                    //si tiene se encuentra se agrega la nota 
+                    if(score.studentRef.id == idStudent){
+                        let note = score.score
+                        const formate = {text:note}
+                        notes.push(formate)
+                        cont++
+                    }
+                }
+                //si el contador es cero es que no se encontro al alumno con nota en la actividad
+                //se le asigna una nota de 0
+                if(cont ==0){
+                    let note = 0
                     const formate = {text:note}
                     notes.push(formate)
-                    cont++
                 }
             }
-            if(cont ==0){
+            //si no tiene 9 actividades se va rellenando con ceros 
+            else{
                 let note = 0
                 const formate = {text:note}
                 notes.push(formate)
@@ -192,16 +205,16 @@ export class ControllerArea {
     }
     //ingresamos la informacion del estudinte y el numero de estudiente con el estilo que debe de llevar en el pdf 
   async styleToStudent(studentInfo,number,activities){
-        console.log("Estudiante",studentInfo.name_complete)
-        console.log(await this.searchNotes(activities.unit1,studentInfo.id))
-        console.log(await this.searchNotes(activities.unit2,studentInfo.id))
-        console.log(await this.searchNotes(activities.unit3,studentInfo.id))
-        console.log(await this.searchNotes(activities.unit4,studentInfo.id))
+        //se buscan las notaas de las actividades por unidad 
+        const noteUnit1  = await this.searchNotes(activities.unit1,studentInfo.id)
+        const noteUnit2 = await this.searchNotes(activities.unit2,studentInfo.id)
+        const noteUnit3 = await this.searchNotes(activities.unit3,studentInfo.id)
+        const noteUnit4 = await this.searchNotes(activities.unit4,studentInfo.id)
         let style = [{text:number},{text:studentInfo.name_complete}
-        ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,{},{},{},{},{},{},{},{},{},{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit1,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit2,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit3,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit4,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
         ]
         return style
     }
