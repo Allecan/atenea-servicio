@@ -2,6 +2,9 @@ import { config } from '../config/default.js'
 import { initializeApp } from 'firebase/app'
 import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc, query, where, orderBy } from 'firebase/firestore'
 
+import { ControllerActivity } from "../api/Actividad/controller.js"
+import { Activity } from "../models/Activity.js"
+
 export class FireBase {
     constructor(config) {
         //console.log(config)
@@ -92,8 +95,28 @@ export class FireBase {
     }
 
     async saveData(name, data) {
-        console.log(name, data)
+        // console.log(name, data)
         const docRef = await addDoc(collection(this.getDB(), name), data)
+        return 'Data Save'
+    }
+
+    async saveArea(name, data) {
+        // console.log(name, data)
+        const docRef = await addDoc(collection(this.getDB(), name), data)
+
+        // Proceso para crear las 4 unidades objetivas para cada unidad
+        const areaRef = docRef.id
+        const objectiveTest1 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 1, areaRef: areaRef, isTest: true}
+        const objectiveTest2 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 2, areaRef: areaRef, isTest: true}
+        const objectiveTest3 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 3, areaRef: areaRef, isTest: true}
+        const objectiveTest4 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 4, areaRef: areaRef, isTest: true}
+        const activityServices = new FireBase(config.fireBase)
+        const activityController = new ControllerActivity(activityServices, Activity)
+        await activityController.createNewActivity(objectiveTest1)
+        await activityController.createNewActivity(objectiveTest2)
+        await activityController.createNewActivity(objectiveTest3)
+        await activityController.createNewActivity(objectiveTest4)
+
         return 'Data Save'
     }
 
