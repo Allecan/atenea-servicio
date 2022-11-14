@@ -5,5 +5,6 @@ export class Activity {
         this.areaRef = activity.areaRef || oldActivity.areaRef
         this.unit = activity.unit
         this.enable = true
+        this.isTest = activity.isTest || false
     }
 }
