@@ -54,7 +54,7 @@
         for (const teacher of teachers.inactiveUsers.data) {
             teacher.grade = {}
             for (const grade of grades) {
-                if (grade.teacherRef != undefined && grade.teacherRef._path.segments.at(-1) == teacher.uid) {
+                if (grade.teacherRef != undefined && grade.teacherRef._path.segments.at(-1) == teacher.uid && grade.enable == true) {
                     delete grade.teacherRef
                     delete grade.levelRef
                     teacher.grade = grade
@@ -113,7 +113,7 @@
         let gradesList = []
         const grades = await this._service.getDataU('Grades')
         for (const grade of grades) {
-            if (grade.teacherRef._path.segments.at(-1) == id) {
+            if (grade.teacherRef._path.segments.at(-1) == id && grade.enable == true) {
                 delete grade.levelRef
                 delete grade.teacherRef
                 delete grade.position
