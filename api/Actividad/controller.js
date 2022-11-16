@@ -51,9 +51,13 @@ export class ControllerActivity {
             throw "El valor de la unidad no puede ser menor a 1 o mayor a 4"
         }
 
-        oldActivity.activity_name = activity.activity_name
-        oldActivity.activity_value = activity.activity_value
-        oldActivity.unit = activity.unit
+        if (oldActivity.isTest == true) {
+            oldActivity.activity_value = activity.activity_value
+        } else {
+            oldActivity.activity_name = activity.activity_name
+            oldActivity.activity_value = activity.activity_value
+            oldActivity.unit = activity.unit
+        }
         delete oldActivity.id
 
         const response = await this._service.updateData('Activities', id, oldActivity);
@@ -121,6 +125,8 @@ export class ControllerActivity {
         const response = await this._service.getOneData('Activities', id)
         if (response == undefined) {
             throw "Este id de actividad no existe"
+        } else if (response.isTest == true) {
+            throw "No se pueden eliminar las actividades de pruebas objetivas"
         }
         response.enable = false
         delete response.id

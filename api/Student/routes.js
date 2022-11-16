@@ -11,6 +11,7 @@ export class StudentRouter {
     registerRouter() {
         this._router.post('/create-student', this.handleCreateStudent.bind(this))
         this._router.get('/getall-students', this.handleGetAllStudents.bind(this))
+        this._router.get('/getall-students-aux', this.handleGetAllStudentsAux.bind(this))
         this._router.get('/getone-bygrade/:id', this.handleGetStudentsByGrade.bind(this))
         this._router.get('/getone-student/:id', this.handleGetOneStudent.bind(this))
         this._router.put('/update-student/:id', this.handleUpdateStudent.bind(this))
@@ -33,6 +34,15 @@ export class StudentRouter {
     async handleGetAllStudents(req, res) {
         try {
             const result = await this._controller.getAllStudents()
+            this._response.succes(req, res, result, this._httpcode.OK)
+        } catch (error) {
+            this._response.error(req, res, error, this._httpcode.BAD_REQUEST)
+        }
+    }
+
+    async handleGetAllStudentsAux(req, res) {
+        try {
+            const result = await this._controller.getAllStudentsAux()
             this._response.succes(req, res, result, this._httpcode.OK)
         } catch (error) {
             this._response.error(req, res, error, this._httpcode.BAD_REQUEST)

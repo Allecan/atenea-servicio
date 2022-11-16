@@ -152,11 +152,17 @@ export class ControllerArea {
     addActivities(unit){
        let auxUnit = []
        const sizeUnit = unit.length 
-        for(let i = 0;i<9;i++){
+        for(let i = 0;i<10;i++){
             if(i<sizeUnit){
-                const name = unit[i].activity_name
-                const activity = this.styleToActivity(name)
-                auxUnit.push(activity)
+                //se debe evitara agregar el parcial, porque ya esta por defecto en formato del pdf
+                //console.log(unit[i].isTest)
+                if(!unit[i].isTest){
+                    const name = unit[i].activity_name
+                    const activity = this.styleToActivity(name)
+                    auxUnit.push(activity)
+                }else{
+                    console.log("Prueba")
+                }
             }else{
                 const name = ""
                 const activity = this.styleToActivity(name)
@@ -170,51 +176,75 @@ export class ControllerArea {
    async searchNotes(unit,idStudent){
         let notes = []
         const sizeUnit = unit.length 
+        //console.log(sizeUnit)
+        //const unitFilter = unit.filter((item)=>item.isTest !== true) 
         for(let i=0;i<9 ;i++){
             //si tiene el nuemero de actividades 
-            if(i<sizeUnit){
-                const auxActivity = await this._service.getOneData("Activities",unit[i].id)
-                let cont = 0
-                //se busca si el alumno tiene notas en la actividada
-                for(const score of auxActivity.scores){
-                    //si tiene se encuentra se agrega la nota 
-                    if(score.studentRef.id == idStudent){
-                        let note = score.score
-                        const formate = {text:note}
-                        notes.push(formate)
-                        cont++
-                    }
+                if(i<sizeUnit){
+                    const resultNote = await this.getTest(idStudent,unit[i].id)
+                    notes.push({text:resultNote,style:"tableHeaderNote"})
                 }
-                //si el contador es cero es que no se encontro al alumno con nota en la actividad
-                //se le asigna una nota de 0
-                if(cont ==0){
-                    let note = 0
-                    const formate = {text:note}
-                    notes.push(formate)
+                //si no tiene 10 actividades se va rellenando con ceros 
+                else{
+                    notes.push({text:0,style:"tableHeaderNote"})
                 }
-            }
-            //si no tiene 9 actividades se va rellenando con ceros 
-            else{
-                let note = 0
-                const formate = {text:note}
-                notes.push(formate)
+            } 
+        //console.log(notes)
+        return notes 
+    }
+    //con esta funcion encontramos la nota de una actividad 
+    async getTest(idStudent,idActivity){
+        const auxActivity = await this._service.getOneData("Activities",idActivity)
+        let note  = 0
+        for(const score of auxActivity.scores){
+            if(score.studentRef.id == idStudent){
+                note = score.score
             }
         }
-        return notes
+        return note
 
+    }
+    totalScore(unit){
+        let cont = 0
+        for(const activity of unit){
+            cont+= activity.text
+        }
+        return cont
     }
     //ingresamos la informacion del estudinte y el numero de estudiente con el estilo que debe de llevar en el pdf 
   async styleToStudent(studentInfo,number,activities){
         //se buscan las notaas de las actividades por unidad 
-        const noteUnit1  = await this.searchNotes(activities.unit1,studentInfo.id)
-        const noteUnit2 = await this.searchNotes(activities.unit2,studentInfo.id)
-        const noteUnit3 = await this.searchNotes(activities.unit3,studentInfo.id)
-        const noteUnit4 = await this.searchNotes(activities.unit4,studentInfo.id)
+        const filter1 = activities.unit1.filter((item) => item.isTest!==true)
+        const filter2 = activities.unit1.filter((item) => item.isTest!==true)
+        const filter3 = activities.unit1.filter((item) => item.isTest!==true)
+        const filter4 = activities.unit1.filter((item) => item.isTest!==true)
+        //Documento Test
+        const test1 = activities.unit1.find(item=>item.isTest==true)
+        const test2 = activities.unit2.find(item=>item.isTest==true)
+        const test3 = activities.unit3.find(item=>item.isTest==true)
+        const test4 = activities.unit4.find(item=>item.isTest==true)
+        //obtener puntaje de los test
+        const scoreUnit1= await this.getTest(studentInfo.id,test1.id)
+        const scoreUnit2 = await this.getTest(studentInfo.id,test2.id)
+        const scoreUnit3 = await this.getTest(studentInfo.id,test3.id)
+        const scoreUnit4 = await this.getTest(studentInfo.id,test4.id)
+
+        //obener notas de las actividades
+        const noteUnit1  = await this.searchNotes(filter1,studentInfo.id)
+        const noteUnit2 = await this.searchNotes(filter2,studentInfo.id)
+        const noteUnit3 = await this.searchNotes(filter3,studentInfo.id)
+        const noteUnit4 = await this.searchNotes(filter4,studentInfo.id)
+        //Zona total
+        const totalScore1 = this.totalScore(noteUnit1)
+        const totalScore2 = this.totalScore(noteUnit2)
+        const totalScore3 = this.totalScore(noteUnit3)
+        const totalScore4 = this.totalScore(noteUnit4)
+
         let style = [{text:number},{text:studentInfo.name_complete}
-        ,...noteUnit1,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit2,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit3,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit4,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit1,{text:totalScore1, style:"tableHeaderTotal"},{text:scoreUnit1,style:"tableHeaderPrueba"},{text:(totalScore1+scoreUnit1),style:"tableHeaderTotalGeneral"}
+        ,...noteUnit2,{text:totalScore2, style:"tableHeaderTotal"},{text:scoreUnit2,style:"tableHeaderPrueba"},{text:(totalScore1+scoreUnit1),style:"tableHeaderTotalGeneral"}
+        ,...noteUnit3,{text:totalScore3, style:"tableHeaderTotal"},{text:scoreUnit3,style:"tableHeaderPrueba"},{text:(totalScore1+scoreUnit1),style:"tableHeaderTotalGeneral"}
+        ,...noteUnit4,{text:totalScore4, style:"tableHeaderTotal"},{text:scoreUnit4,style:"tableHeaderPrueba"},{text:(totalScore1+scoreUnit1),style:"tableHeaderTotalGeneral"}
         ]
         return style
     }
