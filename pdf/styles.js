@@ -77,5 +77,9 @@ export const  style={
         bold:true,
         fillColor: "#B4C6E7"
     },
+    tableHeaderNote:{
+        rotate:180,
+        margin: [30, 15, 30, 15],
+    }
 
 }

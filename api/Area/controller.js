@@ -182,11 +182,11 @@ export class ControllerArea {
             //si tiene el nuemero de actividades 
                 if(i<sizeUnit){
                     const resultNote = await this.getTest(idStudent,unit[i].id)
-                    notes.push({text:resultNote})
+                    notes.push({text:resultNote,style:"tableHeaderNote"})
                 }
                 //si no tiene 10 actividades se va rellenando con ceros 
                 else{
-                    notes.push({text:0})
+                    notes.push({text:0,style:"tableHeaderNote"})
                 }
             } 
         //console.log(notes)
