@@ -212,6 +212,17 @@ export class ControllerArea {
         //console.log(notes)
         return notes 
     }
+    async getTest(idStudent,idTest){
+        const auxActivity = await this._service.getOneData("Activities",idTest)
+        let note  = 0
+        for(const score of auxActivity.scores){
+            if(score.studentRef.id == idStudent){
+                note = score.score
+            }
+        }
+        return note
+
+    }
     //ingresamos la informacion del estudinte y el numero de estudiente con el estilo que debe de llevar en el pdf 
   async styleToStudent(studentInfo,number,activities){
         //se buscan las notaas de las actividades por unidad 
@@ -219,17 +230,28 @@ export class ControllerArea {
         const filter2 = activities.unit1.filter((item) => item.isTest!==true)
         const filter3 = activities.unit1.filter((item) => item.isTest!==true)
         const filter4 = activities.unit1.filter((item) => item.isTest!==true)
+        //Documento Test
+        const test1 = activities.unit1.find(item=>item.isTest==true)
+        const test2 = activities.unit2.find(item=>item.isTest==true)
+        const test3 = activities.unit3.find(item=>item.isTest==true)
+        const test4 = activities.unit4.find(item=>item.isTest==true)
+        //obtener puntaje de los test
+        const scoreUnit1= await this.getTest(studentInfo.id,test1.id)
+        const scoreUnit2 = await this.getTest(studentInfo.id,test2.id)
+        const scoreUnit3 = await this.getTest(studentInfo.id,test3.id)
+        const scoreUnit4 = await this.getTest(studentInfo.id,test4.id)
 
+        //obener notas de las actividades
         const noteUnit1  = await this.searchNotes(filter1,studentInfo.id)
         const noteUnit2 = await this.searchNotes(filter2,studentInfo.id)
         const noteUnit3 = await this.searchNotes(filter3,studentInfo.id)
         const noteUnit4 = await this.searchNotes(filter4,studentInfo.id)
-        
+
         let style = [{text:number},{text:studentInfo.name_complete}
-        ,...noteUnit1,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit2,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit3,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit4,{text:"", style:"tableHeaderTotal"},{text:"",style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit1,{text:"", style:"tableHeaderTotal"},{text:scoreUnit1,style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit2,{text:"", style:"tableHeaderTotal"},{text:scoreUnit2,style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit3,{text:"", style:"tableHeaderTotal"},{text:scoreUnit3,style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit4,{text:"", style:"tableHeaderTotal"},{text:scoreUnit4,style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
         ]
         return style
     }
