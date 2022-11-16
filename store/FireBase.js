@@ -2,6 +2,9 @@ import { config } from '../config/default.js'
 import { initializeApp } from 'firebase/app'
 import { collection, getDocs, getFirestore, addDoc, updateDoc, doc, setDoc, deleteDoc, getDoc, query, where, orderBy } from 'firebase/firestore'
 
+import { ControllerActivity } from "../api/Actividad/controller.js"
+import { Activity } from "../models/Activity.js"
+
 export class FireBase {
     constructor(config) {
         //console.log(config)
@@ -92,8 +95,28 @@ export class FireBase {
     }
 
     async saveData(name, data) {
-        console.log(name, data)
+        // console.log(name, data)
         const docRef = await addDoc(collection(this.getDB(), name), data)
+        return 'Data Save'
+    }
+
+    async saveArea(name, data) {
+        // console.log(name, data)
+        const docRef = await addDoc(collection(this.getDB(), name), data)
+
+        // Proceso para crear las 4 unidades objetivas para cada unidad
+        const areaRef = docRef.id
+        const objectiveTest1 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 1, areaRef: areaRef, isTest: true}
+        const objectiveTest2 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 2, areaRef: areaRef, isTest: true}
+        const objectiveTest3 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 3, areaRef: areaRef, isTest: true}
+        const objectiveTest4 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 4, areaRef: areaRef, isTest: true}
+        const activityServices = new FireBase(config.fireBase)
+        const activityController = new ControllerActivity(activityServices, Activity)
+        await activityController.createNewActivity(objectiveTest1)
+        await activityController.createNewActivity(objectiveTest2)
+        await activityController.createNewActivity(objectiveTest3)
+        await activityController.createNewActivity(objectiveTest4)
+
         return 'Data Save'
     }
 
@@ -257,10 +280,21 @@ export class FireBase {
                 students[estudiante] = delete estudiante.gradeRef
             }
 
+            //Se obtiene la lista de areas del grado
+            const areasRef = collection(this.getDB(), "Areas");
+            const areasQuery = query(areasRef, where("gradeRef", "==", docRef))
+            const areasDocs = await getDocs(areasQuery)
+            const areas = areasDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+            //Se elimina el campo de la referencia de los grados de cada area
+            for (const area of areas) {
+                areas[area] = delete area.gradeRef
+            }
+
             oneData.teacherRef = teacherData
             oneData.levelRef = levelData
             oneData.id = id
             oneData.students = students
+            oneData.areas = areas
 
             // se organizan los datos a como fernando los pidio >:v
 
@@ -301,18 +335,18 @@ export class FireBase {
             areasList.map(area => delete area.gradeRef)
 
             //Se obtienen las actividades de cada area
-            console.log("hola")
             const activitiesData = collection(this.getDB(), "Activities");
             const activitiesDocs = await getDocs(activitiesData);
             let activitiesList = activitiesDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
             for (const area of areasList) {
-                area.activities = []
+                area.activities = {unit1: [], unit2: [], unit3: [], unit4: []}
                 for (const activity of activitiesList) {
-                    if (activity.areaRef._key.path.segments.at(-1) == area.id && activity.enable == true) {
+                    if (activity.areaRef != null && activity.areaRef._key.path.segments.at(-1) == area.id && activity.enable == true) {
                         let addedActivity = activity
                         delete addedActivity.areaRef
                         delete addedActivity.scores
-                        area.activities.push(activity)
+                        let unit = "unit"+addedActivity.unit
+                        area.activities[unit].push(activity)
                     }
                 }
             }

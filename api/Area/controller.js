@@ -28,7 +28,7 @@ export class ControllerArea {
         newArea.gradeRef = gradeRef
         // newGrade.levelRef = levelRef
 
-        const response = await this._service.saveData('Areas', newArea)
+        const response = await this._service.saveArea('Areas', newArea)
         return response
     }
 
