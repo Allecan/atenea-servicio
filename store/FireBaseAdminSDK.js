@@ -129,6 +129,54 @@ export class FireBaseAdminSDK {
     }
   }
 
+  async getAllStudentsEnableAux() {
+    // Obtencion de los niveles en orden
+    const levelsDocs = await this.getFireStoreDatabase().collection("Levels").orderBy("position").get();
+    let levels = levelsDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+
+    // Obtencion de los grados
+    const gradesDocs = await this.getFireStoreDatabase().collection("Grades").where("enable", "==", true).get();
+    let grades = gradesDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+    // Se elimina el campo de teacherRef y cambia levelRef
+    grades.map(doc => (doc.levelRef = doc.levelRef._path.segments.at(-1), delete doc.teacherRef))
+
+    // Obtencion de los estudiantes
+    const studentsDocs = await this.getFireStoreDatabase().collection("Students").where("enable", "==", true).get();
+    let students = studentsDocs.docs.map(doc => Object.assign(doc.data(), { id: doc.id }));
+    // Se cambian los campos de gradeRef
+    students.map(doc => (doc.gradeRef = doc.gradeRef._path.segments.at(-1)))
+
+    // Ingreso de estudiantes a sus respectivos grados
+    for (const grade of grades) {
+      grade.students = []
+      for (const student of students) {
+        if (student.gradeRef == grade.id) {
+          grade.students.push(student)
+        }
+      }
+    }
+
+    // Ingreso de los grados a su respectivo nivel
+    for (const level of levels) {
+      level.grades = []
+      for (const grade of grades) {
+        if (grade.levelRef == level.id) {
+          level.grades[grade.position] = grade
+        }
+      }
+      // Se eliminan los espacios nulos que dejan los grados deshabilitados
+      let fixedGradesList = []
+      for (const grade of level.grades) {
+        if (grade != null) {
+          fixedGradesList.push(grade)
+        }
+      }
+      level.grades = fixedGradesList
+    }
+
+    return levels
+  }
+
   async getEnableStudentsByGrade(idGrade) {
     try {
       const usersObject = { id_grade: '', grade_name: '', size: null, students: [] };

@@ -19,6 +19,11 @@ export class ControllerStudent {
         return response
     }
 
+    async getAllStudentsAux() {
+        const response = await this._service.getAllStudentsEnableAux()
+        return response
+    }
+
     async getStudentsByGrade(uidGradeRef) {
         const response = await this._service.getEnableStudentsByGrade(uidGradeRef)
         return response
