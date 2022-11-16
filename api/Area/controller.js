@@ -177,43 +177,24 @@ export class ControllerArea {
         let notes = []
         const sizeUnit = unit.length 
         //console.log(sizeUnit)
-        //const unitFilter = unit.filter((item)=>item.isTest !== true)
-       
+        //const unitFilter = unit.filter((item)=>item.isTest !== true) 
         for(let i=0;i<9 ;i++){
             //si tiene el nuemero de actividades 
                 if(i<sizeUnit){
-                    const auxActivity = await this._service.getOneData("Activities",unit[i].id)
-                        let cont = 0
-                        //se busca si el alumno tiene notas en la actividada
-                        for(const score of auxActivity.scores){
-                            //si tiene se encuentra se agrega la nota 
-                            if(score.studentRef.id == idStudent){
-                                let note = score.score
-                                const formate = {text:note}
-                                notes.push(formate)
-                                cont++
-                            }
-                        }
-                    //si el contador es cero es que no se encontro al alumno con nota en la actividad
-                    //se le asigna una nota de 0
-                        if(cont ==0){
-                            let note = 0
-                            const formate = {text:note}
-                            notes.push(formate)
-                    }
+                    const resultNote = await this.getTest(idStudent,unit[i].id)
+                    notes.push({text:resultNote})
                 }
                 //si no tiene 10 actividades se va rellenando con ceros 
                 else{
-                    let note = 0
-                    const formate = {text:note}
-                    notes.push(formate)
+                    notes.push({text:0})
                 }
             } 
         //console.log(notes)
         return notes 
     }
-    async getTest(idStudent,idTest){
-        const auxActivity = await this._service.getOneData("Activities",idTest)
+    //con esta funcion encontramos la nota de una actividad 
+    async getTest(idStudent,idActivity){
+        const auxActivity = await this._service.getOneData("Activities",idActivity)
         let note  = 0
         for(const score of auxActivity.scores){
             if(score.studentRef.id == idStudent){
