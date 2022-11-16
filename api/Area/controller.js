@@ -204,6 +204,13 @@ export class ControllerArea {
         return note
 
     }
+    totalScore(unit){
+        let cont = 0
+        for(const activity of unit){
+            cont+= activity.text
+        }
+        return cont
+    }
     //ingresamos la informacion del estudinte y el numero de estudiente con el estilo que debe de llevar en el pdf 
   async styleToStudent(studentInfo,number,activities){
         //se buscan las notaas de las actividades por unidad 
@@ -227,12 +234,17 @@ export class ControllerArea {
         const noteUnit2 = await this.searchNotes(filter2,studentInfo.id)
         const noteUnit3 = await this.searchNotes(filter3,studentInfo.id)
         const noteUnit4 = await this.searchNotes(filter4,studentInfo.id)
+        //Zona total
+        const totalScore1 = this.totalScore(noteUnit1)
+        const totalScore2 = this.totalScore(noteUnit2)
+        const totalScore3 = this.totalScore(noteUnit3)
+        const totalScore4 = this.totalScore(noteUnit4)
 
         let style = [{text:number},{text:studentInfo.name_complete}
-        ,...noteUnit1,{text:"", style:"tableHeaderTotal"},{text:scoreUnit1,style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit2,{text:"", style:"tableHeaderTotal"},{text:scoreUnit2,style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit3,{text:"", style:"tableHeaderTotal"},{text:scoreUnit3,style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
-        ,...noteUnit4,{text:"", style:"tableHeaderTotal"},{text:scoreUnit4,style:"tableHeaderPrueba"},{text:"",style:"tableHeaderTotalGeneral"}
+        ,...noteUnit1,{text:totalScore1, style:"tableHeaderTotal"},{text:scoreUnit1,style:"tableHeaderPrueba"},{text:(totalScore1+scoreUnit1),style:"tableHeaderTotalGeneral"}
+        ,...noteUnit2,{text:totalScore2, style:"tableHeaderTotal"},{text:scoreUnit2,style:"tableHeaderPrueba"},{text:(totalScore1+scoreUnit1),style:"tableHeaderTotalGeneral"}
+        ,...noteUnit3,{text:totalScore3, style:"tableHeaderTotal"},{text:scoreUnit3,style:"tableHeaderPrueba"},{text:(totalScore1+scoreUnit1),style:"tableHeaderTotalGeneral"}
+        ,...noteUnit4,{text:totalScore4, style:"tableHeaderTotal"},{text:scoreUnit4,style:"tableHeaderPrueba"},{text:(totalScore1+scoreUnit1),style:"tableHeaderTotalGeneral"}
         ]
         return style
     }
