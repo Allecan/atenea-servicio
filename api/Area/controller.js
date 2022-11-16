@@ -152,11 +152,16 @@ export class ControllerArea {
     addActivities(unit){
        let auxUnit = []
        const sizeUnit = unit.length 
-        for(let i = 0;i<9;i++){
+        for(let i = 0;i<10;i++){
             if(i<sizeUnit){
-                const name = unit[i].activity_name
-                const activity = this.styleToActivity(name)
-                auxUnit.push(activity)
+                //se debe evitara agregar el parcial, porque ya esta por defecto en formato del pdf
+                if(!unit[i].isTest){
+                    const name = unit[i].activity_name
+                    const activity = this.styleToActivity(name)
+                    auxUnit.push(activity)
+                }else{
+                    console.log("Prueba")
+                }
             }else{
                 const name = ""
                 const activity = this.styleToActivity(name)
@@ -174,23 +179,23 @@ export class ControllerArea {
             //si tiene el nuemero de actividades 
             if(i<sizeUnit){
                 const auxActivity = await this._service.getOneData("Activities",unit[i].id)
-                let cont = 0
-                //se busca si el alumno tiene notas en la actividada
-                for(const score of auxActivity.scores){
-                    //si tiene se encuentra se agrega la nota 
-                    if(score.studentRef.id == idStudent){
-                        let note = score.score
-                        const formate = {text:note}
-                        notes.push(formate)
-                        cont++
+                    let cont = 0
+                    //se busca si el alumno tiene notas en la actividada
+                    for(const score of auxActivity.scores){
+                        //si tiene se encuentra se agrega la nota 
+                        if(score.studentRef.id == idStudent){
+                            let note = score.score
+                            const formate = {text:note}
+                            notes.push(formate)
+                            cont++
+                        }
                     }
-                }
                 //si el contador es cero es que no se encontro al alumno con nota en la actividad
                 //se le asigna una nota de 0
-                if(cont ==0){
-                    let note = 0
-                    const formate = {text:note}
-                    notes.push(formate)
+                    if(cont ==0){
+                        let note = 0
+                        const formate = {text:note}
+                        notes.push(formate)
                 }
             }
             //si no tiene 9 actividades se va rellenando con ceros 
