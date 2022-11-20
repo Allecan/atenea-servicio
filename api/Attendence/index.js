@@ -37,3 +37,44 @@ export const attendenceModel = (expressRouter) => {
  *         gradeRef: 5GHHpOWZe4Cy1yBKsjI4
  *         students: [{"student": "FaRk3iTfC5K9B1awXwYN", "attendence": true},{"student": "JvqWHsQtUFNfoST1WGeS", "attendence": true},{"student": "yr2xZoKDvyOhiEbJLctJ", "attendence": true}]
  */
+/**
+ * @swagger
+ * /api/v1/attendence/new-attendence:
+ *   post:
+ *     summary: Crear una nueva asistencia.
+ *     tags: [Attendence]
+ *     requestBody:  
+ *       required: true
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/Attendence'
+ *     responses:
+ *       200:
+ *         description: asistencia creada 
+*/
+/**
+ * @swagger
+ * /api/v1/attendence/get-mystudents/{id}:
+ *   get:
+ *     summary: Retorna una asistencia.
+ *     tags: [Attendence]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: El id del profesor
+ *     responses:  
+ *       200: 
+ *         description: get attendence
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Attendence'
+ *       400:
+ *         description: attendence not found
+*/
