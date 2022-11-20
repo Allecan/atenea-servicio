@@ -63,3 +63,76 @@ export const studentModel = (expressRouter) => {
  *         manager_phone: +502 52858963
  *         enable: true
  */
+/**
+ * @swagger
+ * /api/v1/student/create-student:
+ *   post:
+ *     summary: Crear una nueva area.
+ *     tags: [Student]
+ *     requestBody:  
+ *       required: true
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/Student'
+ *     responses:
+ *       200:
+ *         description: Estudiante creada 
+*/
+/**
+ * @swagger
+ * /api/v1/student/getall-students:
+ *   get:
+ *     summary: Retorna todas los estudiantes.
+ *     tags: [Student]
+ *     responses:  
+ *       200: 
+ *         description: Retornar todos los estudiantes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Student'
+ * 
+ */
+/**
+ * @swagger
+ * /api/v1/student/getone-bygrade/{id}:
+ *   get:
+ *     summary: Retorna un area.
+ *     tags: [Student]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: El id del grado
+ *     responses:  
+ *       200: 
+ *         description: A User object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 request:
+ *                   type: string
+ *                   description: el tipo de peticion con la direccion
+ *                   example: GET /getall-areas 
+ *                 error:
+ *                   type: boolean
+ *                   description: indica si se tiene un error.
+ *                 status:
+ *                   type: number
+ *                   description: indica el numero de request
+ *                   example: 200
+ *                 body:
+ *                   type: object
+ *                   description: contiene todos los registros
+ *                   example: {"area_name": "Comunicacion y Lenguaje","enable": true,"gradeRef": {"grade_name": "Segundo","enable": true,"position": 1,"id": "rGo2rjlpgkZUfnVjmZhu"},"id": "5GHHpOWZe4Cy1yBKsjI4","activities": {unit1:array,unit2:array,unit3:array,unit4:array}}
+ *       400:
+ *         description: Area not found
+*/

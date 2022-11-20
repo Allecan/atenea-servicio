@@ -96,8 +96,6 @@ export const simpleContent = (information)=>{
             
             ]
         },
-        
-        "\n\n",
         {
             style: 'tableExample',
             table: {
