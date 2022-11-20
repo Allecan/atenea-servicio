@@ -19,6 +19,18 @@ export class ControllerActivity {
         } else if (newActivity.unit < 1 || newActivity.unit > 4) {
             throw "El valor de la unidad no puede ser menor a 1 o mayor a 4"
         }
+
+        // Se verifica que no se sobrepase el limite de 8 actividades
+        const activities = await this._service.getData('Activities')
+        let totalActivities = 0
+        for (const activ of activities) {
+            if (activ.areaRef._key.path.segments.at(-1) == activity.areaRef && activ.unit == activity.unit && activ.isTest == false && activ.enable == true) {
+                  totalActivities++
+            }
+        }
+        if (totalActivities >= 9) {
+            throw "No se pueden crear mas de 9 actividades por unidad. El total de actividades en esta unidad es de " + totalActivities
+        }
         
         // } else if (teacher.rol != 'docente') {
         //     return "Este usuario no es un docente"
