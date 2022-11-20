@@ -106,10 +106,10 @@ export class FireBase {
 
         // Proceso para crear las 4 unidades objetivas para cada unidad
         const areaRef = docRef.id
-        const objectiveTest1 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 1, areaRef: areaRef, isTest: true}
-        const objectiveTest2 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 2, areaRef: areaRef, isTest: true}
-        const objectiveTest3 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 3, areaRef: areaRef, isTest: true}
-        const objectiveTest4 = {activity_name: "PRUEBA OBJETIVA", activity_value: "0", unit: 4, areaRef: areaRef, isTest: true}
+        const objectiveTest1 = {activity_name: "PRUEBA OBJETIVA", activity_value: 30, unit: 1, areaRef: areaRef, isTest: true}
+        const objectiveTest2 = {activity_name: "PRUEBA OBJETIVA", activity_value: 30, unit: 2, areaRef: areaRef, isTest: true}
+        const objectiveTest3 = {activity_name: "PRUEBA OBJETIVA", activity_value: 30, unit: 3, areaRef: areaRef, isTest: true}
+        const objectiveTest4 = {activity_name: "PRUEBA OBJETIVA", activity_value: 30, unit: 4, areaRef: areaRef, isTest: true}
         const activityServices = new FireBase(config.fireBase)
         const activityController = new ControllerActivity(activityServices, Activity)
         await activityController.createNewActivity(objectiveTest1)

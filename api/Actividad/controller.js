@@ -5,8 +5,12 @@ export class ControllerActivity {
     }
 
     async createNewActivity(activity) {
+        if (activity.activity_value <= 0 || activity.activity_value == null) {
+            throw "El valor de la actividad debe ser mayor a 0"
+        }
         const newModel = new this._model(activity, null)
         const newActivity = Object.assign({}, newModel)
+        newActivity.activity_value = parseInt(newActivity.activity_value)
 
         const area = await this._service.getOneData('Areas', newActivity.areaRef)
 
@@ -43,7 +47,11 @@ export class ControllerActivity {
     }
 
     async updateAnActivity(id, activity) {
+        if (activity.activity_value <= 0 || activity.activity_value == null) {
+            throw "El valor de la actividad debe ser mayor a 0"
+        }
         const oldActivity = await this._service.getOneData('Activities', id)
+        activity.activity_value = parseInt(activity.activity_value)
 
         if (oldActivity == undefined) {
             throw "El id de esta actividad no existe"

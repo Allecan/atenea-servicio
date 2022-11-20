@@ -342,7 +342,7 @@ export class FireBaseAdminSDK {
       const date = new Date();
       const today = this.dateToSpanish(date);
       const time =
-        ("0" + date.getHours()).slice(-2) +
+        ("0" + (date.getHours()-6)).slice(-2) +
         ":" +
         ("0" + date.getMinutes()).slice(-2);
       await this.saveUserFirestore(result.uid, {
