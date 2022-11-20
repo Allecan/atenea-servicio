@@ -45,3 +45,136 @@ export const gradeModel = (expressRouter)=>{
  *         teacherRef: RWFKfGsTsJcIp31Rf4RvibXAZl62
  *         levelRef: EkNCLha4XHgew4Wm2S2H
  */
+
+/**
+ * @swagger
+ * /api/v1/grade/add-grade:
+ *   post:
+ *     summary: Crear un nuevo grado.
+ *     tags: [Grade]
+ *     requestBody:  
+ *       required: true
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/Graded'
+ *     responses:
+ *       200:
+ *         description: Grade created 
+*/
+
+/**
+ * @swagger
+ * /api/v1/grade/update-grade/{id}:
+ *   put:
+ *     summary: Editar el grado.
+ *     tags: [Grade]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id del grado
+ *     requestBody:  
+ *       required: true
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/Grade'
+ *     responses:  
+ *       200: 
+ *         description: grade updated!
+ *       400:
+ *         description: grade not found
+*/
+/**
+ * @swagger
+ * /api/v1/grade/delete-grade/{id}:
+ *   delete:
+ *     summary: Elimina un grado.
+ *     tags: [Grade]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: El id del grado
+ *     responses:  
+ *       200: 
+ *         description: grado deleted
+ *       400:
+ *         description: grado not found
+*/
+/**
+ * @swagger
+ * /api/v1/grade/getall-grades:
+ *   get:
+ *     summary: Retorna todas los grados.
+ *     tags: [Grade]
+ *     responses:  
+ *       200: 
+ *         description: Retornar todas los grados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Grade'
+ * 
+ */
+/**
+ * @swagger
+ * /api/v1/grade/getone-grade/{id}:
+ *   get:
+ *     summary: Retorna un grado.
+ *     tags: [Grade]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: El id del grado
+ *     responses:  
+ *       200: 
+ *         description: Retornar todos los grados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Grade'
+ *       400:
+ *         description: grade not found
+*/
+/**
+ * @swagger
+ * /api/v1/grade/add-student:
+ *   put:
+ *     summary: Editar el area.
+ *     tags: [Grade]
+ *     parameters:
+ *       - in: query
+ *         name: idGrade
+ *         type: string
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id del grado
+ *       - in: query
+ *         name: idStudent
+ *         type: string
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id del estudiante
+ *     responses:  
+ *       200: 
+ *         description: Area updated!
+ *       400:
+ *         description: Area not found
+*/
