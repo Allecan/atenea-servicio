@@ -340,12 +340,12 @@ export class FireBaseAdminSDK {
       const auth = getAuth(appFirebase);
       const result = await auth.createUser(data);
       const date = new Date();
-      const today = this.dateToSpanish(date);
       let hours = date.getHours()-6
       if (hours < 0) {
-        today.setDate(today.getDay()-1)
+        date.setDate(date.getDay()-1)
         hours += 24
       }
+      const today = this.dateToSpanish(date);
       const time =
         ("0" + hours).slice(-2) +
         ":" +
