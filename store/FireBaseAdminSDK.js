@@ -340,14 +340,10 @@ export class FireBaseAdminSDK {
       const auth = getAuth(appFirebase);
       const result = await auth.createUser(data);
       const date = new Date();
-      let hours = date.getHours()-6
-      if (hours < 0) {
-        date.setDate(date.getDay()-1)
-        hours += 24
-      }
+      date.setHours(date.getHours()-6)
       const today = this.dateToSpanish(date);
       const time =
-        ("0" + hours).slice(-2) +
+        ("0" + date.getHours()).slice(-2) +
         ":" +
         ("0" + date.getMinutes()).slice(-2);
       await this.saveUserFirestore(result.uid, {
