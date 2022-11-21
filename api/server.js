@@ -10,7 +10,6 @@ import { helpers } from '../lib/helpers.js'
 import { userModel } from './Usuario/index.js'
 import { gradeModel } from './Grado/index.js'
 import { studentModel } from './Student/index.js'
-import { boletinModel } from "./Boletin/index.js"
 import { teacherModel } from "./Profesor/index.js"
 import { attendenceModel } from './Attendence/index.js'
 import { levelModel } from './Nivel/index.js'
@@ -58,7 +57,6 @@ class Server {
     this._app.use('/api/v1/user', userModel(express.Router))
     this._app.use('/api/v1/grade', gradeModel(express.Router))
     this._app.use('/api/v1/student', studentModel(express.Router))
-    this._app.use('/api/v1/boletin',boletinModel(express.Router))
     this._app.use('/api/v1/teacher',teacherModel(express.Router))
     this._app.use('/api/v1/attendence', attendenceModel(express.Router))
     this._app.use('/api/v1/level',levelModel(express.Router))
