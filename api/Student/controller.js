@@ -255,6 +255,10 @@ export class ControllerStudent {
                 let unit2 = 0
                 let unit3 = 0
                 let unit4 = 0
+                let activities1 = []
+                let activities2 = []
+                let activities3 = []
+                let activities4 = []
                 for (const activity of activities) {
                     if (activity.areaRef._path.segments.at(-1) == area.id && activity.enable == true) {
                         // Proceso para hallar la nota del estudiante
@@ -264,22 +268,26 @@ export class ControllerStudent {
                                 studentScore = score.score
                             }
                         }
-                        // Proceso para determinar a que unidad pertenece esa nota
+                        // Proceso para determinar a que unidad pertenece esa nota y actividad
                         if (activity.unit == 1) {
                             unit1 += studentScore
+                            activities1.push({activity_name: activity.activity_name, score: studentScore, isTest: activity.isTest})
                         } else if (activity.unit == 2) {
                             unit2 += studentScore
+                            activities2.push({activity_name: activity.activity_name, score: studentScore, isTest: activity.isTest})
                         } else if (activity.unit == 3) {
                             unit3 += studentScore
+                            activities3.push({activity_name: activity.activity_name, score: studentScore, isTest: activity.isTest})
                         } else if (activity.unit == 4) {
                             unit4 += studentScore
+                            activities4.push({activity_name: activity.activity_name, score: studentScore, isTest: activity.isTest})
                         }
                     }
                 }
-                data.unit1.areas.push({area_name: area.area_name, score: unit1,area_id:area.id})
-                data.unit2.areas.push({area_name: area.area_name, score: unit2,area_id:area.id})
-                data.unit3.areas.push({area_name: area.area_name, score: unit3,area_id:area.id})
-                data.unit4.areas.push({area_name: area.area_name, score: unit4,area_id:area.id})
+                data.unit1.areas.push({area_name: area.area_name, area_id:area.id, score: unit1, activities: activities1})
+                data.unit2.areas.push({area_name: area.area_name, area_id:area.id, score: unit2, activities: activities2})
+                data.unit3.areas.push({area_name: area.area_name, area_id:area.id, score: unit3, activities: activities3})
+                data.unit4.areas.push({area_name: area.area_name, area_id:area.id, score: unit4, activities: activities4})
             }
         }
         // Proceso para obtener el promedio de cada unidad

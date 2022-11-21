@@ -132,7 +132,7 @@ export class ControllerActivity {
             // Se actualiza la lista de notas de la actividad
             for (const oldScore of activity.scores) {
                 if (oldScore.studentRef._key.path.segments.at(-1) == score.studentRef) {
-                    oldScore.score = score.score
+                    oldScore.score = parseInt(score.score)
                 }
             }
         }
