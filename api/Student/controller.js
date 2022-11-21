@@ -1,6 +1,7 @@
 import {appPdf} from "../../pdf/app.js"
 import {contentFunction} from "../../pdf/content/pdfContent.js"
 import { simpleContent } from "../../pdf/content/simpleContent.js"
+//import { allContent } from "../../pdf/content/allContent.js"
 export class ControllerStudent {
     constructor(serciceStudent, student) {
         this._service = serciceStudent
@@ -129,26 +130,32 @@ export class ControllerStudent {
     async unifyAllPdf(idGrade){
         const  listStudent  = await this.getStudentsByGrade(idGrade)
         const sizeList = listStudent.students.length
+        console.log(listStudent.students)
         console.log(sizeList)
-        
-        let content = []
-        for(const student of listStudent.students){
-
-            const courses = await this.getStudentBoletin(student.id)
-            const documentPdf = await this.createPdfInformation(courses,student.id)
-            const bodyContent = simpleContent(documentPdf)           
-            content.push(...bodyContent)
-            content.push({text: '', pageBreak: 'before'})
-
+        if(sizeList == 1){
+            //si solo se tiene un estudiante
+            return await this.unifyOnePdf(listStudent.students[0].id)
+        }else{
+            let content = []
+            for(const student of listStudent.students){
+    
+                const courses = await this.getStudentBoletin(student.id)
+                const documentPdf = await this.createPdfInformation(courses,student.id)
+                const bodyContent = simpleContent(documentPdf)           
+                content.push(...bodyContent)
+                content.push({text: '', pageBreak: 'before'})
+    
+            }
+            const data = {
+                name: "Registro",
+                year: new Date().getFullYear()
+            }
+            //se crea la direccion
+            const direction = `docs/boletin/${data.name}${data.year}Boletin.pdf` 
+            const contentFinal = contentFunction(content)
+            return this.savePdf(contentFinal,direction,data)
         }
-        const data = {
-            name: "Registro",
-            year: new Date().getFullYear()
-        }
-        //se crea la direccion
-        const direction = `docs/boletin/${data.name}${data.year}Boletin.pdf` 
-        const contentFinal = contentFunction(content)
-        return this.savePdf(contentFinal,direction,data)
+
     }
 
     savePdf(content,direction,data){
