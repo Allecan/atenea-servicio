@@ -271,10 +271,10 @@ export class ControllerStudent {
                         }
                     }
                 }
-                data.unit1.areas.push({area_name: area.area_name, score: unit1})
-                data.unit2.areas.push({area_name: area.area_name, score: unit2})
-                data.unit3.areas.push({area_name: area.area_name, score: unit3})
-                data.unit4.areas.push({area_name: area.area_name, score: unit4})
+                data.unit1.areas.push({area_name: area.area_name, score: unit1,area_id:area.id})
+                data.unit2.areas.push({area_name: area.area_name, score: unit2,area_id:area.id})
+                data.unit3.areas.push({area_name: area.area_name, score: unit3,area_id:area.id})
+                data.unit4.areas.push({area_name: area.area_name, score: unit4,area_id:area.id})
             }
         }
         // Proceso para obtener el promedio de cada unidad
